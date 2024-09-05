@@ -1,0 +1,51 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Metrics Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Team Metrics Dashboard</h1>
+    </header>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="#">Overview</a></li>
+                <li><a href="#">Commits</a></li>
+                <li><a href="#">Code Quality</a></li>
+                <li><a href="#">Reviews</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <section class="search-section">
+                <input type="text" id="search-input" placeholder="Search by team email..." oninput="filterKPIs()" autocomplete="off">
+                <div id="autocomplete-list" class="autocomplete-items"></div>
+            </section>
+
+            <section class="kpi-section" id="kpi-section">
+                <div class="kpi-card" data-email="team1@example.com">Team: Alpha | Total Commits: <span>123</span></div>
+                <div class="kpi-card" data-email="team2@example.com">Team: Beta | Open Reviews: <span>8</span></div>
+                <div class="kpi-card" data-email="team3@example.com">Team: Gamma | Bugs Fixed: <span>15</span></div>
+            </section>
+
+            <section class="charts-section">
+                <div class="chart-card">[Chart Placeholder]</div>
+                <div class="chart-card">[Chart Placeholder]</div>
+            </section>
+
+            <section class="table-section">
+                <div class="table-card">[Table Placeholder]</div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
