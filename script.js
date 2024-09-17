@@ -1,41 +1,58 @@
-const express = require('express');
-const { exec } = require('child_process');
-const app = express();
-const port = 3000;
+document.addEventListener('DOMContentLoaded', () => {
+    // Example: Update KPIs dynamically
+});
 
-// Middleware to parse JSON body from POST requests
-app.use(express.json());
+const teams = [
+    { email: 'team1@example.com', name: 'Alpha', totalCommits: 123 },
+    { email: 'team2@example.com', name: 'Beta', openReviews: 8 },
+    { email: 'team3@example.com', name: 'Gamma', bugsFixed: 15 }
+];
 
-// Serve the static HTML page
-app.use(express.static('public'));
+function filterKPIs() {
+    const searchInput = document.getElementById('search-input').value.toLowerCase();
+    const kpiCards = document.querySelectorAll('.kpi-card');
+    const autocompleteList = document.getElementById('autocomplete-list');
+    autocompleteList.innerHTML = '';
 
-// Route to handle the command execution
-app.post('/run-command', (req, res) => {
-    const reason = req.body.reason;
-    
-    if (!reason) {
-        return res.status(400).send('Reason is required');
+    if (!searchInput) {
+        // If input is empty, show all KPI cards and hide autocomplete suggestions
+        kpiCards.forEach(card => card.style.display = 'flex');
+        return;
     }
 
-    // Construct the shell command with the user input
-    const command = `/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py --reasons:${reason}`;
-
-    // Execute the shell command
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            return res.status(500).send(`Error executing the command: ${error.message}`);
+    // Filter KPI cards based on search input
+    kpiCards.forEach(card => {
+        const email = card.getAttribute('data-email').toLowerCase();
+        if (email.includes(searchInput)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
         }
-
-        if (stderr) {
-            return res.status(500).send(`stderr: ${stderr}`);
-        }
-
-        // Send the output back to the client
-        res.send(`Command output:\n${stdout}`);
     });
+
+    // Generate autocomplete suggestions based on input
+    const matchingTeams = teams.filter(team => team.email.toLowerCase().includes(searchInput));
+    matchingTeams.forEach(team => {
+        const item = document.createElement('div');
+        item.classList.add('autocomplete-item');
+        item.textContent = team.email;
+        item.onclick = () => selectAutocompleteItem(team.email);
+        autocompleteList.appendChild(item);
+    });
+}
+
+function selectAutocompleteItem(email) {
+    // Set the search input to the selected email and filter KPIs
+    document.getElementById('search-input').value = email;
+    filterKPIs();
+    // Clear autocomplete suggestions after selection
+    document.getElementById('autocomplete-list').innerHTML = '';
+}
+
+document.getElementById('commandForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const searchInput = document.getElementById('search-input').value;
+    const command = `codeChurnQuery.py --reasons="${searchInput}"`; // Construct the command here
+    console.log(command)
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});

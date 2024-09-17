@@ -1,3 +1,8 @@
+import subprocess
+
+subprocess.run(["dir", "-1"])
+
+'''OLD CODE------------------------------------------------------------------------------------------
 from gerrit import GerritClient
 from collections import defaultdict
 from datetime import datetime
@@ -41,6 +46,7 @@ def save_into_xlsx():
 
 
 '''
+'''
 def findCodeDifference(change_id):
     change = GERRIT.changes.get(change_id)
     files = change.list_files()
@@ -53,7 +59,7 @@ def findCodeDifference(change_id):
         print(f"  Lines added: {lines_inserted}")
         print(f"  Lines removed: {lines_deleted}")
 '''
-
+'''
 #Main
 for change in CHANGES:
     subject = change.get("subject", "")
@@ -68,9 +74,10 @@ for change in CHANGES:
             "Project": change.get("project"),
             "Updated": change.get("updated"),
             "Days from 1st commit": extract_num_of_days(change.get("updated")), #Func for extracting # of days
-            "x": "", #TODO
+            "x": "", 
             "1/x": "",
             #"Lines Inserted": findCodeDifference(change.get("change_id"))
         })
 
 save_into_xlsx()
+'''
