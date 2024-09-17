@@ -26,13 +26,12 @@
 
         <main class="main-content">
             <section class="search-section">
-                <form id="commandForm">
+                <form action="http://localhost:3000/script" id="commandForm" method="POST">
                     <label for="search-input">Enter Reason or Subject</label>
-                    <input type="text" id="search-input" placeholder="Reason/Subject..." oninput="filterKPIs()" autocomplete="off">
+                    <input type="text" name="command" id="search-input" placeholder="Reason/Subject..." oninput="filterKPIs()" autocomplete="off">
                     <button type="submit">Search</button>
                 </form>
                 <div id="autocomplete-list" class="autocomplete-items"></div>
-                <div id="output"></div> <!-- Added output div -->
             </section>
 
             <section class="kpi-section" id="kpi-section">
