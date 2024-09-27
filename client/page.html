@@ -1,76 +1,171 @@
+<!----->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Team Metrics Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header class="header">
-        <h1>Team Metrics Dashboard</h1>
+      <h1>Team Metrics Dashboard</h1>
     </header>
-    
+
     <div class="container">
-        <aside class="sidebar">
-            <nav>
-                <ul>
-                    <li><a href="#">Overview</a></li>
-                    <li><a href="#">Commits</a></li>
-                    <li><a href="#">Code Quality</a></li>
-                    <li><a href="#">Reviews</a></li>
-                </ul>
-            </nav>
-        </aside>
+      <aside class="sidebar">
+        <nav>
+          <ul>
+            <li><a href="#">Overview</a></li>
+            <li><a href="#">Commits</a></li>
+            <li><a href="#">Code Quality</a></li>
+            <li><a href="#">Reviews</a></li>
+          </ul>
+        </nav>
+      </aside>
 
-        <main class="main-content">
-            <section class="search-section">
-                <form action="http://localhost:3000/script" id="commandForm" method="POST">
-                    <label for="search-input">Enter Reason or Subject</label>
-                    <input type="text" name="command" id="search-input" placeholder="Reason/Subject..." oninput="filterKPIs()" autocomplete="off">
-                    <button type="submit">Search</button>
-                </form>
-                <div id="autocomplete-list" class="autocomplete-items"></div>
-            </section>
+      <main class="main-content">
+        <section class="search-section">
+          <form
+            action="http://localhost:3000/submit"
+            id="commandForm"
+            method="POST"
+          >
+            <div class="split-search">
+              <!-- Left side with Reason/Owner -->
+              <div class="left-half">
+                <div class="searchbar-container">
+                  <label for="search-input">Enter Reason or Subject:</label>
+                  <input
+                    type="text"
+                    name="command"
+                    id="search-input"
+                    placeholder="Reason/Subject..."
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="searchbar-container">
+                  <label for="owner-input">Owners:</label>
+                  <input
+                    type="text"
+                    name="owner"
+                    id="owner-input"
+                    placeholder="Owner..."
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
 
-            <section class="kpi-section" id="kpi-section">
-                <div class="kpi-card" data-email="team1@example.com">
-                    <h3>Team: Alpha</h3>
-                    <p>Total Commits: <span>123</span></p>
-                </div>
-                <div class="kpi-card" data-email="team2@example.com">
-                    <h3>Team: Beta</h3>
-                    <p>Open Reviews: <span>8</span></p>
-                </div>
-                <div class="kpi-card" data-email="team3@example.com">
-                    <h3>Team: Gamma</h3>
-                    <p>Bugs Fixed: <span>15</span></p>
-                </div>
-            </section>
+              <!-- Center 'OR' -->
+              <div class="or-divider">
+                <div class="vertical-line"></div>
+                <div class="or">OR</div>
+                <div class="vertical-line"></div>
+              </div>
 
-            <section class="charts-section">
-                <div class="chart-card">
-                    <h3>Commit Trends</h3>
-                    [Chart Placeholder]
+              <!-- Right side with new 'Team' input -->
+              <div class="right-half">
+                <div class="searchbar-container2">
+                  <label for="team-input">Team:</label>
+                  <input
+                    type="text"
+                    name="team"
+                    id="team-input"
+                    placeholder="Team..."
+                    autocomplete="off"
+                  />
                 </div>
-                <div class="chart-card">
-                    <h3>Code Quality Metrics</h3>
-                    [Chart Placeholder]
-                </div>
-            </section>
+              </div>
+            </div>
 
-            <section class="table-section">
-                <div class="table-card">
-                    <h3>Review Summary</h3>
-                    [Table Placeholder]
+            <button type="button" id="toggle-advanced">
+              Advanced Settings
+            </button>
+
+            <!-- Hidden Advanced Settings -->
+            <div class="advanced-settings hidden" id="advanced-settings">
+              <div class="date-fields">
+                <div class="date-container">
+                  <label for="start-date">Start</label>
+                  <input type="date" id="start-date" name="start-date" max="" />
                 </div>
-            </section>
-        </main>
+                <div class="date-container">
+                  <label for="end-date">End</label>
+                  <input type="date" id="end-date" name="end-date" max="" />
+                </div>
+              </div>
+
+              <div class="checkbox-container">
+                <label for="intersect-checkbox" id="intersect-label"
+                  >Intersect</label
+                >
+                <input
+                  type="checkbox"
+                  id="intersect-checkbox"
+                  name="intersect"
+                />
+              </div>
+            </div>
+
+            <button type="submit" id="submitButton">Search</button>
+          </form>
+          <div id="autocomplete-list" class="autocomplete-items"></div>
+        </section>
+
+        <section class="kpi-section" id="kpi-section">
+          <div class="kpi-card" data-email="team1@example.com">
+            <h3>Team: Alpha</h3>
+            <p>Total Commits: <span>123</span></p>
+          </div>
+          <div class="kpi-card" data-email="team2@example.com">
+            <h3>Team: Beta</h3>
+            <p>Open Reviews: <span>8</span></p>
+          </div>
+          <div class="kpi-card" data-email="team3@example.com">
+            <h3>Team: Gamma</h3>
+            <p>Bugs Fixed: <span>15</span></p>
+          </div>
+        </section>
+
+        <section class="charts-section">
+          <div class="chart-card">
+            <h3>Commit Trends</h3>
+            [Chart Placeholder]
+          </div>
+          <div class="chart-card">
+            <h3>Code Quality Metrics</h3>
+            [Chart Placeholder]
+          </div>
+        </section>
+
+        <section class="table-section">
+          <div class="table-card">
+            <h3>Review Summary</h3>
+            [Table Placeholder]
+          </div>
+        </section>
+      </main>
     </div>
     <footer class="footer">
-        <p>&copy; 2024 Team Metrics Dashboard</p>
+      <p>&copy; 2024 Team Metrics Dashboard</p>
     </footer>
-    <script src="script.js"></script> <!-- External JS file -->
-</body>
+
+    <script>
+      // Prevent future dates
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("start-date").setAttribute("max", today);
+      document.getElementById("end-date").setAttribute("max", today);
+
+      // Toggle Advanced Settings visibility
+      document
+        .getElementById("toggle-advanced")
+        .addEventListener("click", () => {
+          const advancedSettings = document.getElementById("advanced-settings");
+          advancedSettings.classList.toggle("hidden");
+          advancedSettings.classList.toggle("shown");
+        });
+    </script>
+    <script src="script.js"></script>
+  </body>
 </html>
