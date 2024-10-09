@@ -5,6 +5,11 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./tests/setup.js",
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -13,10 +18,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000", // Your backend server's address
+        //all requests w/ api route are proxied to server address
+        target: "http://localhost:5001", // Your backend server's address
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api/, ""), //strips the /api portion of the route before request gets sent to backend
       },
     },
   },

@@ -44,7 +44,7 @@ const SearchForm = () => {
       return;
     }
     const matchingTeams = teams.filter((team) =>
-      team.email.toLowerCase().includes(searchInput)
+      team.email.toLowerCase().includes(searchInput),
     );
     setAutocompleteList(matchingTeams);
   };
@@ -178,15 +178,21 @@ const SearchForm = () => {
           id="toggle-advanced"
           onClick={handleToggleAdvanced}
         >
-          Advanced Settings
+          <b>Advanced Settings</b>
         </button>
 
         {/* Hidden Advanced Settings */}
         {advancedVisible && (
-          <div className="advanced-settings" id="advanced-settings">
+          <div
+            className="advanced-settings"
+            id="advanced-settings"
+            data-testid="advanced-settings"
+          >
             <div className="date-fields">
               <div className="date-container">
-                <label htmlFor="start-date">Start</label>
+                <label htmlFor="start-date">
+                  <b>Start Date:</b>
+                </label>
                 <input
                   type="date"
                   id="start-date"
@@ -197,7 +203,9 @@ const SearchForm = () => {
                 />
               </div>
               <div className="date-container">
-                <label htmlFor="end-date">End</label>
+                <label htmlFor="end-date">
+                  <b>End Date:</b>
+                </label>
                 <input
                   type="date"
                   id="end-date"
@@ -210,6 +218,9 @@ const SearchForm = () => {
             </div>
 
             <div className="checkbox-container">
+              <label htmlFor="intersect-checkbox" id="intersect-label">
+                <b>Intersect</b>
+              </label>
               <input
                 type="checkbox"
                 id="intersect-checkbox"
@@ -217,15 +228,12 @@ const SearchForm = () => {
                 checked={formData.intersect}
                 onChange={handleChange}
               />
-              <label htmlFor="intersect-checkbox" id="intersect-label">
-                Intersect
-              </label>
             </div>
           </div>
         )}
 
         <button type="submit" id="submitButton">
-          Search
+          <b>Search</b>
         </button>
       </form>
     </section>

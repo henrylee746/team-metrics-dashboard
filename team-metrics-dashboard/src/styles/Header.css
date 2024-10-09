@@ -1,6 +1,13 @@
 .header {
-  background-color: #3e8ed0;
+  background-color: #12060a;
   color: white;
   padding: 20px;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.images {
+  display: flex;
+  gap: 5px;
 }

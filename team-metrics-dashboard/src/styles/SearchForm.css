@@ -32,13 +32,24 @@
 .searchbar-container2 input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   margin-top: 5px;
+  transition: all 0.25s ease-in-out;
+  background-color: #242424;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+}
+
+input:hover {
+  transform: scale(1.03);
+  background-color: white;
+  color: black;
 }
 
 .searchbar-container label,
 .searchbar-container2 label {
+  color: white;
   font-weight: bold;
   display: block;
   margin-bottom: 5px;
@@ -50,7 +61,7 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  color: #333;
+  color: white;
   padding: 0 10px;
   gap: 5px;
   max-width: 50px;
@@ -62,13 +73,8 @@
 
 .vertical-line {
   width: 2px;
-  background-color: black;
+  background-color: gray;
   height: 60px;
-}
-
-input:hover {
-  transform: scale(1.03);
-  border-color: black;
 }
 
 #search-input {
@@ -88,16 +94,25 @@ input:hover {
 .date-container input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 4px;
   margin-top: 5px;
+  background-color: #242424;
+  color: white;
+  font-weight: bold;
+  transition: all 0.5s ease-in-out;
+}
+
+.date-container label {
+  color: white;
 }
 
 .checkbox-container {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
-  gap: 15px;
+  gap: 35px;
+  color: white;
 }
 
 .checkbox-container label {
@@ -110,30 +125,34 @@ input:hover {
 }
 
 button#submitButton {
-  background-color: #3e8ed0;
+  background-color: #1c2d40;
   color: white;
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.25s ease-in-out;
 }
 
 .search-form button#submitButton:hover {
-  background-color: #1c2d40;
+  background-color: lightgray;
+  color: black;
 }
 
 button#toggle-advanced {
   background-color: #2c3e50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 10px;
   margin-bottom: 20px;
   cursor: pointer;
+  transition: all 0.5s ease-in-out;
 }
 
 button#toggle-advanced:hover {
-  background-color: #1c2d40;
+  background-color: lightgray;
+  color: black;
 }
 
 .autocomplete-items {

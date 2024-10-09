@@ -1,6 +1,6 @@
 .sidebar {
-  background-color: #2b5dad;
   color: white;
+  background-color: #1c1719;
   padding: 20px;
   width: 200px;
 }
@@ -15,10 +15,10 @@
 }
 
 .sidebar ul li a {
-  color: white;
+  color: gray;
   text-decoration: none;
 }
 
 .sidebar ul li a:hover {
-  color: black;
+  color: white;
 }

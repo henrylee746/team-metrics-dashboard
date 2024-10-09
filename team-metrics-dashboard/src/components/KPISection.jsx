@@ -3,17 +3,22 @@ import { useState, useEffect } from "react";
 import "../styles/KPISection.css";
 
 const KPISection = () => {
-  const [kpis, setKpis] = useState([]);
+  const [kpis, setKpis] = useState([
+    { email: "team1@example.com", name: "Alpha", totalCommits: 123 },
+    { email: "team2@example.com", name: "Beta", openReviews: 8 },
+    { email: "team3@example.com", name: "Gamma", bugsFixed: 15 },
+  ]);
 
   useEffect(() => {
-    // Fetch KPIs from the server or use static data
-    // For demonstration, we'll use static data
+    // Fetch KPIs from the database (use handleFilter function)
+    /*
     const initialKPIs = [
       { email: "team1@example.com", name: "Alpha", totalCommits: 123 },
       { email: "team2@example.com", name: "Beta", openReviews: 8 },
       { email: "team3@example.com", name: "Gamma", bugsFixed: 15 },
     ];
     setKpis(initialKPIs);
+    */
   }, []);
 
   const handleFilter = (filteredKPIs) => {
