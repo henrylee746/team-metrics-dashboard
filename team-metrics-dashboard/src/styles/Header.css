@@ -4,10 +4,36 @@
   padding: 20px;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
 }
 
-.images {
+h1 {
+  transform: translateY(-3px);
+}
+
+.left-header-icon,
+.right-header-icon {
   display: flex;
+  align-items: center;
   gap: 5px;
+}
+
+.right-header-icon {
+  justify-content: end;
+}
+
+.menu-icon,
+.toggle-icon {
+  max-width: 50px;
+  cursor: pointer;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.menu-icon:hover {
+  transform: scale(1.2);
+  color: antiquewhite;
 }

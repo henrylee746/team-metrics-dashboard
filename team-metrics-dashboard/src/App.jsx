@@ -1,5 +1,5 @@
-import React from "react";
 import "./styles/global.css"; // Import global styles
+import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import SearchForm from "./components/SearchForm.jsx";
@@ -9,12 +9,27 @@ import TableSection from "./components/TableSection.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
+  const [theme, setTheme] = useState("dark"); // Default to dark mode
+  const [isSidebarOpen, setIsSideBarOpen] = useState(false);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
+  };
+
+  const sidebarToggle = () => {
+    setIsSideBarOpen((prevState) => !prevState);
+  };
+
   return (
     <div className="App">
-      <Header />
+      <Header
+        sidebarToggle={sidebarToggle}
+        toggleTheme={toggleTheme}
+        currentTheme={theme}
+      />
       <div className="container">
-        <Sidebar />
-        <main className="main-content">
+        <Sidebar isSidebarOpen={isSidebarOpen} />
+        <main className={`main-content ${isSidebarOpen ? "sidebar-open" : ""}`}>
           <SearchForm />
           <KPISection />
           <ChartsSection />

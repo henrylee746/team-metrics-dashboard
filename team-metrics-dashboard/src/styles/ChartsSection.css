@@ -12,11 +12,9 @@
   flex: 1;
   height: 300px; /* Adjust as needed */
   color: white;
-  transition: all 0.5s ease;
+  transition: all 0.1s ease;
 }
 
 .chart-card:hover {
-  background-color: white;
-  color: black;
-  transform: scale(1.02);
+  transform: translateY(-5px);
 }

@@ -1,13 +1,18 @@
 import "../styles/Header.css";
-import lightbulb from "../assets/lightbulb.png";
-import moon from "../assets/moon.png";
+import { FaSun, FaMoon, FaBars } from "react-icons/fa";
 
-const Header = () => (
+const Header = ({ sidebarToggle, toggleTheme, currentTheme }) => (
   <header className="header">
-    <h1>Team Metrics Dashboard</h1>
-    <div className="images">
-      <img src={lightbulb} alt="Lightbulb" width={10} height={10} />
-      <img src={moon} alt="Moon" width={10} height={10} />
+    <div className="left-header-icon">
+      <FaBars className="menu-icon" onClick={sidebarToggle}></FaBars>
+      <h1>Team Metrics Dashboard</h1>
+    </div>
+    <div className="right-header-icon" onClick={toggleTheme}>
+      {currentTheme == "dark" ? (
+        <FaSun className="toggle-icon"></FaSun>
+      ) : (
+        <FaMoon className="toggle-icon"></FaMoon>
+      )}
     </div>
   </header>
 );

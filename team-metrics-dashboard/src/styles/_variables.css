@@ -1,0 +1,31 @@
+/* styles/_variables.css */
+
+:root {
+  /* Primary Colors */
+  --color-primary: #3498db; /* Example primary color */
+  --color-primary-dark: #2980b9; /* Darkened primary color */
+
+  /* Secondary Colors */
+  --color-secondary: #6b7280; /* Example secondary color */
+  --color-secondary-dark: #4b5563; /* Darkened secondary color */
+
+  /* Other Colors */
+  --color-bg-light: #f1f5f9;
+  --color-bg-dark: #1f2937;
+  --color-text-light: #1f2937;
+  --color-text-dark: #f1f5f9;
+
+  /* Transition Duration */
+  --transition-duration: 0.3s;
+}
+
+/* Theme Classes */
+.light {
+  --color-bg: var(--color-bg-light);
+  --color-text: var(--color-text-light);
+}
+
+.dark {
+  --color-bg: var(--color-bg-dark);
+  --color-text: var(--color-text-dark);
+}

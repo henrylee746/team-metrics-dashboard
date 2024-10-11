@@ -47,6 +47,10 @@ input:hover {
   color: black;
 }
 
+input:focus {
+  outline: none;
+}
+
 .searchbar-container label,
 .searchbar-container2 label {
   color: white;
@@ -129,14 +133,15 @@ button#submitButton {
   color: white;
   padding: 10px 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.25s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .search-form button#submitButton:hover {
   background-color: lightgray;
   color: black;
+  transform: translateY(-4px);
 }
 
 button#toggle-advanced {
@@ -147,12 +152,13 @@ button#toggle-advanced {
   padding: 10px;
   margin-bottom: 20px;
   cursor: pointer;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 
 button#toggle-advanced:hover {
   background-color: lightgray;
   color: black;
+  transform: translateY(-4px);
 }
 
 .autocomplete-items {

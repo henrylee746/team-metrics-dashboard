@@ -7,7 +7,7 @@
 
 body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  background-color: #0a0a0a;
+  background-color: black;
 }
 
 .container {
@@ -18,4 +18,23 @@ body {
 .main-content {
   flex: 1;
   padding: 20px;
+  transition: margin-left 700ms;
+}
+
+.main-content.sidebar-open {
+  margin-left: 200px;
+}
+
+/* Scrollbar Styling*/
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 4px;
 }
