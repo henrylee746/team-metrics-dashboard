@@ -20,6 +20,13 @@ h1 {
 
 .right-header-icon {
   justify-content: end;
+  transition: all 0.5s ease;
+  font-size: 1.5rem;
+}
+
+.right-header-icon:hover {
+  transform: scaleY(1.05);
+  color: gray;
 }
 
 .menu-icon,
@@ -35,5 +42,4 @@ h1 {
 
 .menu-icon:hover {
   transform: scale(1.2);
-  color: antiquewhite;
 }

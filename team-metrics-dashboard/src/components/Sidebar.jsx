@@ -1,8 +1,13 @@
 import "../styles/Sidebar.css";
+import { FaTimes } from "react-icons/fa";
 
 const Sidebar = (props) => {
   return (
     <aside className={`sidebar ${props.isSidebarOpen ? "open" : ""}`}>
+      <div className="sidebar-header">
+        <h2>Menu</h2>
+        <FaTimes className="close-icon" onClick={props.sidebarToggle}></FaTimes>
+      </div>
       <nav>
         <ul>
           <li>

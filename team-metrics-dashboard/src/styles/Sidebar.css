@@ -6,6 +6,33 @@
   transition: transform 0.5s ease, opacity 0.5s ease; /* Added transform and opacity transitions */
   transform: translateX(-100%); /* Initially hidden off-screen */
   opacity: 0;
+  position: absolute;
+  height: 1073px; /*fixed value not good?*/
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.close-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  margin-left: 70px;
+  margin-top: 3px;
+}
+
+.close-icon:hover {
+  color: gray;
+  transform: rotate(90deg);
 }
 
 .sidebar.open {

@@ -15,14 +15,24 @@ body {
   min-height: 100vh;
 }
 
+/* For header to stick when scroll
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+*/
+
 .main-content {
   flex: 1;
   padding: 20px;
-  transition: margin-left 700ms;
+  transition: all 600ms ease;
+  margin-top: 10px;
 }
-
 .main-content.sidebar-open {
   margin-left: 200px;
+  opacity: 0.1;
+  pointer-events: none;
 }
 
 /* Scrollbar Styling*/

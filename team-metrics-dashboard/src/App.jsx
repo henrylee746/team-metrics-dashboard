@@ -26,9 +26,10 @@ function App() {
         sidebarToggle={sidebarToggle}
         toggleTheme={toggleTheme}
         currentTheme={theme}
+        className="header"
       />
       <div className="container">
-        <Sidebar isSidebarOpen={isSidebarOpen} />
+        <Sidebar isSidebarOpen={isSidebarOpen} sidebarToggle={sidebarToggle} />
         <main className={`main-content ${isSidebarOpen ? "sidebar-open" : ""}`}>
           <SearchForm />
           <KPISection />
