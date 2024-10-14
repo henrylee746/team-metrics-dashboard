@@ -1,3 +1,5 @@
+@import "_variables.css";
+
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +9,7 @@
 
 body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  background-color: black;
+  background-color: var(--color-body);
 }
 
 .container {
@@ -47,4 +49,35 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: gray;
   border-radius: 4px;
+}
+
+/*Responsive Design*/
+
+@media screen and (max-width: 733px) {
+  .left-half,
+  .right-half {
+    flex-direction: column;
+    justify-content: center;
+  }
+  div.date-fields {
+    width: 100%;
+  }
+  #search-input,
+  #team-input,
+  #owner-input {
+    margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 509px) {
+  .date-fields {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 364px) {
+  footer.footer,
+  header.header {
+    width: calc(100% + 200px);
+  }
 }

@@ -1,6 +1,8 @@
+@import "_variables.css";
 .footer {
-  background-color: #12060a;
-  color: white;
+  transition: all var(--transition-duration) ease;
+  background-color: var(--color-footer);
+  color: var(--color-text);
   text-align: center;
   padding: 10px;
   width: 100%;

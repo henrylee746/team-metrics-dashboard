@@ -1,31 +1,30 @@
 /* styles/_variables.css */
 
 :root {
-  /* Primary Colors */
-  --color-primary: #3498db; /* Example primary color */
-  --color-primary-dark: #2980b9; /* Darkened primary color */
-
-  /* Secondary Colors */
-  --color-secondary: #6b7280; /* Example secondary color */
-  --color-secondary-dark: #4b5563; /* Darkened secondary color */
-
   /* Other Colors */
   --color-bg-light: #f1f5f9;
-  --color-bg-dark: #1f2937;
-  --color-text-light: #1f2937;
+  --color-bg-dark: #242424;
+  --color-text-light: #242424;
   --color-text-dark: #f1f5f9;
 
-  /* Transition Duration */
-  --transition-duration: 0.3s;
+  --transition-duration: 300ms;
 }
 
 /* Theme Classes */
 .light {
   --color-bg: var(--color-bg-light);
   --color-text: var(--color-text-light);
+  --color-bg-opposite: var(--color-bg-dark);
+  --color-text-opposite: var(--color-text-dark);
+  --color-footer: white;
+  --color-body: #3ea8e5;
 }
 
 .dark {
   --color-bg: var(--color-bg-dark);
   --color-text: var(--color-text-dark);
+  --color-bg-opposite: var(--color-bg-light);
+  --color-text-opposite: var(--color-text-light);
+  --color-footer: #12060a;
+  --color-body: black;
 }

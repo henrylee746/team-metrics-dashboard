@@ -1,3 +1,5 @@
+@import "_variables.css";
+
 .search-section {
   margin-bottom: 20px;
 }
@@ -38,9 +40,8 @@
   appearance: 0;
   border: none;
   border-bottom: 0.2em solid white;
-  background: black;
+  background: var(--color-body);
   width: 100%;
-  transition: all 0.15s ease-in-out;
   border-radius: 0.2em 0.2em 0 0;
   color: transparent;
   text-shadow: 0 0 0 white;
@@ -52,7 +53,7 @@
 .searchbar-container input:focus,
 .searchbar-container2 input:focus {
   outline-style: solid;
-  outline-color: gray;
+  outline-color: white;
 }
 
 .searchbar-container > label,
@@ -61,7 +62,7 @@
   position: absolute;
   left: 0px;
   pointer-events: none;
-  transition: all 0.2s ease;
+  transition: all var(--transition-duration) ease;
 }
 
 input:focus + label {
@@ -111,10 +112,10 @@ input:focus + label {
   border: none;
   border-radius: 10px;
   margin-top: 5px;
-  background-color: #242424;
-  color: white;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-weight: bold;
-  transition: all 0.5s ease-in-out;
+  transition: all var(--transition-duration) ease-in-out;
 }
 
 .date-container label {
@@ -183,24 +184,25 @@ input:focus + label {
 */
 
 button#submitButton {
-  background-color: #242424;
-  color: white;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   padding: 10px 15px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all var(--transition-duration) ease-in-out;
   max-width: 150px;
   align-self: center;
   margin-top: 15px;
 }
 
 .search-form button#submitButton:hover {
-  background-color: white;
-  color: black;
+  background-color: var(--color-bg-opposite);
+  color: var(--color-text-opposite);
   transform: translateY(-4px);
 }
 
+/*
 button#toggle-advanced {
   background-color: #242424;
   color: white;
@@ -219,6 +221,7 @@ button#toggle-advanced:hover {
   color: black;
   transform: translateY(-4px);
 }
+*/
 
 .autocomplete-items {
   border: 1px solid #ccc;
