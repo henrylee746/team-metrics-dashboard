@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const { exec } = require("child_process");
-const port = 5000;
+const port = 5001;
 const xlsx = require("xlsx");
 const path = require("path");
 const cors = require("cors");
@@ -11,7 +11,7 @@ app.use(
     origin: "http://localhost:5173", // Frontend URL
     methods: ["GET", "POST"],
     credentials: true,
-  })
+  }),
 );
 app.use(express.static("public"));
 app.use(express.json());
@@ -110,11 +110,11 @@ const convertJsonToXlsx = (jsonData) => {
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
     (sum, commit) => sum + (commit.testCodeChurn || 0),
-    0
+    0,
   );
   let totalDesign = input.reduce(
     (sum, commit) => sum + (commit.sourceCodeChurn || 0),
-    0
+    0,
   );
   fillCumulativeCode(input, totalTest, totalDesign);
 };
@@ -176,11 +176,11 @@ const getLeadTime = (input) => {
     "Last commit": input[input.length - 1]["updated"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
-      0
+      0,
     ),
     "Total test code churn": input.reduce(
       (a, b) => a + (b.testCodeChurn || 0),
-      0
+      0,
     ),
     "Total code churn":
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +
@@ -188,6 +188,10 @@ const getLeadTime = (input) => {
   });
   console.log(input);
   convertJsonToXlsx(input);
+  //Path from PowerBI dashboard
+  app.get("/api/report-data", (req, res) => {
+    res.json(input);
+  });
 };
 
 // Helper function for getting difference in days

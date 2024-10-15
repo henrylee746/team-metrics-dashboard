@@ -19,11 +19,6 @@ const SearchForm = () => {
   ];
 
   const handleToggleAdvanced = () => {
-    /*change sidebar height depending on whether advanced settings is open or not
-     * (which causes VH to be larger)*/
-    if (!advancedVisible == false)
-      document.querySelector(".sidebar").style.height = "1073px";
-    else document.querySelector(".sidebar").style.height = "1183px";
     setAdvancedVisible(!advancedVisible);
   };
 
@@ -45,7 +40,7 @@ const SearchForm = () => {
       return;
     }
     const matchingTeams = teams.filter((team) =>
-      team.email.toLowerCase().includes(searchInput)
+      team.email.toLowerCase().includes(searchInput),
     );
     setAutocompleteList(matchingTeams);
   };
