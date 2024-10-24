@@ -25,6 +25,12 @@ body {
 }
 */
 
+.links {
+  max-width: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
 .main-content {
   flex: 1;
   padding: 20px;

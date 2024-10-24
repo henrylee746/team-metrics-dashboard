@@ -13,6 +13,11 @@
   height: 300px; /* Adjust as needed */
   color: var(--color-text);
   transition: all var(--transition-duration) ease-out;
+  opacity: 0;
+}
+
+.table-card.shown {
+  opacity: 1;
 }
 
 .table-card:hover {

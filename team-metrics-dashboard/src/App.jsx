@@ -3,13 +3,23 @@ import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import SearchForm from "./components/SearchForm.jsx";
-import KPISection from "./components/KPISection.jsx";
-import ChartsSection from "./components/ChartsSection.jsx";
-import TableSection from "./components/TableSection.jsx";
 import Footer from "./components/Footer.jsx";
-
+import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 function App() {
+  const navigate = useNavigate();
+  const [dataFetched, setDataFetched] = useState(false);
+  const [responseData, setResponseData] = useState(null);
   const [theme, setTheme] = useState("dark"); // Default to dark mode
+  const [formData, setFormData] = useState({
+    command: "",
+    owner: "",
+    team: "",
+    startDate: "",
+    endDate: "",
+    intersect: false,
+  });
   const [isSidebarOpen, setIsSideBarOpen] = useState(false);
 
   //Saving preferred viewing mode currently does not work..
@@ -22,6 +32,22 @@ function App() {
     }
   }, []);
 
+  //Handling Form Changes
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleLinkChange = (e) => {
+    const selectedValue = e.target.value;
+    if (selectedValue) {
+      navigate(selectedValue);
+    }
+  };
+
   /*The theme can be manipulated using state.. 
   but effects are necessary to directly change the DOM 
   depending on dark/light mode
@@ -33,7 +59,7 @@ function App() {
   useEffect(() => {
     // Apply theme class to root element
     document.documentElement.classList.remove(
-      theme === "dark" ? "light" : "dark"
+      theme === "dark" ? "light" : "dark",
     );
     document.documentElement.classList.add(theme);
 
@@ -89,10 +115,35 @@ function App() {
       <div className="container">
         <Sidebar isSidebarOpen={isSidebarOpen} sidebarToggle={sidebarToggle} />
         <main className={`main-content ${isSidebarOpen ? "sidebar-open" : ""}`}>
-          <SearchForm />
-          <KPISection />
-          <ChartsSection />
-          <TableSection />
+          <SearchForm
+            formData={formData}
+            setFormData={handleChange}
+            resetData={setFormData}
+            setDataFetched={setDataFetched}
+            responseData={responseData}
+            setResponseData={setResponseData}
+          />
+          {responseData && (
+            <>
+              <select className="links" onChange={handleLinkChange}>
+                {responseData.map((arr, index) => {
+                  if (index == responseData.length - 1) {
+                    return (
+                      <option key={index} value={`${index}`}>
+                        Total
+                      </option>
+                    );
+                  }
+                  return (
+                    <option key={index} value={`${index}`}>
+                      Subject: {arr[0]["reason"]}
+                    </option>
+                  );
+                })}
+              </select>
+              <Outlet context={[responseData, dataFetched]} />
+            </>
+          )}
         </main>
       </div>
       <Footer />

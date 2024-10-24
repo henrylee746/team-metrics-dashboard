@@ -18,6 +18,19 @@
   transition: all var(--transition-duration) ease;
 }
 
+.chart-card.one {
+  transform: translateX(-100vw);
+}
+
+.chart-card.two {
+  transform: translateX(100vw);
+}
+
+.chart-card.one.shown,
+.chart-card.two.shown {
+  transform: translateX(0);
+}
+
 .chart-card:hover {
   transform: translateY(-5px);
 }

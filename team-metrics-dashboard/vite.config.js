@@ -19,7 +19,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         //all requests w/ api route are proxied to server address
-        target: "http://localhost:5001", // Your backend server's address
+        target: "http://localhost:5000", // Your backend server's address
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""), //strips the /api portion of the route before request gets sent to backend
@@ -27,4 +27,3 @@ export default defineConfig({
     },
   },
 });
-

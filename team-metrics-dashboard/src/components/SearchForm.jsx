@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import "../styles/SearchForm.css";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const SearchForm = () => {
+const SearchForm = ({
+  formData,
+  setFormData,
+  resetData,
+  dataFetched,
+  setDataFetched,
+  responseData,
+  setResponseData,
+}) => {
   const [advancedVisible, setAdvancedVisible] = useState(false);
-  const [formData, setFormData] = useState({
-    command: "",
-    owner: "",
-    team: "",
-    startDate: "",
-    endDate: "",
-    intersect: false,
-  });
+
   const [autocompleteList, setAutocompleteList] = useState([]);
   const teams = [
     { email: "team1@example.com", name: "Alpha", totalCommits: 123 },
@@ -18,19 +21,10 @@ const SearchForm = () => {
     { email: "team3@example.com", name: "Gamma", bugsFixed: 15 },
   ];
 
+  const navigate = useNavigate();
+
   const handleToggleAdvanced = () => {
     setAdvancedVisible(!advancedVisible);
-  };
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-    if (name === "command") {
-      filterKPIs(value);
-    }
   };
 
   const filterKPIs = (input) => {
@@ -54,7 +48,10 @@ const SearchForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    navigate("/");
     e.preventDefault();
+    setDataFetched(false);
+    setResponseData([]);
     const { command, owner, team, startDate, endDate, intersect } = formData;
 
     if (!command && !owner && !team && !startDate && !endDate && !intersect) {
@@ -80,23 +77,28 @@ const SearchForm = () => {
       if (response.ok) {
         // Handle successful response
         console.log("Form submitted successfully");
-        // Optionally, reset the form or provide user feedback
-        setFormData({
+        const data = await response.json();
+        console.log(data.data);
+        setResponseData(data.data);
+        setDataFetched(true);
+        resetData({
           command: "",
           owner: "",
           team: "",
           startDate: "",
           endDate: "",
-          intersect: false,
         });
-        setAutocompleteList([]);
+
+        //setAutocompleteList([]);
       } else {
         // Handle error response
         const errorData = await response.json();
         console.error("Form submission failed:", errorData.message);
+        setDataFetched(false);
       }
     } catch (error) {
       console.error("Form submission failed:", error);
+      setDataFetched(false);
     }
   };
 
@@ -126,7 +128,7 @@ const SearchForm = () => {
                 id="search-input"
                 autoComplete="off"
                 value={formData.command}
-                onChange={handleChange}
+                onChange={setFormData}
               />
               <label htmlFor="command">Reason/Subject(s)</label>
               {autocompleteList.length > 0 && (
@@ -150,7 +152,7 @@ const SearchForm = () => {
                 id="team-input"
                 autoComplete="off"
                 value={formData.team}
-                onChange={handleChange}
+                onChange={setFormData}
               />
               <label htmlFor="team">Team(s)</label>
             </div>
@@ -173,7 +175,7 @@ const SearchForm = () => {
                 id="owner-input"
                 autoComplete="off"
                 value={formData.owner}
-                onChange={handleChange}
+                onChange={setFormData}
               />
               <label htmlFor="owner">Owner(s)</label>
             </div>
@@ -186,7 +188,7 @@ const SearchForm = () => {
                   name="startDate"
                   max={new Date().toISOString().split("T")[0]}
                   value={formData.startDate}
-                  onChange={handleChange}
+                  onChange={setFormData}
                 />
               </div>
               <div className="date-container">
@@ -198,7 +200,7 @@ const SearchForm = () => {
                   name="endDate"
                   max={new Date().toISOString().split("T")[0]}
                   value={formData.endDate}
-                  onChange={handleChange}
+                  onChange={setFormData}
                 />
               </div>
             </div>

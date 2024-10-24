@@ -1,52 +1,75 @@
-/*eslint-disable*/
 import { useState, useEffect } from "react";
 import "../styles/KPISection.css";
 
-const KPISection = () => {
-  const [kpis, setKpis] = useState([
-    { email: "team1@example.com", name: "Alpha", totalCommits: 123 },
-    { email: "team2@example.com", name: "Beta", openReviews: 8 },
-    { email: "team3@example.com", name: "Gamma", bugsFixed: 15 },
-  ]);
+const KPISection = ({ responseData, dataFetched, index }) => {
+  useEffect(() => {
+    const cardSection = document.querySelectorAll(".kpi-card");
+    cardSection.forEach((card) => {
+      console.log(card.className);
+      if (!dataFetched) {
+        card.classList.remove("shown");
+        return;
+      }
+      card.classList.add("shown");
+    });
+  }, [dataFetched]);
 
   useEffect(() => {
-    // Fetch KPIs from the database (use handleFilter function)
-    /*
-    const initialKPIs = [
-      { email: "team1@example.com", name: "Alpha", totalCommits: 123 },
-      { email: "team2@example.com", name: "Beta", openReviews: 8 },
-      { email: "team3@example.com", name: "Gamma", bugsFixed: 15 },
-    ];
-    setKpis(initialKPIs);
-    */
-  }, []);
-
-  const handleFilter = (filteredKPIs) => {
-    setKpis(filteredKPIs);
-  };
+    const cardSection = document.querySelectorAll(".kpi-card");
+    cardSection.forEach((card) => {
+      console.log(card.className);
+      if (!card.className.includes(index)) {
+        card.classList.remove("shown");
+        return;
+      }
+      card.classList.add("shown");
+    });
+  }, [index]);
 
   return (
     <section className="kpi-section" id="kpi-section">
-      {kpis.map((team) => (
-        <div className="kpi-card" key={team.email} data-email={team.email}>
-          <h3>Team: {team.name}</h3>
-          {team.totalCommits && (
-            <p>
-              Total Commits: <span>{team.totalCommits}</span>
-            </p>
-          )}
-          {team.openReviews && (
-            <p>
-              Open Reviews: <span>{team.openReviews}</span>
-            </p>
-          )}
-          {team.bugsFixed && (
-            <p>
-              Bugs Fixed: <span>{team.bugsFixed}</span>
-            </p>
-          )}
-        </div>
-      ))}
+      <div className={`kpi-card ${index}`}>
+        <h4>
+          First Commit:{" "}
+          <i>
+            {responseData.length > 0
+              ? responseData[responseData.length - 1]["First Commit"]
+              : null}
+          </i>
+        </h4>
+
+        <h4>
+          Last Commit:{" "}
+          <i>
+            {responseData.length > 0
+              ? responseData[responseData.length - 1]["Last commit"]
+              : null}
+          </i>
+        </h4>
+      </div>
+      <div className={`kpi-card ${index}`}>
+        <h4>
+          Last Commit - First Commit:{" "}
+          <i>
+            {" "}
+            {responseData.length > 0
+              ? responseData[responseData.length - 1][
+                  "Last Commit-First Commit"
+                ]
+              : null}
+          </i>
+        </h4>
+      </div>
+      <div className={`kpi-card ${index}`}>
+        <h4>
+          Total Code Churn:{" "}
+          <i>
+            {responseData.length > 0
+              ? responseData[responseData.length - 1]["Total code churn"]
+              : null}
+          </i>
+        </h4>
+      </div>
     </section>
   );
 };
