@@ -43,6 +43,23 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
     console.log(responseData.slice(0, responseData.length - 1));
   }, [dataFetched]);
 
+  /*From Recharts Docs
+  active: determines if tooltip is visible or not
+  payload: input data (automatically calculated)
+  label: by default, is: "`${x}${y}`"
+  */
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <h2 className="label">{`x : ${label} | y: ${payload[0].value}`}</h2>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <section className="charts-section" id="charts-section">
       <div className={`chart-card one ${index}`}>
@@ -57,9 +74,15 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
             }}
           >
             <CartesianGrid strokeDasharray="2 2" />
-            <XAxis dataKey="days from 1st commit" interval={0} />
+            <XAxis
+              type="number"
+              domain={[1, "auto"]}
+              unit=" days"
+              dataKey="days from 1st commit"
+              interval={0}
+            />
             <YAxis />
-            <Tooltip />
+            <Tooltip position={{ x: 900, y: -15 }} content={CustomTooltip} />
 
             <Legend verticalAlign="top" />
             <Bar
@@ -84,9 +107,15 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis interval={0} dataKey="days from 1st commit" />
+            <XAxis
+              type="number"
+              domain={[1, "auto"]}
+              interval={0}
+              dataKey="days from 1st commit"
+              padding={{ left: 30, right: 30 }}
+            />
             <YAxis />
-            <Tooltip />
+            <Tooltip position={{ x: 900, y: -15 }} content={CustomTooltip} />
             <Legend verticalAlign="top" />
             <Line
               type="monotone"

@@ -23,3 +23,8 @@
 .table-card:hover {
   transform: translateY(-5px);
 }
+
+.custom-tooltip {
+  width: 250px;
+  height: 100px;
+}

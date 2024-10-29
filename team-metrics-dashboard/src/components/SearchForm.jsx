@@ -50,6 +50,10 @@ const SearchForm = ({
     setAutocompleteList([]);
   };
 
+  const handleButtonChange = () => {
+    setLoading(true);
+  };
+
   const handleSubmit = async (e) => {
     navigate("/"); //resets URL back to homepage
     e.preventDefault();
@@ -245,7 +249,7 @@ const SearchForm = ({
           </div>
         )*/}
 
-        <button type="submit" id="submitButton">
+        <button type="submit" id="submitButton" onClick={handleButtonChange}>
           <b>Search</b>
         </button>
       </form>
