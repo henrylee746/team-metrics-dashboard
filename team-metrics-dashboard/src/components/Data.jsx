@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 function Data() {
   const [responseData, dataFetched] = useOutletContext();
-  const { index } = useParams();
+  const { index = 0 } = useParams();
 
   const currentData = responseData[index];
 

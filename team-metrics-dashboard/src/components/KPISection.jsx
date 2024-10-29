@@ -2,18 +2,8 @@ import { useState, useEffect } from "react";
 import "../styles/KPISection.css";
 
 const KPISection = ({ responseData, dataFetched, index }) => {
-  useEffect(() => {
-    const cardSection = document.querySelectorAll(".kpi-card");
-    cardSection.forEach((card) => {
-      console.log(card.className);
-      if (!dataFetched) {
-        card.classList.remove("shown");
-        return;
-      }
-      card.classList.add("shown");
-    });
-  }, [dataFetched]);
-
+  /*Use cardSection as a reference to when link select 
+  element should be visible, as well as loader*/
   useEffect(() => {
     const cardSection = document.querySelectorAll(".kpi-card");
     cardSection.forEach((card) => {

@@ -11,6 +11,9 @@ const SearchForm = ({
   setDataFetched,
   responseData,
   setResponseData,
+  setLoading,
+  setError,
+  loading,
 }) => {
   const [advancedVisible, setAdvancedVisible] = useState(false);
 
@@ -48,11 +51,12 @@ const SearchForm = ({
   };
 
   const handleSubmit = async (e) => {
-    navigate("/");
+    navigate("/"); //resets URL back to homepage
     e.preventDefault();
-    setDataFetched(false);
-    setResponseData([]);
     const { command, owner, team, startDate, endDate, intersect } = formData;
+
+    if (document.querySelector(".links") !== null)
+      document.querySelector(".links").classList.remove("shown");
 
     if (!command && !owner && !team && !startDate && !endDate && !intersect) {
       return;
@@ -81,6 +85,7 @@ const SearchForm = ({
         console.log(data.data);
         setResponseData(data.data);
         setDataFetched(true);
+        setError(null);
         resetData({
           command: "",
           owner: "",
@@ -93,12 +98,14 @@ const SearchForm = ({
       } else {
         // Handle error response
         const errorData = await response.json();
-        console.error("Form submission failed:", errorData.message);
-        setDataFetched(false);
+        throw new Error(`HTTP Error: Status ${response.status}`);
       }
     } catch (error) {
       console.error("Form submission failed:", error);
       setDataFetched(false);
+      setResponseData(null);
+      setError(error.message);
+    } finally {
     }
   };
 

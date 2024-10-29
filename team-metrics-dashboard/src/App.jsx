@@ -12,6 +12,8 @@ function App() {
   const [dataFetched, setDataFetched] = useState(false);
   const [responseData, setResponseData] = useState(null);
   const [theme, setTheme] = useState("dark"); // Default to dark mode
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     command: "",
     owner: "",
@@ -31,6 +33,14 @@ function App() {
       setTheme(savedTheme);
     }
   }, []);
+
+  useEffect(() => {
+    if (responseData) {
+      navigate("/0");
+      document.querySelector(".links").classList.add("shown");
+      setLoading(false);
+    }
+  }, [responseData]);
 
   //Handling Form Changes
   const handleChange = (e) => {
@@ -122,12 +132,23 @@ function App() {
             setDataFetched={setDataFetched}
             responseData={responseData}
             setResponseData={setResponseData}
+            setLoading={setLoading}
+            setError={setError}
+            loading={loading}
           />
-          {responseData && (
+          {dataFetched && (
             <>
               <select className="links" onChange={handleLinkChange}>
+                Toggle by Subject:
                 {responseData.map((arr, index) => {
                   if (index == responseData.length - 1) {
+                    if (responseData.length == 1) {
+                      return (
+                        <option key={index} value={`${index}`}>
+                          Subject {arr[responseData.length - 1]["reason"]}
+                        </option>
+                      );
+                    }
                     return (
                       <option key={index} value={`${index}`}>
                         Total
@@ -136,7 +157,7 @@ function App() {
                   }
                   return (
                     <option key={index} value={`${index}`}>
-                      Subject: {arr[0]["reason"]}
+                      Subject {arr[0]["reason"]}
                     </option>
                   );
                 })}
@@ -144,6 +165,8 @@ function App() {
               <Outlet context={[responseData, dataFetched]} />
             </>
           )}
+          {loading && <div className="loader"></div>}
+          {error && <p>{error}.</p>}
         </main>
       </div>
       <Footer />
