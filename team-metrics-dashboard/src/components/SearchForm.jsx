@@ -51,20 +51,24 @@ const SearchForm = ({
   };
 
   const handleButtonChange = () => {
-    setLoading(true);
+    const { command, owner, team, startDate, endDate, intersect } = formData;
+
+    if (!command && !owner && !team && !startDate && !endDate && !intersect) {
+      return;
+    } else setLoading(true);
   };
 
   const handleSubmit = async (e) => {
-    navigate("/"); //resets URL back to homepage
     e.preventDefault();
     const { command, owner, team, startDate, endDate, intersect } = formData;
-
-    if (document.querySelector(".links") !== null)
-      document.querySelector(".links").classList.remove("shown");
 
     if (!command && !owner && !team && !startDate && !endDate && !intersect) {
       return;
     }
+    navigate("/"); //resets URL back to homepage
+
+    if (document.querySelector(".links") !== null)
+      document.querySelector(".links").classList.remove("shown");
 
     try {
       const response = await fetch("/api/submit", {

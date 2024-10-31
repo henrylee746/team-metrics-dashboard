@@ -52,7 +52,7 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip">
-          <h2 className="label">{`x : ${label} | y: ${payload[0].value}`}</h2>
+          <h3 className="label">{`Days since 1st commit  : ${label} | y: ${payload[0].value}`}</h3>
         </div>
       );
     }
@@ -76,19 +76,19 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
             <CartesianGrid strokeDasharray="2 2" />
             <XAxis
               type="number"
-              domain={[1, "auto"]}
               unit=" days"
               dataKey="days from 1st commit"
+              padding={{ left: 30, right: 30 }}
               interval={0}
             />
             <YAxis />
-            <Tooltip position={{ x: 900, y: -15 }} content={CustomTooltip} />
+            <Tooltip position={{ y: -25 }} content={CustomTooltip} />
 
             <Legend verticalAlign="top" />
             <Bar
               dataKey="1/x"
-              barSize={30}
               fill="#8884d8"
+              barSize={5}
               activeBar={<Rectangle fill="pink" stroke="blue" />}
             />
             <Line type="monotone" dataKey="1/x" stroke="#ff7300" />
@@ -109,13 +109,12 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               type="number"
-              domain={[1, "auto"]}
               interval={0}
               dataKey="days from 1st commit"
               padding={{ left: 30, right: 30 }}
             />
             <YAxis />
-            <Tooltip position={{ x: 900, y: -15 }} content={CustomTooltip} />
+            <Tooltip position={{ y: 5 }} content={CustomTooltip} />
             <Legend verticalAlign="top" />
             <Line
               type="monotone"

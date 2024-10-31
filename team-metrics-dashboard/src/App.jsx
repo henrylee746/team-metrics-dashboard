@@ -34,6 +34,8 @@ function App() {
     }
   }, []);
 
+  //Once data is fetched, redirect to first array of data
+  //(and disable loading animation)
   useEffect(() => {
     if (responseData) {
       navigate("/0");

@@ -6,7 +6,7 @@
   --color-bg-dark: #242424;
   --color-text-light: #242424;
   --color-text-dark: #f1f5f9;
-
+  --color-bg-light-for-card: #edf2ef;
   --transition-duration: 300ms;
 }
 
@@ -18,6 +18,7 @@
   --color-text-opposite: var(--color-text-dark);
   --color-footer: white;
   --color-body: #3ea8e5;
+  --color-bg-cards: var(--color-bg-light-for-card);
 }
 
 .dark {
@@ -27,4 +28,5 @@
   --color-text-opposite: var(--color-text-light);
   --color-footer: #12060a;
   --color-body: black;
+  --color-bg-cards: var(--color-bg-dark);
 }

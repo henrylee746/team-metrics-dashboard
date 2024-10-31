@@ -30,7 +30,7 @@ const TableSection = ({ responseData, dataFetched, index }) => {
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip">
-          <h2 className="label">{`Days since 1st commit: ${label} | y: ${payload[0].value * 2}`}</h2>
+          <h3 className="label">{`Days since 1st commit: ${label} | y: ${payload[0].value * 2}`}</h3>
         </div>
       );
     }
@@ -53,19 +53,25 @@ const TableSection = ({ responseData, dataFetched, index }) => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="days from 1st commit" interval={0} />
+            <XAxis
+              padding={{ left: 30, right: 30 }}
+              dataKey="days from 1st commit"
+              interval={0}
+            />
             <YAxis />
-            <Tooltip position={{ x: 900, y: -15 }} content={CustomTooltip} />
+            <Tooltip position={{ y: 10 }} content={CustomTooltip} />
             <Legend verticalAlign="top" />
             <Bar
               dataKey="% of total test (cumulative)"
               stackId="a"
               fill="#8884d8"
+              activeBar={<Rectangle fill="gold" stroke="blue" />}
             />
             <Bar
               dataKey="% of total design (cumulative)"
               stackId="a"
               fill="#82ca9d"
+              activeBar={<Rectangle fill="pink" stroke="blue" />}
             />
           </BarChart>
         </ResponsiveContainer>
