@@ -108,7 +108,7 @@ function ProfileForm() {
               </FormItem>
             )}
           />
-          <div className="grid items-center gap-4 grid-cols-2">
+          <div className="grid items-center gap-4 grid-cols-1 lg:grid-cols-2">
             <FormField
               control={form.control}
               name="dateRange"
@@ -129,7 +129,7 @@ function ProfileForm() {
             <PopoverComponent></PopoverComponent>
           </div>
         </div>
-        <Button type="submit" className="m-auto">
+        <Button type="submit">
           <Forward />
           Submit
         </Button>
@@ -152,7 +152,7 @@ function DatePickerWithRange() {
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "justify-start text-left font-normal",
               !date && "text-muted-foreground",
             )}
           >
