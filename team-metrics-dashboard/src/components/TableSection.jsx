@@ -1,4 +1,4 @@
-import "../styles/TableSection.css";
+import "../output.css";
 import { useEffect } from "react";
 import {
   LineChart,
@@ -30,7 +30,8 @@ const TableSection = ({ responseData, dataFetched, index }) => {
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip">
-          <h3 className="label">{`Days since 1st commit: ${label} | y: ${payload[0].value * 2}`}</h3>
+          <h5 className="label">{`Days since 1st commit  : ${label} | % of test: ${payload[0].value}`}</h5>
+          <h5 className="label">{`% of design: ${payload[1].value}`}</h5>{" "}
         </div>
       );
     }
@@ -52,7 +53,7 @@ const TableSection = ({ responseData, dataFetched, index }) => {
               bottom: 5,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="1 1" />
             <XAxis
               padding={{ left: 30, right: 30 }}
               dataKey="days from 1st commit"

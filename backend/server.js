@@ -18,6 +18,7 @@ app.use(
 app.use(express.static("public"));
 app.use(express.json());
 
+//Async method (although risks sending multiple network responses if one exec fails)
 app.post("/submit", (req, res) => {
   finalData = [];
   const { parcel, owners, team, startDate, endDate, intersectCheckBox } =
@@ -101,11 +102,10 @@ app.post("/submit", (req, res) => {
       case "endDate":
         command += `--end="${endDate}" `;
         break;
-      /*
+
       case "intersectCheckBox":
         command += "--intersect ";
         break;
-      */
     }
   }
   command += "--saveData;";
@@ -129,6 +129,70 @@ app.post("/submit", (req, res) => {
   });
 });
 
+/*
+const execPromise = (command) =>
+  new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        return reject({ status: "error", message: error.message });
+      }
+      if (stderr) {
+        return reject({ status: "error", message: stderr });
+      }
+      processXlsxToJson(); // Populate finalData with results from file processing
+
+      resolve(stdout);
+    });
+  });
+
+app.post("/submit", async (req, res) => {
+  finalData = [];
+  const { parcel, owners, team, startDate, endDate, intersectCheckBox } =
+    req.body;
+
+  if (
+    !parcel &&
+    !owners &&
+    !team &&
+    !startDate &&
+    !endDate &&
+    !intersectCheckBox
+  ) {
+    return res
+      .status(400)
+      .send({ status: "failed", message: "No data provided" });
+  }
+
+  let parcelSplit = [];
+  if (parcel.includes(",") || parcel.includes(";")) {
+    parcelSplit = parcel.trim().split(/[,;]+/);
+  } else {
+    parcelSplit = [parcel];
+  }
+
+  try {
+    const commands = parcelSplit.map((parcelItem) => {
+      let command = `/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py --reasons="${parcelItem}" `;
+      if (owners) command += `--owners="${owners}" `;
+      if (team) command += `--team="${team}" `;
+      if (startDate) command += `--begin="${startDate}" `;
+      if (endDate) command += `--end="${endDate}" `;
+      command += "--saveData;";
+      return execPromise(command);
+    });
+
+    // Wait for all commands to complete
+    const results = await Promise.all(commands);
+
+    // Process each result after all exec commands have completed
+    res
+      .status(200)
+      .send({ status: "success", message: "Data processed", data: finalData });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+*/
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -188,7 +252,7 @@ const fillCumulativeCode = (input, totalTest, totalDesign) => {
 const calculateDaysFromFirstCommit = (input) => {
   input = input.slice().reverse();
   const originalDate = new Date(input[0]["updated"]);
-  input[0]["days from 1st commit"] = 0;
+  [input[0]["days from 1st commit"], input[0]["x"]] = [0, 0];
 
   for (let i = 1; i < input.length; i++) {
     const iterDate = new Date(input[i]["updated"]);

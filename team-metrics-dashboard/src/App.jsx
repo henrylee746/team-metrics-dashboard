@@ -1,4 +1,4 @@
-import "./styles/global.css"; // Import global styles
+import "./output.css"; // Import global styles
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
 import Sidebar from "./components/Sidebar.jsx";
@@ -40,6 +40,7 @@ function App() {
     if (responseData) {
       navigate("/0");
       document.querySelector(".links").classList.add("shown");
+      document.querySelector(".links").selectedIndex = 0; //sets select value back to first subject queried back
       setLoading(false);
     }
   }, [responseData]);
@@ -86,36 +87,6 @@ function App() {
     setIsSideBarOpen((prevState) => !prevState);
   };
 
-  /*********Responsive Design**********************************/
-  /*if sidebar is toggled while window is small size, adjust sidebar 
-  to fit height of main-content*/
-  useEffect(() => {
-    setTimeout(() => {
-      const div1 = document.querySelector(".sidebar");
-      const div2 = document.querySelector(".main-content");
-
-      const div2Height = div2.offsetHeight;
-      //offsetHeight takes border & padding into calculation
-
-      //(plus 10 margin)
-      div1.style.height = div2Height + 10 + "px";
-    }, 400);
-  }, [isSidebarOpen]);
-
-  //resizes sidebar as main-content resizes when window resizes
-  window.addEventListener("resize", () => {
-    const div1 = document.querySelector(".sidebar");
-    const div2 = document.querySelector(".main-content");
-
-    const div2Height = div2.offsetHeight;
-    //offsetHeight takes border & padding into calculation
-
-    //(plus 10 margin)
-    div1.style.height = div2Height + 10 + "px";
-  });
-
-  /********************************************/
-
   return (
     <div className="App">
       <Header
@@ -125,7 +96,6 @@ function App() {
         className="header"
       />
       <div className="container">
-        <Sidebar isSidebarOpen={isSidebarOpen} sidebarToggle={sidebarToggle} />
         <main className={`main-content ${isSidebarOpen ? "sidebar-open" : ""}`}>
           <SearchForm
             formData={formData}

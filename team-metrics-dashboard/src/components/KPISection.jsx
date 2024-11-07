@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/KPISection.css";
+import "../output.css";
 
 const KPISection = ({ responseData, dataFetched, index }) => {
   /*Use cardSection as a reference to when link select 

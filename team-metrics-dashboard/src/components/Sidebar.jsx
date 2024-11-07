@@ -1,4 +1,4 @@
-import "../styles/Sidebar.css";
+import "../output.css";
 import { FaTimes } from "react-icons/fa";
 
 const Sidebar = (props) => {

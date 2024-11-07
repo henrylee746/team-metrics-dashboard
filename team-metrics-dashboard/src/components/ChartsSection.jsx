@@ -1,4 +1,4 @@
-import "../styles/ChartsSection.css";
+import "../output.css";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -49,14 +49,27 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
   label: by default, is: "`${x}${y}`"
   */
   const CustomTooltip = ({ active, payload, label }) => {
+    //for % of test and design charts
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip">
-          <h3 className="label">{`Days since 1st commit  : ${label} | y: ${payload[0].value}`}</h3>
+          <h5 className="label">{`Days since 1st commit  : ${label} | % of test: ${payload[0].value}`}</h5>
+          <h5 className="label">{`% of design: ${payload[1].value}`}</h5>
         </div>
       );
     }
+    return null;
+  };
 
+  const CustomTooltipForOneOverX = ({ active, payload, label }) => {
+    //for 1/x chart
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <h4 className="label">{`Days since 1st commit  : ${label} | 1/x: ${payload[0].value}`}</h4>
+        </div>
+      );
+    }
     return null;
   };
 
@@ -76,19 +89,18 @@ const ChartsSection = ({ responseData, dataFetched, index }) => {
             <CartesianGrid strokeDasharray="2 2" />
             <XAxis
               type="number"
-              unit=" days"
               dataKey="days from 1st commit"
               padding={{ left: 30, right: 30 }}
               interval={0}
             />
             <YAxis />
-            <Tooltip position={{ y: -25 }} content={CustomTooltip} />
+            <Tooltip position={{ y: -25 }} content={CustomTooltipForOneOverX} />
 
             <Legend verticalAlign="top" />
             <Bar
               dataKey="1/x"
               fill="#8884d8"
-              barSize={5}
+              barSize={2} //5 if large input?
               activeBar={<Rectangle fill="pink" stroke="blue" />}
             />
             <Line type="monotone" dataKey="1/x" stroke="#ff7300" />

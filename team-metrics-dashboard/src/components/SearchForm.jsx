@@ -1,7 +1,244 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import * as React from "react";
+import { addDays, subDays, format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import { useState, useEffect } from "react";
-import "../styles/SearchForm.css";
-import { Link } from "react-router-dom";
+import "../output.css";
 import { useNavigate } from "react-router-dom";
+import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Forward } from "lucide-react";
+
+const formSchema = z.object({
+  subject: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  team: z.string().min(2, {
+    message: "Field is optional, but if filled must be at least 2 characters.",
+  }),
+});
+
+function ProfileForm() {
+  // Define the form without TypeScript annotations
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      subject: "",
+      team: "",
+    },
+  });
+
+  // Define a submit handler
+  function onSubmit(values) {
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-2 gap-8">
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Subject(s)</FormLabel>
+                <FormControl>
+                  <Input placeholder="11022-SP12" {...field} />
+                </FormControl>
+                <FormDescription>Comma or semicolon separated</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="team"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Team(s)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Eh-Team" {...field} />
+                </FormControl>
+                <FormDescription>Team name(s)</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="owner"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Owner(s)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Eh-Team" {...field} />
+                </FormControl>
+                <FormDescription>Comma or semicolon separated</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="grid items-center gap-4 grid-cols-2">
+            <FormField
+              control={form.control}
+              name="dateRange"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date Range (Start-End)</FormLabel>
+                  <FormControl>
+                    <DatePickerWithRange></DatePickerWithRange>
+                  </FormControl>
+                  <FormDescription>
+                    Commits will be filtered in this date range
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <PopoverComponent></PopoverComponent>
+          </div>
+        </div>
+        <Button type="submit" className="m-auto">
+          <Forward />
+          Submit
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
+function DatePickerWithRange() {
+  const [date, setDate] = React.useState({
+    from: subDays(new Date(), 20),
+    to: new Date(),
+  });
+
+  return (
+    <div className={cn("grid gap-2")}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id="date"
+            variant={"outline"}
+            className={cn(
+              "w-[300px] justify-start text-left font-normal",
+              !date && "text-muted-foreground",
+            )}
+          >
+            <CalendarIcon />
+            {date?.from ? (
+              date.to ? (
+                <>
+                  {format(date.from, "LLL dd, y")} -{" "}
+                  {format(date.to, "LLL dd, y")}
+                </>
+              ) : (
+                format(date.from, "LLL dd, y")
+              )
+            ) : (
+              <span>Pick a date</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            initialFocus
+            mode="range"
+            defaultMonth={date?.from}
+            selected={date}
+            onSelect={setDate}
+            numberOfMonths={2}
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+function PopoverComponent() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline">Open popover</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-120">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">Dimensions</h4>
+            <p className="text-sm text-muted-foreground">
+              Set the dimensions for the layer.
+            </p>
+          </div>
+          <div className="grid gap-2">
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="width">Width</Label>
+              <Input
+                id="width"
+                defaultValue="100%"
+                className="col-span-2 h-8"
+              />
+            </div>
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="maxWidth">Max. width</Label>
+              <Input
+                id="maxWidth"
+                defaultValue="300px"
+                className="col-span-2 h-8"
+              />
+            </div>
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="height">Height</Label>
+              <Input
+                id="height"
+                defaultValue="25px"
+                className="col-span-2 h-8"
+              />
+            </div>
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="maxHeight">Max. height</Label>
+              <Input
+                id="maxHeight"
+                defaultValue="none"
+                className="col-span-2 h-8"
+              />
+            </div>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 const SearchForm = ({
   formData,
@@ -16,7 +253,6 @@ const SearchForm = ({
   loading,
 }) => {
   const [advancedVisible, setAdvancedVisible] = useState(false);
-
   const [autocompleteList, setAutocompleteList] = useState([]);
   const teams = [
     { email: "team1@example.com", name: "Alpha", totalCommits: 123 },
@@ -112,7 +348,8 @@ const SearchForm = ({
       console.error("Form submission failed:", error);
       setDataFetched(false);
       setResponseData(null);
-      setError(error.message);
+      setLoading(false);
+      setError(error.message); //not being set correctly
     } finally {
     }
   };
@@ -131,132 +368,59 @@ const SearchForm = ({
   });
 
   return (
-    <section className="search-section" id="overview">
-      <form className="search-form" onSubmit={handleSubmit}>
-        <div className="split-search">
-          {/* Left side with Reason/Owner */}
-          <div className="left-half">
-            <div className="searchbar-container">
-              <input
-                type="text"
-                name="command"
-                id="search-input"
-                autoComplete="off"
-                value={formData.command}
-                onChange={setFormData}
-              />
-              <label htmlFor="command">Reason/Subject(s)</label>
-              {autocompleteList.length > 0 && (
-                <div className="autocomplete-items">
-                  {autocompleteList.map((team) => (
-                    <div
-                      key={team.email}
-                      className="autocomplete-item"
-                      onClick={() => selectAutocompleteItem(team.email)}
-                    >
-                      {team.email}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="searchbar-container2">
-              <input
-                type="text"
-                name="team"
-                id="team-input"
-                autoComplete="off"
-                value={formData.team}
-                onChange={setFormData}
-              />
-              <label htmlFor="team">Team(s)</label>
-            </div>
+    <section className="search-section w-screen px-4" id="overview">
+      <ProfileForm></ProfileForm>
+      {/* <form className="search-form" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 gap-8">
+          <div className="searchbar-container">
+            <Input
+              type="text"
+              name="command"
+              id="search-input"
+              autoComplete="off"
+              value={formData.command}
+              onChange={setFormData}
+              className=""
+              placeholder="Reason/Subject(s)"
+            />
+          </div>
+          <div className="searchbar-container">
+            <Input
+              type="text"
+              name="team"
+              id="team-input"
+              autoComplete="off"
+              value={formData.team}
+              onChange={setFormData}
+              placeholder="Team(s)"
+            />
           </div>
 
-          {/* Center 'OR' 
-            <div className="or-divider">
-              <div className="vertical-line"></div>
-              <div className="or">OR</div>
-              <div className="vertical-line"></div>
-            </div>
-                  */}
-
-          {/* Right side with new 'Team' input */}
-          <div className="right-half">
-            <div className="searchbar-container">
-              <input
-                type="text"
-                name="owner"
-                id="owner-input"
-                autoComplete="off"
-                value={formData.owner}
-                onChange={setFormData}
-              />
-              <label htmlFor="owner">Owner(s)</label>
-            </div>
-            <div className="date-fields">
-              <div className="date-container">
-                <label htmlFor="startDate">Start Date</label>
-                <input
-                  type="date"
-                  id="start-date"
-                  name="startDate"
-                  max={new Date().toISOString().split("T")[0]}
-                  value={formData.startDate}
-                  onChange={setFormData}
-                />
-              </div>
-              <div className="date-container">
-                <label htmlFor="endDate">End Date</label>
-
-                <input
-                  type="date"
-                  id="end-date"
-                  name="endDate"
-                  max={new Date().toISOString().split("T")[0]}
-                  value={formData.endDate}
-                  onChange={setFormData}
-                />
-              </div>
-            </div>
+          <div className="searchbar-container">
+            <Input
+              type="text"
+              name="owner"
+              id="owner-input"
+              autoComplete="off"
+              value={formData.owner}
+              onChange={setFormData}
+              placeholder="Owner(s)"
+            />
+          </div>
+          <div className="date-field flex gap-2 items-center justify-center">
+            <Label htmlFor="dateRange font-bold">Date Range: </Label>
+            <DatePickerWithRange
+              name="dateRange"
+              id="dateRange"
+              className="w-32"
+            ></DatePickerWithRange>
           </div>
         </div>
-
-        {/*<button
-          type="button"
-          id="toggle-advanced"
-          onClick={handleToggleAdvanced}
-        >
-          <b>Advanced Settings</b>
-                </button>*/}
-
-        {/* Hidden Advanced Settings }
-        {advancedVisible && (
-          <div
-            className="advanced-settings"
-            id="advanced-settings"
-            data-testid="advanced-settings"
-          >
-            <div className="checkbox-container">
-              <input
-                type="checkbox"
-                id="intersect-checkbox"
-                name="intersect"
-                checked={formData.intersect}
-                onChange={handleChange}
-                className="css-checkbox"
-              />
-              <label htmlFor="intersect-checkbox" id="intersect-label">
-                <b>Intersect</b>
-              </label>
-            </div>
-          </div>
-        )*/}
 
         <button type="submit" id="submitButton" onClick={handleButtonChange}>
           <b>Search</b>
         </button>
-      </form>
+      </form>*/}
     </section>
   );
 };

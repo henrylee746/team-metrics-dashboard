@@ -1,4 +1,4 @@
-import "../styles/global.css"; // Import global styles
+import "../output.css"; // Import global styles
 import KPISection from "../components/KPISection.jsx";
 import ChartsSection from "../components/ChartsSection.jsx";
 import TableSection from "../components/TableSection.jsx";
