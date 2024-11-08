@@ -73,7 +73,6 @@ function ProfileForm({ onSubmit }) {
       owner: "",
       dateRange: { from: null, to: null },
       gerrit: true,
-
       gerritDelta: false,
       gerritArchive: false,
       intersect: false,
@@ -384,6 +383,8 @@ const SearchForm = ({
 
       if (response.ok) {
         console.log("Form submitted successfully");
+        const data = await response.data();
+        console.log(data);
       } else {
         // Handle error response
         const errorData = await response.json();
