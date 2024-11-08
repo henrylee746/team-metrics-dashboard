@@ -1,10 +1,12 @@
 const express = require("express");
+const { format } = require("date-fns");
 const app = express();
 const { exec } = require("child_process");
 const port = 5000;
 const xlsx = require("xlsx");
 const path = require("path");
 const cors = require("cors");
+const { start } = require("repl");
 
 let finalData = []; //represents final JSON arr after manipulations
 
@@ -13,7 +15,7 @@ app.use(
     origin: "http://localhost:5173", // Frontend URL
     methods: ["GET", "POST"],
     credentials: true,
-  }),
+  })
 );
 app.use(express.static("public"));
 app.use(express.json());
@@ -21,38 +23,47 @@ app.use(express.json());
 //Async method (although risks sending multiple network responses if one exec fails)
 app.post("/submit", (req, res) => {
   finalData = [];
-  const { parcel, owners, team, startDate, endDate, intersectCheckBox } =
-    req.body;
+  const {
+    subject,
+    team,
+    owner,
+    dateRange,
+    gerrit,
+    gerritArchive,
+    gerritDelta,
+    intersect,
+  } = req.body;
 
-  // Validate inputs
-  if (
-    !parcel &&
-    !owners &&
-    !team &&
-    !startDate &&
-    !endDate &&
-    !intersectCheckBox
-  ) {
-    return res
-      .status(400)
-      .send({ status: "failed", message: "No data provided" });
-  }
+  //Format Dates then create a new obj w/ formatted dates
+  const startDate = format(dateRange.from, "yyyy-MM-dd");
+  const endDate = format(dateRange.to, "yyyy-MM-dd");
 
-  let [command, parcelSplit] = ["", ""];
-  for (const [key, value] of Object.entries(req.body)) {
+  const objData = {
+    subject: subject,
+    team: team,
+    owner: owner,
+    startDate: startDate,
+    endDate: endDate,
+    gerrit: gerrit,
+    gerritArchive: gerritArchive,
+    gerritDelta: gerritDelta,
+    intersect: intersect,
+  };
+
+  let [command, subjectSplit] = ["", ""];
+  for (const [key, value] of Object.entries(objData)) {
     if (value === "" || value === false) continue;
     switch (key) {
-      case "parcel":
-        if (parcel.includes(",") || parcel.includes(";")) {
-          parcelSplit = parcel.trim().split(/[,;]+/); //regex to split either during , or ; occurence
-          console.log(parcelSplit);
-          for (let i = 0; i < parcelSplit.length; i++) {
+      case "subject":
+        if (subject.includes(",") || subject.includes(";")) {
+          subjectSplit = subject.trim().split(/[,;]+/); //regex to split either during , or ; occurence
+          for (let i = 0; i < subjectSplit.length; i++) {
             command =
               "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
-            command += `--reasons="${parcelSplit[i]}" `;
+            command += `--reasons="${subjectSplit[i]}" `;
             switch (key) {
-              case "owners":
-                command += `--owners="${owners}" `;
+              case "owner":
+                command += `--owner="${owner}" `;
                 break;
               case "team":
                 command += `--team="${team}" `;
@@ -62,6 +73,18 @@ app.post("/submit", (req, res) => {
                 break;
               case "endDate":
                 command += `--end="${endDate}" `;
+                break;
+              case "gerrit":
+                command += `--gerrit=gerrit`;
+                break;
+              case "gerritArchive":
+                command += `--gerrit=gerritArchive`;
+                break;
+              case "gerritDelta":
+                command += `--gerrit=gerritDelta`;
+                break;
+              case "intersect":
+                command += `--intersect`;
                 break;
             }
             command += "--saveData;";
@@ -88,10 +111,10 @@ app.post("/submit", (req, res) => {
           }
         }
         command = "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
-        command += `--reasons="${parcel}" `;
+        command += `--reasons="${subject}" `;
         break;
-      case "owners":
-        command += `--owners="${owners}" `;
+      case "owner":
+        command += `--owner="${owner}" `;
         break;
       case "team":
         command += `--team="${team}" `;
@@ -102,9 +125,17 @@ app.post("/submit", (req, res) => {
       case "endDate":
         command += `--end="${endDate}" `;
         break;
-
-      case "intersectCheckBox":
-        command += "--intersect ";
+      case "gerrit":
+        command += `--gerrit=gerrit`;
+        break;
+      case "gerritArchive":
+        command += `--gerrit=gerritArchive`;
+        break;
+      case "gerritDelta":
+        command += `--gerrit=gerritDelta`;
+        break;
+      case "intersect":
+        command += `--intersect`;
         break;
     }
   }
@@ -129,70 +160,6 @@ app.post("/submit", (req, res) => {
   });
 });
 
-/*
-const execPromise = (command) =>
-  new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        return reject({ status: "error", message: error.message });
-      }
-      if (stderr) {
-        return reject({ status: "error", message: stderr });
-      }
-      processXlsxToJson(); // Populate finalData with results from file processing
-
-      resolve(stdout);
-    });
-  });
-
-app.post("/submit", async (req, res) => {
-  finalData = [];
-  const { parcel, owners, team, startDate, endDate, intersectCheckBox } =
-    req.body;
-
-  if (
-    !parcel &&
-    !owners &&
-    !team &&
-    !startDate &&
-    !endDate &&
-    !intersectCheckBox
-  ) {
-    return res
-      .status(400)
-      .send({ status: "failed", message: "No data provided" });
-  }
-
-  let parcelSplit = [];
-  if (parcel.includes(",") || parcel.includes(";")) {
-    parcelSplit = parcel.trim().split(/[,;]+/);
-  } else {
-    parcelSplit = [parcel];
-  }
-
-  try {
-    const commands = parcelSplit.map((parcelItem) => {
-      let command = `/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py --reasons="${parcelItem}" `;
-      if (owners) command += `--owners="${owners}" `;
-      if (team) command += `--team="${team}" `;
-      if (startDate) command += `--begin="${startDate}" `;
-      if (endDate) command += `--end="${endDate}" `;
-      command += "--saveData;";
-      return execPromise(command);
-    });
-
-    // Wait for all commands to complete
-    const results = await Promise.all(commands);
-
-    // Process each result after all exec commands have completed
-    res
-      .status(200)
-      .send({ status: "success", message: "Data processed", data: finalData });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-*/
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -212,11 +179,11 @@ const processXlsxToJson = () => {
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
     (sum, commit) => sum + (commit.testCodeChurn || 0),
-    0,
+    0
   );
   let totalDesign = input.reduce(
     (sum, commit) => sum + (commit.sourceCodeChurn || 0),
-    0,
+    0
   );
   fillCumulativeCode(input, totalTest, totalDesign);
 };
@@ -278,11 +245,11 @@ const getFirstAndLastCommit = (input) => {
     "Last commit": input[input.length - 1]["updated"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
-      0,
+      0
     ),
     "Total test code churn": input.reduce(
       (a, b) => a + (b.testCodeChurn || 0),
-      0,
+      0
     ),
     "Total code churn":
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +

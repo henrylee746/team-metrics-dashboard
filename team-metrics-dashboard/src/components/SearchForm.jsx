@@ -42,7 +42,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-/*Form Validation (Client-Side) via Zod*/
+/*Form Validation (Client-Side) via Zod
+Form Schema*/
 const formSchema = z.object({
   subject: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -64,7 +65,7 @@ const formSchema = z.object({
 
 function ProfileForm({ onSubmit }) {
   const form = useForm({
-    //set schema and default values
+    //Defining the form
     resolver: zodResolver(formSchema),
     defaultValues: {
       subject: "",
@@ -80,7 +81,8 @@ function ProfileForm({ onSubmit }) {
   });
 
   function handleFormSubmit(values) {
-    onSubmit(values); // Passes the values to the parent component
+    //Defining the submit handler
+    onSubmit(values); // Invokes the function from parent component
   }
 
   return (
@@ -95,7 +97,11 @@ function ProfileForm({ onSubmit }) {
               <FormItem>
                 <FormLabel>Subject(s)</FormLabel>
                 <FormControl>
-                  <Input placeholder="11022-SP12" {...field} />
+                  <Input
+                    //className={`[&:not(:focus)]:placeholder-transparent`}
+                    placeholder="11022-SP12"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>Comma or semicolon separated</FormDescription>
                 <FormMessage />
@@ -125,7 +131,9 @@ function ProfileForm({ onSubmit }) {
                 <FormControl>
                   <Input placeholder="henry.lee.a@ericsson.com" {...field} />
                 </FormControl>
-                <FormDescription>Comma or semicolon separated</FormDescription>
+                <FormDescription>
+                  Comma or semicolon separated by email/signum
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -232,7 +240,7 @@ function PopoverComponent({ form }) {
           <div className="space-y-2">
             <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
             <p className="text-sm text-muted-foreground">
-              Selects which Gerrit servers to look through ( selects all by
+              Selects which Gerrit servers to look through ( selects Gerrit by
               default )
             </p>
           </div>
@@ -289,27 +297,25 @@ function PopoverComponent({ form }) {
             </div>
             <Separator />
             <div className="flex flex-col gap-5">
-              <div className="space-y-2">
-                <div className="flex gap-3 items-center ">
-                  <Controller
-                    control={form.control}
-                    name="intersect"
-                    render={({ field }) => (
-                      <FormItem className="flex items-end gap-2">
-                        <Label htmlFor="intersect">Intersect</Label>
-                        <FormControl>
-                          <Switch
-                            id="intersect"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="space-y-3">
+                <Controller
+                  control={form.control}
+                  name="intersect"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="intersect">Intersect</Label>
+                      <FormControl>
+                        <Switch
+                          id="intersect"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
                 <p className="text-sm text-muted-foreground">
-                  Filter results which satisfy Subject(s) and Owner(s)
+                  Filter results which satisfy Subject(s) and Owner(s)/Team(s)
                   simutaeneously
                 </p>
               </div>
@@ -335,22 +341,23 @@ const SearchForm = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleButtonChange = () => {
-    const { command, owner, team, startDate, endDate, intersect } = formData;
-
-    if (!command && !owner && !team && !startDate && !endDate && !intersect) {
-      return;
-    } else setLoading(true);
-  };
-
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
+    const {
+      subject,
+      team,
+      owner,
+      dateRange,
+      gerrit,
+      gerritArchive,
+      gerritDelta,
+      intersect,
+    } = values;
 
-    /*
-    const { command, owner, team, startDate, endDate, intersect } = formData;
-
-    if (!command && !owner && !team && !startDate && !endDate && !intersect) {
+    if (!subject && !team && !owner) {
       return;
+    } else {
+      setLoading(true);
     }
     navigate("/"); //resets URL back to homepage
 
@@ -364,32 +371,19 @@ const SearchForm = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          parcel: command,
-          owners: owner,
+          subject: subject,
           team: team,
-          startDate: startDate,
-          endDate: endDate,
-          intersectCheckBox: intersect,
+          owner: owner,
+          dateRange: dateRange,
+          gerrit: gerrit,
+          gerritArchive: gerritArchive,
+          gerritDelta: gerritDelta,
+          intersect: intersect,
         }),
       });
 
       if (response.ok) {
-        // Handle successful response
         console.log("Form submitted successfully");
-        const data = await response.json();
-        console.log(data.data);
-        setResponseData(data.data);
-        setDataFetched(true);
-        setError(null);
-        resetData({
-          command: "",
-          owner: "",
-          team: "",
-          startDate: "",
-          endDate: "",
-        });
-
-        //setAutocompleteList([]);
       } else {
         // Handle error response
         const errorData = await response.json();
@@ -403,7 +397,6 @@ const SearchForm = ({
       setError(error.message); //not being set correctly
     } finally {
     }
-    */
   };
 
   return (
