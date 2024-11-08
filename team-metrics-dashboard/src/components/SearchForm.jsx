@@ -1,24 +1,35 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import * as React from "react";
-import { addDays, subDays, format } from "date-fns";
+import { useState, useEffect } from "react";
+import "../output.css";
+import { useNavigate } from "react-router-dom";
+
+/*Form Imports*/
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+
+/*Icon Imports, from lucide-react lib*/
 import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Forward } from "lucide-react";
+
+/*For Dates*/
+import { addDays, subDays, format } from "date-fns";
+
+/*shadcn/UI components*/
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-import { useState, useEffect } from "react";
-import "../output.css";
-import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -29,42 +40,53 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Forward } from "lucide-react";
+import { cn } from "@/lib/utils";
 
+/*Form Validation (Client-Side) via Zod*/
 const formSchema = z.object({
   subject: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  team: z.string().min(2, {
-    message: "Field is optional, but if filled must be at least 2 characters.",
-  }),
+  team: z.string().optional(),
+  owner: z.string().optional(),
+  dateRange: z
+    .object({
+      from: z.date().optional(),
+      to: z.date().optional(),
+    })
+    .optional(),
+  gerrit: z.boolean().optional(), // For Gerrit checkbox
+
+  gerritDelta: z.boolean().optional(), // For Gerrit Delta checkbox
+  gerritArchive: z.boolean().optional(), // For Gerrit Archive checkbox
+  intersect: z.boolean().optional(), // For Switch button
 });
 
-function ProfileForm() {
-  // Define the form without TypeScript annotations
+function ProfileForm({ onSubmit }) {
   const form = useForm({
+    //set schema and default values
     resolver: zodResolver(formSchema),
     defaultValues: {
       subject: "",
       team: "",
+      owner: "",
+      dateRange: { from: null, to: null },
+      gerrit: true,
+
+      gerritDelta: false,
+      gerritArchive: false,
+      intersect: false,
     },
   });
 
-  // Define a submit handler
-  function onSubmit(values) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  function handleFormSubmit(values) {
+    onSubmit(values); // Passes the values to the parent component
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      {/*handleSubmit: from react-hook-form*/}
+      <form onSubmit={form.handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-2 gap-8">
           <FormField
             control={form.control}
@@ -87,7 +109,7 @@ function ProfileForm() {
               <FormItem>
                 <FormLabel>Team(s)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Eh-Team" {...field} />
+                  <Input placeholder="Eh-Team, Jets; Hurricanes" {...field} />
                 </FormControl>
                 <FormDescription>Team name(s)</FormDescription>
                 <FormMessage />
@@ -101,7 +123,7 @@ function ProfileForm() {
               <FormItem>
                 <FormLabel>Owner(s)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Eh-Team" {...field} />
+                  <Input placeholder="henry.lee.a@ericsson.com" {...field} />
                 </FormControl>
                 <FormDescription>Comma or semicolon separated</FormDescription>
                 <FormMessage />
@@ -109,14 +131,17 @@ function ProfileForm() {
             )}
           />
           <div className="grid items-center gap-4 grid-cols-1 lg:grid-cols-2">
-            <FormField
+            <Controller
               control={form.control}
               name="dateRange"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date Range (Start-End)</FormLabel>
                   <FormControl>
-                    <DatePickerWithRange></DatePickerWithRange>
+                    <DatePickerWithRange
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormDescription>
                     Commits will be filtered in this date range
@@ -125,24 +150,34 @@ function ProfileForm() {
                 </FormItem>
               )}
             />
-
-            <PopoverComponent></PopoverComponent>
+            <PopoverComponent form={form}></PopoverComponent>
           </div>
         </div>
-        <Button type="submit">
-          <Forward />
-          Submit
-        </Button>
+        <div className="flex w-screen justify-center">
+          <Button type="submit" className="mt-4 ">
+            <Forward />
+            Submit
+          </Button>
+        </div>
       </form>
     </Form>
   );
 }
 
-function DatePickerWithRange() {
+function DatePickerWithRange({ value, onChange }) {
   const [date, setDate] = React.useState({
-    from: subDays(new Date(), 20),
-    to: new Date(),
+    from: value?.from || subDays(new Date(), 20),
+    to: value?.to || new Date(),
   });
+
+  useEffect(() => {
+    onChange(date);
+  }, []);
+
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    onChange(newDate); // Passes the new date range back to the form
+  };
 
   return (
     <div className={cn("grid gap-2")}>
@@ -153,7 +188,7 @@ function DatePickerWithRange() {
             variant={"outline"}
             className={cn(
               "justify-start text-left font-normal",
-              !date && "text-muted-foreground",
+              !date && "text-muted-foreground"
             )}
           >
             <CalendarIcon />
@@ -177,7 +212,7 @@ function DatePickerWithRange() {
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateChange}
             numberOfMonths={2}
           />
         </PopoverContent>
@@ -186,52 +221,98 @@ function DatePickerWithRange() {
   );
 }
 
-function PopoverComponent() {
+function PopoverComponent({ form }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">Open popover</Button>
+        <Button variant="outline">Advanced</Button>
       </PopoverTrigger>
-      <PopoverContent className="w-120">
-        <div className="grid gap-4">
+      <PopoverContent className="w-auto mt-0.5" align="end">
+        <div className="flex flex-col gap-4">
           <div className="space-y-2">
-            <h4 className="font-medium leading-none">Dimensions</h4>
+            <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
             <p className="text-sm text-muted-foreground">
-              Set the dimensions for the layer.
+              Selects which Gerrit servers to look through ( selects all by
+              default )
             </p>
           </div>
-          <div className="grid gap-2">
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="width">Width</Label>
-              <Input
-                id="width"
-                defaultValue="100%"
-                className="col-span-2 h-8"
+          <div className="flex flex-col gap-5">
+            <div className="flex gap-8 justify-center items-center">
+              <Controller
+                control={form.control}
+                name="gerrit"
+                render={({ field }) => (
+                  <FormItem className="flex items-end gap-2">
+                    <Label htmlFor="gerrit">Gerrit</Label>
+                    <FormControl>
+                      <Checkbox
+                        id="gerrit"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="gerritDelta"
+                render={({ field }) => (
+                  <FormItem className="flex items-end gap-2">
+                    <Label htmlFor="gerritDelta">Gerrit Delta</Label>
+                    <FormControl>
+                      <Checkbox
+                        id="gerritDelta"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="gerritArchive"
+                render={({ field }) => (
+                  <FormItem className="flex items-end gap-2">
+                    <Label htmlFor="gerritArchive">Gerrit Archive</Label>
+                    <FormControl>
+                      <Checkbox
+                        id="gerritArchive"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
               />
             </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxWidth">Max. width</Label>
-              <Input
-                id="maxWidth"
-                defaultValue="300px"
-                className="col-span-2 h-8"
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="height">Height</Label>
-              <Input
-                id="height"
-                defaultValue="25px"
-                className="col-span-2 h-8"
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxHeight">Max. height</Label>
-              <Input
-                id="maxHeight"
-                defaultValue="none"
-                className="col-span-2 h-8"
-              />
+            <Separator />
+            <div className="flex flex-col gap-5">
+              <div className="space-y-2">
+                <div className="flex gap-3 items-center ">
+                  <Controller
+                    control={form.control}
+                    name="intersect"
+                    render={({ field }) => (
+                      <FormItem className="flex items-end gap-2">
+                        <Label htmlFor="intersect">Intersect</Label>
+                        <FormControl>
+                          <Switch
+                            id="intersect"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Filter results which satisfy Subject(s) and Owner(s)
+                  simutaeneously
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -252,39 +333,7 @@ const SearchForm = ({
   setError,
   loading,
 }) => {
-  const [advancedVisible, setAdvancedVisible] = useState(false);
-  const [autocompleteList, setAutocompleteList] = useState([]);
-  const teams = [
-    { email: "team1@example.com", name: "Alpha", totalCommits: 123 },
-    { email: "team2@example.com", name: "Beta", openReviews: 8 },
-    { email: "team3@example.com", name: "Gamma", bugsFixed: 15 },
-  ];
-
   const navigate = useNavigate();
-
-  const handleToggleAdvanced = () => {
-    setAdvancedVisible(!advancedVisible);
-  };
-
-  const filterKPIs = (input) => {
-    const searchInput = input.toLowerCase();
-    if (!searchInput) {
-      setAutocompleteList([]);
-      return;
-    }
-    const matchingTeams = teams.filter((team) =>
-      team.email.toLowerCase().includes(searchInput),
-    );
-    setAutocompleteList(matchingTeams);
-  };
-
-  const selectAutocompleteItem = (email) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      command: email,
-    }));
-    setAutocompleteList([]);
-  };
 
   const handleButtonChange = () => {
     const { command, owner, team, startDate, endDate, intersect } = formData;
@@ -294,8 +343,10 @@ const SearchForm = ({
     } else setLoading(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (values) => {
+    console.log("Form values:", values); // Logs the submitted values
+
+    /*
     const { command, owner, team, startDate, endDate, intersect } = formData;
 
     if (!command && !owner && !team && !startDate && !endDate && !intersect) {
@@ -352,75 +403,12 @@ const SearchForm = ({
       setError(error.message); //not being set correctly
     } finally {
     }
+    */
   };
 
-  /*To prevent labels of text inputs lowering when there is present input*/
-  const inputs = document.querySelectorAll("input[type=text]");
-
-  inputs.forEach((input) => {
-    input.addEventListener("change", () => {
-      if (input.value) {
-        input.nextElementSibling.style.transform = "translateY(-25px)";
-      } else {
-        input.nextElementSibling.style.transform = "";
-      }
-    });
-  });
-
   return (
-    <section className="search-section w-screen px-4" id="overview">
-      <ProfileForm></ProfileForm>
-      {/* <form className="search-form" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-8">
-          <div className="searchbar-container">
-            <Input
-              type="text"
-              name="command"
-              id="search-input"
-              autoComplete="off"
-              value={formData.command}
-              onChange={setFormData}
-              className=""
-              placeholder="Reason/Subject(s)"
-            />
-          </div>
-          <div className="searchbar-container">
-            <Input
-              type="text"
-              name="team"
-              id="team-input"
-              autoComplete="off"
-              value={formData.team}
-              onChange={setFormData}
-              placeholder="Team(s)"
-            />
-          </div>
-
-          <div className="searchbar-container">
-            <Input
-              type="text"
-              name="owner"
-              id="owner-input"
-              autoComplete="off"
-              value={formData.owner}
-              onChange={setFormData}
-              placeholder="Owner(s)"
-            />
-          </div>
-          <div className="date-field flex gap-2 items-center justify-center">
-            <Label htmlFor="dateRange font-bold">Date Range: </Label>
-            <DatePickerWithRange
-              name="dateRange"
-              id="dateRange"
-              className="w-32"
-            ></DatePickerWithRange>
-          </div>
-        </div>
-
-        <button type="submit" id="submitButton" onClick={handleButtonChange}>
-          <b>Search</b>
-        </button>
-      </form>*/}
+    <section className="search-section w-screen p-4" id="overview">
+      <ProfileForm onSubmit={handleSubmit}></ProfileForm>
     </section>
   );
 };

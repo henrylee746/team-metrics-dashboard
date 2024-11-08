@@ -1,7 +1,6 @@
 import "./output.css"; // Import global styles
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
-import Sidebar from "./components/Sidebar.jsx";
 import SearchForm from "./components/SearchForm.jsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
@@ -22,7 +21,6 @@ function App() {
     endDate: "",
     intersect: false,
   });
-  const [isSidebarOpen, setIsSideBarOpen] = useState(false);
 
   //Saving preferred viewing mode currently does not work..
   useEffect(() => {
@@ -72,7 +70,7 @@ function App() {
   useEffect(() => {
     // Apply theme class to root element
     document.documentElement.classList.remove(
-      theme === "dark" ? "light" : "dark",
+      theme === "dark" ? "light" : "dark"
     );
     document.documentElement.classList.add(theme);
 
@@ -83,20 +81,16 @@ function App() {
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
-  const sidebarToggle = () => {
-    setIsSideBarOpen((prevState) => !prevState);
-  };
 
   return (
     <div className="App">
       <Header
-        sidebarToggle={sidebarToggle}
         toggleTheme={toggleTheme}
         currentTheme={theme}
         className="header"
       />
       <div className="container">
-        <main className={`main-content ${isSidebarOpen ? "sidebar-open" : ""}`}>
+        <main className={`main-content`}>
           <SearchForm
             formData={formData}
             setFormData={handleChange}

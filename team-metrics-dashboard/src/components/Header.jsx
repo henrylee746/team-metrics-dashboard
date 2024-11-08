@@ -20,7 +20,7 @@ const Header = ({ sidebarToggle, toggleTheme, currentTheme }) => (
     </div>
     <div className="right-header-icon cursor-pointer" onClick={toggleTheme}>
       {currentTheme == "dark" ? (
-        <FaSun className="toggle-icon w-8 h-8"></FaSun>
+        <FaSun className="toggle-icon w-6 h-6"></FaSun>
       ) : (
         <FaMoon className="toggle-icon"></FaMoon>
       )}
