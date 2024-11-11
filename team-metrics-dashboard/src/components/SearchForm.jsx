@@ -48,7 +48,6 @@ const formSchema = z.object({
   subject: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  team: z.string().optional(),
   owner: z.string().optional(),
   dateRange: z
     .object({
@@ -69,12 +68,11 @@ function ProfileForm({ onSubmit }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       subject: "",
-      team: "",
       owner: "",
       dateRange: { from: null, to: null },
       gerrit: true,
-      gerritDelta: false,
-      gerritArchive: false,
+      gerritDelta: true,
+      gerritArchive: true,
       intersect: false,
     },
   });
@@ -88,7 +86,7 @@ function ProfileForm({ onSubmit }) {
     <Form {...form}>
       {/*handleSubmit: from react-hook-form*/}
       <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 gap-8 items-center p-4">
           <FormField
             control={form.control}
             name="subject"
@@ -109,20 +107,6 @@ function ProfileForm({ onSubmit }) {
           />
           <FormField
             control={form.control}
-            name="team"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Team(s)</FormLabel>
-                <FormControl>
-                  <Input placeholder="Eh-Team, Jets; Hurricanes" {...field} />
-                </FormControl>
-                <FormDescription>Team name(s)</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="owner"
             render={({ field }) => (
               <FormItem>
@@ -137,28 +121,26 @@ function ProfileForm({ onSubmit }) {
               </FormItem>
             )}
           />
-          <div className="grid items-center gap-4 grid-cols-1 lg:grid-cols-2">
-            <Controller
-              control={form.control}
-              name="dateRange"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date Range (Start-End)</FormLabel>
-                  <FormControl>
-                    <DatePickerWithRange
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Commits will be filtered in this date range
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <PopoverComponent form={form}></PopoverComponent>
-          </div>
+          <Controller
+            control={form.control}
+            name="dateRange"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date Range (Start-End)</FormLabel>
+                <FormControl>
+                  <DatePickerWithRange
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Commits will be filtered in this date range
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <PopoverComponent form={form}></PopoverComponent>
         </div>
         <div className="flex w-screen justify-center">
           <Button type="submit" className="mt-4 ">
@@ -230,82 +212,31 @@ function DatePickerWithRange({ value, onChange }) {
 
 function PopoverComponent({ form }) {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Advanced</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto mt-0.5" align="end">
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
-            <p className="text-sm text-muted-foreground">
-              Selects which Gerrit servers to look through ( selects Gerrit by
-              default )
-            </p>
-          </div>
-          <div className="flex flex-col gap-5">
-            <div className="flex gap-8 justify-center items-center">
-              <Controller
-                control={form.control}
-                name="gerrit"
-                render={({ field }) => (
-                  <FormItem className="flex items-end gap-2">
-                    <Label htmlFor="gerrit">Gerrit</Label>
-                    <FormControl>
-                      <Checkbox
-                        id="gerrit"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Controller
-                control={form.control}
-                name="gerritDelta"
-                render={({ field }) => (
-                  <FormItem className="flex items-end gap-2">
-                    <Label htmlFor="gerritDelta">Gerrit Delta</Label>
-                    <FormControl>
-                      <Checkbox
-                        id="gerritDelta"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Controller
-                control={form.control}
-                name="gerritArchive"
-                render={({ field }) => (
-                  <FormItem className="flex items-end gap-2">
-                    <Label htmlFor="gerritArchive">Gerrit Archive</Label>
-                    <FormControl>
-                      <Checkbox
-                        id="gerritArchive"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+    <>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">Advanced</Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto mt-0.5" align="end">
+          <div className="flex flex-col gap-4">
+            <div className="space-y-2">
+              <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
+              <p className="text-sm text-muted-foreground">
+                Selects which Gerrit servers to look through ( selects all by
+                default )
+              </p>
             </div>
-            <Separator />
             <div className="flex flex-col gap-5">
-              <div className="space-y-3">
+              <div className="flex gap-8 justify-center items-center">
                 <Controller
                   control={form.control}
-                  name="intersect"
+                  name="gerrit"
                   render={({ field }) => (
                     <FormItem className="flex items-end gap-2">
-                      <Label htmlFor="intersect">Intersect</Label>
+                      <Label htmlFor="gerrit">Gerrit</Label>
                       <FormControl>
-                        <Switch
-                          id="intersect"
+                        <Checkbox
+                          id="gerrit"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
@@ -313,38 +244,79 @@ function PopoverComponent({ form }) {
                     </FormItem>
                   )}
                 />
-                <p className="text-sm text-muted-foreground">
-                  Filter results which satisfy Subject(s) and Owner(s)/Team(s)
-                  simutaeneously
-                </p>
+                <Controller
+                  control={form.control}
+                  name="gerritDelta"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="gerritDelta">Gerrit Delta</Label>
+                      <FormControl>
+                        <Checkbox
+                          id="gerritDelta"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="gerritArchive"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="gerritArchive">Gerrit Archive</Label>
+                      <FormControl>
+                        <Checkbox
+                          id="gerritArchive"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Separator />
+              <div className="flex flex-col gap-5">
+                <div className="space-y-3">
+                  <Controller
+                    control={form.control}
+                    name="intersect"
+                    render={({ field }) => (
+                      <FormItem className="flex items-end gap-2">
+                        <Label htmlFor="intersect">Intersect</Label>
+                        <FormControl>
+                          <Switch
+                            id="intersect"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Filter results which satisfy Subject(s) and Owner(s)/
+                    simutaeneously
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </>
   );
 }
 
-const SearchForm = ({
-  formData,
-  setFormData,
-  resetData,
-  dataFetched,
-  setDataFetched,
-  responseData,
-  setResponseData,
-  setLoading,
-  setError,
-  loading,
-}) => {
+const SearchForm = ({ setResponseData, setLoading, setError }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
     const {
       subject,
-      team,
       owner,
       dateRange,
       gerrit,
@@ -353,7 +325,7 @@ const SearchForm = ({
       intersect,
     } = values;
 
-    if (!subject && !team && !owner) {
+    if (!subject && !owner) {
       return;
     } else {
       setLoading(true);
@@ -371,7 +343,6 @@ const SearchForm = ({
         },
         body: JSON.stringify({
           subject: subject,
-          team: team,
           owner: owner,
           dateRange: dateRange,
           gerrit: gerrit,
@@ -381,28 +352,32 @@ const SearchForm = ({
         }),
       });
 
-      if (response.ok) {
-        console.log("Form submitted successfully");
-        const data = await response.data();
-        console.log(data);
-      } else {
-        // Handle error response
+      if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(`HTTP Error: Status ${response.status}`);
+        throw new Error(
+          `HTTP Error: ${response.status} - ${errorData.message}`
+        );
       }
+
+      const promise = await response.json();
+      setResponseData(promise); // Set all response data together if needed
     } catch (error) {
       console.error("Form submission failed:", error);
-      setDataFetched(false);
       setResponseData(null);
       setLoading(false);
-      setError(error.message); //not being set correctly
+      setError(error.message);
     } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <section className="search-section w-screen p-4" id="overview">
+    <section
+      className="flex flex-col justify-center items-center search-section w-screen"
+      id="overview"
+    >
       <ProfileForm onSubmit={handleSubmit}></ProfileForm>
+      <Separator className="my-6 w-11/12" />
     </section>
   );
 };

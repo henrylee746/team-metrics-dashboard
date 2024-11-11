@@ -6,21 +6,22 @@ import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
+/*UI components*/
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 function App() {
   const navigate = useNavigate();
-  const [dataFetched, setDataFetched] = useState(false);
   const [responseData, setResponseData] = useState(null);
   const [theme, setTheme] = useState("dark"); // Default to dark mode
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
-    command: "",
-    owner: "",
-    team: "",
-    startDate: "",
-    endDate: "",
-    intersect: false,
-  });
 
   //Saving preferred viewing mode currently does not work..
   useEffect(() => {
@@ -37,25 +38,13 @@ function App() {
   useEffect(() => {
     if (responseData) {
       navigate("/0");
-      document.querySelector(".links").classList.add("shown");
-      document.querySelector(".links").selectedIndex = 0; //sets select value back to first subject queried back
-      setLoading(false);
     }
   }, [responseData]);
 
-  //Handling Form Changes
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
   const handleLinkChange = (e) => {
-    const selectedValue = e.target.value;
-    if (selectedValue) {
-      navigate(selectedValue);
+    //handles option changes, modifies URL based on selected option
+    if (e) {
+      navigate(e); //triggers re-render of Data component as it's dependent on dynamic parameter of :index
     }
   };
 
@@ -92,44 +81,61 @@ function App() {
       <div className="container">
         <main className={`main-content`}>
           <SearchForm
-            formData={formData}
-            setFormData={handleChange}
-            resetData={setFormData}
-            setDataFetched={setDataFetched}
-            responseData={responseData}
             setResponseData={setResponseData}
             setLoading={setLoading}
             setError={setError}
-            loading={loading}
           />
-          {dataFetched && (
-            <>
-              <select className="links" onChange={handleLinkChange}>
-                Toggle by Subject:
-                {responseData.map((arr, index) => {
-                  if (index == responseData.length - 1) {
-                    if (responseData.length == 1) {
+
+          {responseData && (
+            <div className="px-4 w-screen">
+              <Select onValueChange={handleLinkChange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select Subject/Owner" />
+                </SelectTrigger>
+                <SelectContent className="links">
+                  {responseData.intersect &&
+                    responseData.data.map((arr, index) => {
+                      if (index == responseData.data.length - 1) {
+                        if (responseData.data.length == 1) {
+                          return (
+                            <SelectItem key={index} value={`${index}`}>
+                              Subject:{" "}
+                              {arr[responseData.data.length - 1]["reason"]}
+                            </SelectItem>
+                          );
+                        }
+                        return (
+                          <SelectItem key={index} value={`${index}`}>
+                            Total
+                          </SelectItem>
+                        );
+                      }
                       return (
-                        <option key={index} value={`${index}`}>
-                          Subject {arr[responseData.length - 1]["reason"]}
-                        </option>
+                        <SelectItem key={index} value={`${index}`}>
+                          Subject: {arr[0]["reason"]}
+                        </SelectItem>
                       );
-                    }
-                    return (
-                      <option key={index} value={`${index}`}>
-                        Total
-                      </option>
-                    );
-                  }
-                  return (
-                    <option key={index} value={`${index}`}>
-                      Subject {arr[0]["reason"]}
-                    </option>
-                  );
-                })}
-              </select>
-              <Outlet context={[responseData, dataFetched]} />
-            </>
+                    })}
+                  {!responseData.intersect &&
+                    responseData.data.map((arr, index) => {
+                      if (index + 1 > responseData.subjectSplit) {
+                        return (
+                          <SelectItem key={index} value={`${index}`}>
+                            Owner: {arr[0]["name"]}
+                          </SelectItem>
+                        );
+                      } else {
+                        return (
+                          <SelectItem key={index} value={`${index}`}>
+                            Subject: {arr[0]["reason"]}
+                          </SelectItem>
+                        );
+                      }
+                    })}
+                </SelectContent>
+              </Select>
+              {<Outlet context={[responseData.data]} />}
+            </div>
           )}
           {loading && <div className="loader"></div>}
           {error && <p>{error}.</p>}

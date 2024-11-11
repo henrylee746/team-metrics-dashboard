@@ -1,65 +1,105 @@
-import { useState, useEffect } from "react";
-import "../output.css";
+import * as React from "react";
 
-const KPISection = ({ responseData, dataFetched, index }) => {
-  /*Use cardSection as a reference to when link select 
-  element should be visible, as well as loader*/
-  useEffect(() => {
-    const cardSection = document.querySelectorAll(".kpi-card");
-    cardSection.forEach((card) => {
-      console.log(card.className);
-      if (!card.className.includes(index)) {
-        card.classList.remove("shown");
-        return;
-      }
-      card.classList.add("shown");
-    });
-  }, [index]);
+import "../output.css";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+
+const KPISection = ({ responseData }) => {
+  const plugin = React.useRef(
+    Autoplay({ delay: 2000, stopOnInteraction: false })
+  );
 
   return (
-    <section className="kpi-section" id="kpi-section">
-      <div className={`kpi-card ${index}`}>
-        <h4>
-          First Commit:{" "}
-          <i>
-            {responseData.length > 0
-              ? responseData[responseData.length - 1]["First Commit"]
-              : null}
-          </i>
-        </h4>
-
-        <h4>
-          Last Commit:{" "}
-          <i>
-            {responseData.length > 0
-              ? responseData[responseData.length - 1]["Last commit"]
-              : null}
-          </i>
-        </h4>
-      </div>
-      <div className={`kpi-card ${index}`}>
-        <h4>
-          Last Commit - First Commit:{" "}
-          <i>
-            {" "}
-            {responseData.length > 0
-              ? responseData[responseData.length - 1][
-                  "Last Commit-First Commit"
-                ]
-              : null}
-          </i>
-        </h4>
-      </div>
-      <div className={`kpi-card ${index}`}>
-        <h4>
-          Total Code Churn:{" "}
-          <i>
-            {responseData.length > 0
-              ? responseData[responseData.length - 1]["Total code churn"]
-              : null}
-          </i>
-        </h4>
-      </div>
+    <section className="kpi-section flex justify-center items-center gap-5 my-12">
+      <Carousel
+        className="w-[350px]"
+        plugins={[plugin.current]}
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={plugin.current.play}
+      >
+        <CarouselContent>
+          <CarouselItem className="basis-1/2 ">
+            <Card className="w-[150px] h-[150px]">
+              <CardContent className="flex aspect-square items-center justify-center text-center p-6">
+                <span>
+                  <p>
+                    First Commit:{" "}
+                    <i className="text-xl font-semibold">
+                      {responseData.length > 0
+                        ? responseData[responseData.length - 1]["First Commit"]
+                        : null}
+                    </i>
+                  </p>
+                  <p>
+                    {" "}
+                    Last Commit:{" "}
+                    <i className="text-xl font-semibold">
+                      {responseData.length > 0
+                        ? responseData[responseData.length - 1]["Last commit"]
+                        : null}
+                    </i>
+                  </p>
+                </span>
+              </CardContent>
+            </Card>
+          </CarouselItem>
+          <CarouselItem className="basis-1/2 ">
+            <Card className="w-[150px] h-[150px]">
+              <CardContent className="flex aspect-square items-center justify-center text-center p-6">
+                <span>
+                  <h4>
+                    Last Commit - First Commit:{" "}
+                    <i className="text-xl font-semibold">
+                      {" "}
+                      {responseData.length > 0
+                        ? responseData[responseData.length - 1][
+                            "Last Commit-First Commit"
+                          ]
+                        : null}{" "}
+                      days
+                    </i>
+                  </h4>
+                </span>
+              </CardContent>
+            </Card>
+          </CarouselItem>
+          <CarouselItem className="basis-1/2 ">
+            <Card className="w-[150px] h-[150px]">
+              <CardContent className="flex aspect-square items-center justify-center text-center p-6">
+                <span>
+                  <h4>
+                    Total Code Churn:{"   "}
+                    <i className="text-xl font-semibold">
+                      {responseData.length > 0
+                        ? responseData[responseData.length - 1][
+                            "Total code churn"
+                          ]
+                        : null}{" "}
+                      lines
+                    </i>
+                  </h4>
+                </span>
+              </CardContent>
+            </Card>
+          </CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </section>
   );
 };

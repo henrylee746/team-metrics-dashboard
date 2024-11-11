@@ -1,147 +1,144 @@
 import "../output.css";
 
 import React, { useState, useEffect } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, Line, LineChart } from "recharts";
+
 import {
-  LineChart,
-  Line,
-  ComposedChart,
-  Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ReferenceLine,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart";
+import { Label } from "@/components/ui/label";
 
-const colors = [
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "red",
-  "pink",
-  "brown",
-];
-
-const ChartsSection = ({ responseData, dataFetched, index }) => {
-  useEffect(() => {
-    const chartSection = document.querySelectorAll(".chart-card");
-
-    chartSection.forEach((chart) => {
-      if (!chart.className.includes(index)) {
-        chart.classList.remove("shown");
-        return;
-      }
-      chart.classList.add("shown");
-    });
-  }, [index]);
-
-  useEffect(() => {
-    console.log(responseData.slice(0, responseData.length - 1));
-  }, [dataFetched]);
-
-  /*From Recharts Docs
-  active: determines if tooltip is visible or not
-  payload: input data (automatically calculated)
-  label: by default, is: "`${x}${y}`"
-  */
-  const CustomTooltip = ({ active, payload, label }) => {
-    //for % of test and design charts
-    if (active && payload && payload.length) {
-      return (
-        <div className="custom-tooltip">
-          <h5 className="label">{`Days since 1st commit  : ${label} | % of test: ${payload[0].value}`}</h5>
-          <h5 className="label">{`% of design: ${payload[1].value}`}</h5>
-        </div>
-      );
-    }
-    return null;
+const ChartsSection = ({ responseData, index }) => {
+  const chartConfig = {
+    oneOverX: {
+      label: "1/x",
+      color: "hsl(var(--chart-1))",
+    },
+    totalTest: {
+      label: "% of total test (cumulative)",
+      color: "hsl(var(--chart-2))",
+    },
+    totalDesign: {
+      label: "% of total design (cumulative)",
+      color: "hsl(var(--chart-3))",
+    },
   };
 
-  const CustomTooltipForOneOverX = ({ active, payload, label }) => {
-    //for 1/x chart
-    if (active && payload && payload.length) {
-      return (
-        <div className="custom-tooltip">
-          <h4 className="label">{`Days since 1st commit  : ${label} | 1/x: ${payload[0].value}`}</h4>
-        </div>
-      );
-    }
-    return null;
-  };
+  function Component() {
+    return (
+      <ChartContainer
+        config={chartConfig}
+        className="min-h-[200px] max-w-[700px] w-full"
+      >
+        <BarChart accessibilityLayer data={responseData}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="days from 1st commit"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+          />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
 
+          <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
+        </BarChart>
+      </ChartContainer>
+    );
+  }
   return (
-    <section className="charts-section" id="charts-section">
-      <div className={`chart-card one ${index}`}>
-        <h3>1/x</h3>
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            width={700}
-            height={600}
-            data={responseData.slice(0, responseData.length - 1)}
-            margin={{
-              bottom: 15,
-            }}
-          >
-            <CartesianGrid strokeDasharray="2 2" />
-            <XAxis
-              type="number"
-              dataKey="days from 1st commit"
-              padding={{ left: 30, right: 30 }}
-              interval={0}
-            />
-            <YAxis />
-            <Tooltip position={{ y: -25 }} content={CustomTooltipForOneOverX} />
+    <section
+      className="charts-section flex gap-12 p-20 flex-wrap justify-center items-center"
+      id="charts-section"
+    >
+      <Label />
+      1/x
+      <ChartContainer
+        config={chartConfig}
+        className="min-h-[200px] max-w-[700px] w-full"
+      >
+        <BarChart accessibilityLayer data={responseData}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="days from 1st commit"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+          />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
 
-            <Legend verticalAlign="top" />
-            <Bar
-              dataKey="1/x"
-              fill="#8884d8"
-              barSize={2} //5 if large input?
-              activeBar={<Rectangle fill="pink" stroke="blue" />}
-            />
-            <Line type="monotone" dataKey="1/x" stroke="#ff7300" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
-      <div className={`chart-card two ${index}`}>
-        <h3>Total Test vs Design Code</h3>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            width={700}
-            height={500}
-            data={responseData.slice(0, responseData.length - 1)}
-            margin={{
-              bottom: 15,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              type="number"
-              interval={0}
-              dataKey="days from 1st commit"
-              padding={{ left: 30, right: 30 }}
-            />
-            <YAxis />
-            <Tooltip position={{ y: 5 }} content={CustomTooltip} />
-            <Legend verticalAlign="top" />
-            <Line
-              type="monotone"
-              dataKey="% of total test (cumulative)"
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="% of total design (cumulative)"
-              stroke="#82ca9d"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+          <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
+        </BarChart>
+      </ChartContainer>
+      <ChartContainer
+        config={chartConfig}
+        className="min-h-[200px] max-w-[700px] w-full"
+      >
+        <BarChart accessibilityLayer data={responseData}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="days from 1st commit"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+          />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
+
+          <Bar
+            dataKey="% of total test (cumulative)"
+            fill="var(--color-totalTest)"
+            radius={4}
+          />
+
+          <Bar
+            dataKey="% of total design (cumulative)"
+            fill="var(--color-totalDesign)"
+            radius={4}
+          />
+        </BarChart>
+      </ChartContainer>
+      <ChartContainer
+        config={chartConfig}
+        className="min-h-[200px] max-w-[700px] w-full"
+      >
+        <LineChart
+          accessibilityLayer
+          data={responseData}
+          margin={{
+            left: 12,
+            right: 12,
+          }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="days from 1st commit"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
+          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          <Line
+            dataKey="% of total test (cumulative)"
+            type="monotone"
+            stroke="var(--color-totalTest)"
+            strokeWidth={2}
+            dot={false}
+          />
+          <Line
+            dataKey="% of total design (cumulative)"
+            type="monotone"
+            stroke="var(--color-totalDesign)"
+            strokeWidth={2}
+            dot={false}
+          />
+        </LineChart>
+      </ChartContainer>
     </section>
   );
 };

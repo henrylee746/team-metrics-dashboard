@@ -6,9 +6,11 @@ const port = 5000;
 const xlsx = require("xlsx");
 const path = require("path");
 const cors = require("cors");
-const { start } = require("repl");
+const json = require("./message.json");
+const jsonWithIntersect = require("./messageIntersect.json");
 
 let finalData = []; //represents final JSON arr after manipulations
+let command = "";
 
 app.use(
   cors({
@@ -20,12 +22,32 @@ app.use(
 app.use(express.static("public"));
 app.use(express.json());
 
-//Async method (although risks sending multiple network responses if one exec fails)
 app.post("/submit", (req, res) => {
   finalData = [];
+
+  const { intersect } = req.body;
+
+  if (intersect) {
+    //Owner: ehsxmng
+    //11022-SP12, 11160-SP4 w/ Intersect
+    finalData = jsonWithIntersect;
+  } else {
+    //11022-SP12, 11160-SP4 (no date range, all servers selected)
+    finalData = json;
+  }
+
+  res.status(200).send({
+    status: "success",
+    message: "Data processed",
+    data: finalData,
+    subjectSplit: 2,
+    ownerSplit: 1,
+    intersect: intersect,
+  });
+
+  /* normal querying code 
   const {
     subject,
-    team,
     owner,
     dateRange,
     gerrit,
@@ -38,109 +60,25 @@ app.post("/submit", (req, res) => {
   const startDate = format(dateRange.from, "yyyy-MM-dd");
   const endDate = format(dateRange.to, "yyyy-MM-dd");
 
+  const subjectSplit = subject.trim().split(/[,;]+/); //regex to split either during , or ; occurence
+  const ownerSplit = owner.trim().split(/[,;]+/); //regex to split either during , or ; occurence
+
   const objData = {
     subject: subject,
-    team: team,
     owner: owner,
-    startDate: startDate,
-    endDate: endDate,
+    startDate: startDate, //startDate
+    endDate: endDate, //endDate
     gerrit: gerrit,
     gerritArchive: gerritArchive,
     gerritDelta: gerritDelta,
     intersect: intersect,
   };
 
-  let [command, subjectSplit] = ["", ""];
-  for (const [key, value] of Object.entries(objData)) {
-    if (value === "" || value === false) continue;
-    switch (key) {
-      case "subject":
-        if (subject.includes(",") || subject.includes(";")) {
-          subjectSplit = subject.trim().split(/[,;]+/); //regex to split either during , or ; occurence
-          for (let i = 0; i < subjectSplit.length; i++) {
-            command =
-              "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
-            command += `--reasons="${subjectSplit[i]}" `;
-            switch (key) {
-              case "owner":
-                command += `--owner="${owner}" `;
-                break;
-              case "team":
-                command += `--team="${team}" `;
-                break;
-              case "startDate":
-                command += `--begin="${startDate}" `;
-                break;
-              case "endDate":
-                command += `--end="${endDate}" `;
-                break;
-              case "gerrit":
-                command += `--gerrit=gerrit`;
-                break;
-              case "gerritArchive":
-                command += `--gerrit=gerritArchive`;
-                break;
-              case "gerritDelta":
-                command += `--gerrit=gerritDelta`;
-                break;
-              case "intersect":
-                command += `--intersect`;
-                break;
-            }
-            command += "--saveData;";
-            console.log(command);
-            console.log(`Executing command: ${command}`);
+  command = "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
 
-            exec(command, (error, stdout, stderr) => {
-              if (error) {
-                console.error(`Error: ${error.message}`);
-                return res
-                  .status(500)
-                  .send({ status: "error", message: error.message });
-              }
-              if (stderr) {
-                console.error(`Stderr: ${stderr}`);
-                return res
-                  .status(500)
-                  .send({ status: "error", message: stderr });
-              }
-              console.log(`Stdout:\n${stdout}`);
-              command = "";
-              processXlsxToJson();
-            });
-          }
-        }
-        command = "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
-        command += `--reasons="${subject}" `;
-        break;
-      case "owner":
-        command += `--owner="${owner}" `;
-        break;
-      case "team":
-        command += `--team="${team}" `;
-        break;
-      case "startDate":
-        command += `--begin="${startDate}" `;
-        break;
-      case "endDate":
-        command += `--end="${endDate}" `;
-        break;
-      case "gerrit":
-        command += `--gerrit=gerrit`;
-        break;
-      case "gerritArchive":
-        command += `--gerrit=gerritArchive`;
-        break;
-      case "gerritDelta":
-        command += `--gerrit=gerritDelta`;
-        break;
-      case "intersect":
-        command += `--intersect`;
-        break;
-    }
-  }
-  command += "--saveData;";
-  console.log(`Executing command after loop: ${command}`);
+  command = buildCommand(objData, command);
+
+  console.log(`Executing command: ${command}`);
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
@@ -152,29 +90,140 @@ app.post("/submit", (req, res) => {
       return res.status(500).send({ status: "error", message: stderr });
     }
     console.log(`Stdout:\n${stdout}`);
-    command = "";
-    processXlsxToJson();
-    res
-      .status(200)
-      .send({ status: "success", message: "Data processed", data: finalData });
+    processXlsxToJson(subject, owner);
+
+    res.status(200).send({
+      status: "success",
+      message: "Data processed",
+      data: finalData,
+      subjectSplit: subjectSplit,
+      ownerSplit: ownerSplit,
+      intersect: intersect,
+    });
   });
+  */
 });
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-//***************Fuctions Called (Stack Trace) in Top to Bottom Order */
-const processXlsxToJson = () => {
+/*Fuctions Called (Stack Trace) in Top to Bottom Order */
+const buildCommand = (objData, command) => {
+  const keys = Object.keys(objData);
+  const values = Object.values(objData);
+
+  for (let i = 0; i < keys.length; i++) {
+    if (values[i] === "" || !values[i]) continue;
+    switch (keys[i]) {
+      case "subject":
+        command += `--reasons=${values[i]} `;
+        break;
+      case "owner":
+        command += `--owners=${values[i]} `;
+        break;
+      case "startDate":
+        command += `--begin=${values[i]} `;
+        break;
+      case "endDate":
+        command += `--end=${values[i]} `;
+        break;
+      case "gerrit":
+        command += `--gerrit=gerrit`;
+        break;
+      case "gerritArchive":
+        if (!values[i - 1]) {
+          command += `--gerrit=gerritArchive`;
+          break;
+        }
+        command += `,gerritArchive`;
+        break;
+      case "gerritDelta":
+        if (!values[i - 2] && !values[i - 1]) {
+          command += `--gerrit=gerritDelta`;
+          break;
+        }
+        command += `,gerritDelta `;
+        break;
+      case "intersect":
+        command += `--intersect `;
+        break;
+    }
+  }
+  command += `--saveData`;
+  return command;
+};
+
+const processXlsxToJson = (subject, owner) => {
   const workbook = xlsx.readFile(path.join(__dirname, "./csv/churnQuery.xlsx"));
   const sheet_name = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[sheet_name];
 
   // Convert the worksheet to JSON data
   const jsonData = xlsx.utils.sheet_to_json(worksheet);
-  addTotalTestAndTotalDesign(jsonData);
+  separateQueries(jsonData, command, subject, owner); //passing in subject = subjectSplit, owner = ownerSplit
 };
 
+const separateQueries = (jsonData, command, subject, owner) => {
+  const [subjectSplit, ownerSplit] = [subject, owner];
+  let overlapArr = [];
+  if (command.includes("--intersect")) {
+    //if data was selected to be intersected
+    let counter = 0;
+    let jsonArr = [];
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i].reason == subjectSplit[counter]) {
+        jsonArr.push(jsonData[i]);
+      } else {
+        counter++;
+        addTotalTestAndTotalDesign(jsonArr);
+        jsonArr = [];
+        jsonArr.push(jsonData[i]);
+      }
+    }
+    addTotalTestAndTotalDesign(jsonArr);
+    if (jsonArr == jsonData) addTotalTestAndTotalDesign(jsonData);
+  } else {
+    //if data wasn't selected to be intersected
+    let counter = 0;
+    let jsonArr = [];
+    let index;
+    for (let i = 0; i < jsonData.length; i++) {
+      if (ownerSplit.includes(jsonData[i].user)) {
+        overlapArr.push(jsonData[i]);
+      }
+      if (jsonData[i].reason == subjectSplit[counter]) {
+        jsonArr.push(jsonData[i]);
+      } else {
+        ++counter;
+        addTotalTestAndTotalDesign(jsonArr);
+        jsonArr = [];
+        if (counter + 1 > subjectSplit.length) {
+          index = i;
+          counter = 0;
+          break;
+        }
+        jsonArr.push(jsonData[i]);
+      }
+    }
+
+    //Begin owner parsing process after subjects have been parsed
+    jsonArr = overlapArr;
+    for (let i = index; i < jsonData.length; i++) {
+      if (jsonData[i].user == ownerSplit[counter]) {
+        jsonArr.push(jsonData[i]);
+      } else {
+        counter++;
+        addTotalTestAndTotalDesign(jsonArr);
+        jsonArr = [];
+        jsonArr.push(jsonData[i]);
+      }
+    }
+    addTotalTestAndTotalDesign(jsonArr);
+  }
+};
+
+//Each option (jsonArr) goes through data manipulation starting here
 // Loops through objects and gets totalTest and totalDesign totals out of all commits
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
@@ -255,9 +304,9 @@ const getFirstAndLastCommit = (input) => {
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +
       input.reduce((a, b) => a + (b.testCodeChurn || 0), 0),
   });
-  console.log(input);
+  //console.log(input);
   finalData.push(input);
-  console.log(finalData);
+
   convertJsonToXlsx(input);
 };
 const convertJsonToXlsx = (jsonData) => {

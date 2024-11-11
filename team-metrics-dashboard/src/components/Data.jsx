@@ -1,33 +1,19 @@
 import "../output.css"; // Import global styles
 import KPISection from "../components/KPISection.jsx";
 import ChartsSection from "../components/ChartsSection.jsx";
-import TableSection from "../components/TableSection.jsx";
 import { useOutletContext } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 function Data() {
-  const [responseData, dataFetched] = useOutletContext();
-  const { index = 0 } = useParams();
+  const [responseData] = useOutletContext();
+  const { index } = useParams(); //grabs current index in URL
 
-  const currentData = responseData[index];
+  const currentData = responseData[index]; //sets data according to option chosen
 
   return (
     <>
-      <KPISection
-        responseData={currentData}
-        dataFetched={dataFetched}
-        index={index}
-      />
-      <ChartsSection
-        responseData={currentData}
-        dataFetched={dataFetched}
-        index={index}
-      />
-      <TableSection
-        responseData={currentData}
-        dataFetched={dataFetched}
-        index={index}
-      />
+      <KPISection responseData={currentData} />
+      <ChartsSection responseData={currentData} index={index} />
     </>
   );
 }
