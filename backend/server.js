@@ -7,6 +7,7 @@ const xlsx = require("xlsx");
 const path = require("path");
 const cors = require("cors");
 const json = require("./message.json");
+const fs = require("fs");
 const jsonWithIntersect = require("./messageIntersect.json");
 
 let finalData = []; //represents final JSON arr after manipulations
@@ -168,6 +169,18 @@ const processXlsxToJson = (subject, owner) => {
 };
 
 const separateQueries = (jsonData, command, subject, owner) => {
+  //TODO:
+  /*
+1. Add total of all subjects/owners 
+(final object in jsonData must be sorted by date to do this)
+
+
+2. When parsing through subjects, 
+if a selected owner worked on that subject, 
+it must be included in overlapArr as well 
+(but must be inserted in the correct index in jsonArr by date.)
+*/
+
   let [subjectSplit, ownerSplit] = [subject, owner];
 
   //clear the arrays if the split element is empty quotes
@@ -179,6 +192,8 @@ const separateQueries = (jsonData, command, subject, owner) => {
 
   //if only the subject field was filled
   if (ownerSplit.length == 0) {
+    let counter = 0;
+    let jsonArr = [];
     for (let i = 0; i < jsonData.length; i++) {
       if (jsonData[i].reason == subjectSplit[counter]) {
         jsonArr.push(jsonData[i]);
@@ -189,11 +204,23 @@ const separateQueries = (jsonData, command, subject, owner) => {
         jsonArr.push(jsonData[i]);
       }
     }
-
     addTotalTestAndTotalDesign(jsonArr);
-    if (jsonArr !== jsonData) addTotalTestAndTotalDesign(jsonData);
     return;
   } else if (subjectSplit.length == 0) {
+    let counter = 0;
+    let jsonArr = [];
+    for (let i = index; i < jsonData.length; i++) {
+      if (jsonData[i].user == ownerSplit[counter]) {
+        jsonArr.push(jsonData[i]);
+      } else {
+        counter++;
+        addTotalTestAndTotalDesign(jsonArr);
+        jsonArr = [];
+        jsonArr.push(jsonData[i]);
+      }
+    }
+    addTotalTestAndTotalDesign(jsonArr);
+    return;
   }
 
   //if both subject and owner field was filled w/ at least one entry
@@ -211,9 +238,7 @@ const separateQueries = (jsonData, command, subject, owner) => {
         jsonArr.push(jsonData[i]);
       }
     }
-
     addTotalTestAndTotalDesign(jsonArr);
-    if (jsonArr !== jsonData) addTotalTestAndTotalDesign(jsonData);
   } else {
     //if data wasn't selected to be intersected
     let counter = 0;

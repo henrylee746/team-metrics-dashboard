@@ -95,21 +95,6 @@ function App() {
                 <SelectContent>
                   {responseData.intersect &&
                     responseData.data.map((arr, index) => {
-                      if (index == responseData.data.length - 1) {
-                        if (responseData.data.length == 1) {
-                          return (
-                            <SelectItem key={index} value={`${index}`}>
-                              Subject:{" "}
-                              {arr[responseData.data.length - 1]["reason"]}
-                            </SelectItem>
-                          );
-                        }
-                        return (
-                          <SelectItem key={index} value={`${index}`}>
-                            Total
-                          </SelectItem>
-                        );
-                      }
                       return (
                         <SelectItem key={index} value={`${index}`}>
                           Subject: {arr[0]["reason"]}
