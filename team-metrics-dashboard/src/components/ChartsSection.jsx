@@ -1,7 +1,20 @@
 import "../output.css";
 
 import React, { useState, useEffect } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, Line, LineChart } from "recharts";
+import {
+  LabelList,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Line,
+  LineChart,
+  PolarAngleAxis,
+  PolarGrid,
+  Radar,
+  RadarChart,
+} from "recharts";
 
 import {
   ChartContainer,
@@ -10,6 +23,14 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
 const ChartsSection = ({ responseData, index }) => {
@@ -28,117 +49,143 @@ const ChartsSection = ({ responseData, index }) => {
     },
   };
 
-  function Component() {
-    return (
-      <ChartContainer
-        config={chartConfig}
-        className="min-h-[200px] max-w-[700px] w-full"
-      >
-        <BarChart accessibilityLayer data={responseData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="days from 1st commit"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-          />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
-
-          <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
-        </BarChart>
-      </ChartContainer>
-    );
-  }
   return (
     <section
-      className="charts-section flex gap-12 p-20 flex-wrap justify-center items-center"
+      className="charts-section w-screen grid sm:grid-cols-1 lg:grid-cols-2 gap-12 p-8  justify-center items-center"
       id="charts-section"
     >
-      <Label />
-      1/x
-      <ChartContainer
-        config={chartConfig}
-        className="min-h-[200px] max-w-[700px] w-full"
-      >
-        <BarChart accessibilityLayer data={responseData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="days from 1st commit"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-          />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
+      <Card>
+        <CardHeader>
+          <CardTitle>1/x</CardTitle>
+          <CardDescription>
+            Displays amount of days in between each respective commit done
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+            <BarChart accessibilityLayer data={responseData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="days from 1st commit"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickCount={3}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
 
-          <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
-        </BarChart>
-      </ChartContainer>
-      <ChartContainer
-        config={chartConfig}
-        className="min-h-[200px] max-w-[700px] w-full"
-      >
-        <BarChart accessibilityLayer data={responseData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="days from 1st commit"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-          />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
+              <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle></CardTitle>
+        </CardHeader>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Total Test and Total Design Code</CardTitle>
+          <CardDescription>
+            Displays percentage of total test and design code over time
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer
+            config={chartConfig}
+            className="min-h-[200px]  w-full"
+          >
+            <BarChart accessibilityLayer data={responseData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="days from 1st commit"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickCount={3}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
 
-          <Bar
-            dataKey="% of total test (cumulative)"
-            fill="var(--color-totalTest)"
-            radius={4}
-          />
+              <Bar
+                dataKey="% of total test (cumulative)"
+                fill="var(--color-totalTest)"
+                radius={4}
+              />
 
-          <Bar
-            dataKey="% of total design (cumulative)"
-            fill="var(--color-totalDesign)"
-            radius={4}
-          />
-        </BarChart>
-      </ChartContainer>
-      <ChartContainer
-        config={chartConfig}
-        className="min-h-[200px] max-w-[700px] w-full"
-      >
-        <LineChart
-          accessibilityLayer
-          data={responseData}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="days from 1st commit"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <Line
-            dataKey="% of total test (cumulative)"
-            type="monotone"
-            stroke="var(--color-totalTest)"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="% of total design (cumulative)"
-            type="monotone"
-            stroke="var(--color-totalDesign)"
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
-      </ChartContainer>
+              <Bar
+                dataKey="% of total design (cumulative)"
+                fill="var(--color-totalDesign)"
+                radius={4}
+              />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Total Test and Design Code (Line Graph)</CardTitle>
+          <CardDescription>
+            Test and Design Code over time, but in lines
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig}>
+            <LineChart
+              accessibilityLayer
+              data={responseData}
+              margin={{
+                left: 12,
+                right: 12,
+              }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="days from 1st commit"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickCount={3}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="line" />}
+              />
+              <Line
+                dataKey="% of total test (cumulative)"
+                type="monotone"
+                stroke="var(--color-totalTest)"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                dataKey="% of total design (cumulative)"
+                type="monotone"
+                stroke="var(--color-totalDesign)"
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
     </section>
   );
 };

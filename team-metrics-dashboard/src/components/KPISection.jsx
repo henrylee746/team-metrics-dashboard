@@ -20,7 +20,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 const KPISection = ({ responseData }) => {
   const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: false })
+    Autoplay({ delay: 2000, stopOnInteraction: false }),
   );
 
   return (
@@ -58,12 +58,12 @@ const KPISection = ({ responseData }) => {
             </Card>
           </CarouselItem>
           <CarouselItem className="basis-1/2 ">
-            <Card className="w-[150px] h-[150px]">
-              <CardContent className="flex aspect-square items-center justify-center text-center p-6">
+            <Card className="w-[150px] h-[150px] flex items-center">
+              <CardContent className="aspect-square text-center p-6">
                 <span>
                   <h4>
-                    Last Commit - First Commit:{" "}
-                    <i className="text-xl font-semibold">
+                    Last Commit - First Commit:
+                    <i className="text-md font-semibold">
                       {" "}
                       {responseData.length > 0
                         ? responseData[responseData.length - 1][
@@ -77,22 +77,20 @@ const KPISection = ({ responseData }) => {
               </CardContent>
             </Card>
           </CarouselItem>
-          <CarouselItem className="basis-1/2 ">
+          <CarouselItem className="basis-1/2">
             <Card className="w-[150px] h-[150px]">
               <CardContent className="flex aspect-square items-center justify-center text-center p-6">
-                <span>
-                  <h4>
-                    Total Code Churn:{"   "}
-                    <i className="text-xl font-semibold">
-                      {responseData.length > 0
-                        ? responseData[responseData.length - 1][
-                            "Total code churn"
-                          ]
-                        : null}{" "}
-                      lines
-                    </i>
-                  </h4>
-                </span>
+                <h4>
+                  Total Code Churn:{"   "}
+                  <i className="text-xl font-semibold">
+                    {responseData.length > 0
+                      ? responseData[responseData.length - 1][
+                          "Total code churn"
+                        ]
+                      : null}{" "}
+                    lines
+                  </i>
+                </h4>
               </CardContent>
             </Card>
           </CarouselItem>

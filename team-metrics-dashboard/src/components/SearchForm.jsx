@@ -177,7 +177,7 @@ function DatePickerWithRange({ value, onChange }) {
             variant={"outline"}
             className={cn(
               "justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground",
             )}
           >
             <CalendarIcon />
@@ -332,9 +332,6 @@ const SearchForm = ({ setResponseData, setLoading, setError }) => {
     }
     navigate("/"); //resets URL back to homepage
 
-    if (document.querySelector(".links") !== null)
-      document.querySelector(".links").classList.remove("shown");
-
     try {
       const response = await fetch("/api/submit", {
         method: "POST",
@@ -355,7 +352,7 @@ const SearchForm = ({ setResponseData, setLoading, setError }) => {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `HTTP Error: ${response.status} - ${errorData.message}`
+          `HTTP Error: ${response.status} - ${errorData.message}`,
         );
       }
 
@@ -368,6 +365,7 @@ const SearchForm = ({ setResponseData, setLoading, setError }) => {
       setError(error.message);
     } finally {
       setLoading(false);
+      setError(false);
     }
   };
 

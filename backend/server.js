@@ -17,7 +17,7 @@ app.use(
     origin: "http://localhost:5173", // Frontend URL
     methods: ["GET", "POST"],
     credentials: true,
-  })
+  }),
 );
 app.use(express.static("public"));
 app.use(express.json());
@@ -25,6 +25,7 @@ app.use(express.json());
 app.post("/submit", (req, res) => {
   finalData = [];
 
+  /*
   const { intersect } = req.body;
 
   if (intersect) {
@@ -44,8 +45,7 @@ app.post("/submit", (req, res) => {
     ownerSplit: 1,
     intersect: intersect,
   });
-
-  /* normal querying code 
+  */
   const {
     subject,
     owner,
@@ -60,14 +60,18 @@ app.post("/submit", (req, res) => {
   const startDate = format(dateRange.from, "yyyy-MM-dd");
   const endDate = format(dateRange.to, "yyyy-MM-dd");
 
-  const subjectSplit = subject.trim().split(/[,;]+/); //regex to split either during , or ; occurence
-  const ownerSplit = owner.trim().split(/[,;]+/); //regex to split either during , or ; occurence
+  //to remove all whitespace from inputs (e.g. 11022-SP12,  11160-SP4)
+  const subjectTrimmed = subject.replace(/\s+/g, "");
+  const ownerTrimmed = owner.replace(/\s+/g, "");
+
+  const subjectSplit = subjectTrimmed.split(/[,;]+/);
+  const ownerSplit = ownerTrimmed.split(/[,;]+/);
 
   const objData = {
-    subject: subject,
-    owner: owner,
-    startDate: startDate, //startDate
-    endDate: endDate, //endDate
+    subject: subjectTrimmed,
+    owner: ownerTrimmed,
+    startDate: "", //startDate
+    endDate: "", //endDate
     gerrit: gerrit,
     gerritArchive: gerritArchive,
     gerritDelta: gerritDelta,
@@ -90,18 +94,17 @@ app.post("/submit", (req, res) => {
       return res.status(500).send({ status: "error", message: stderr });
     }
     console.log(`Stdout:\n${stdout}`);
-    processXlsxToJson(subject, owner);
+    processXlsxToJson(subjectSplit, ownerSplit);
 
     res.status(200).send({
       status: "success",
       message: "Data processed",
       data: finalData,
-      subjectSplit: subjectSplit,
-      ownerSplit: ownerSplit,
+      subjectSplit: subjectSplit.length,
+      ownerSplit: ownerSplit.length,
       intersect: intersect,
     });
   });
-  */
 });
 
 app.get("*", (req, res) => {
@@ -165,8 +168,35 @@ const processXlsxToJson = (subject, owner) => {
 };
 
 const separateQueries = (jsonData, command, subject, owner) => {
-  const [subjectSplit, ownerSplit] = [subject, owner];
-  let overlapArr = [];
+  let [subjectSplit, ownerSplit] = [subject, owner];
+
+  //clear the arrays if the split element is empty quotes
+  if (subjectSplit[0] === "") subjectSplit = [];
+  if (ownerSplit[0] === "") ownerSplit = [];
+
+  console.log(subjectSplit.length);
+  console.log(ownerSplit.length);
+
+  //if only the subject field was filled
+  if (ownerSplit.length == 0) {
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i].reason == subjectSplit[counter]) {
+        jsonArr.push(jsonData[i]);
+      } else {
+        counter++;
+        addTotalTestAndTotalDesign(jsonArr);
+        jsonArr = [];
+        jsonArr.push(jsonData[i]);
+      }
+    }
+
+    addTotalTestAndTotalDesign(jsonArr);
+    if (jsonArr !== jsonData) addTotalTestAndTotalDesign(jsonData);
+    return;
+  } else if (subjectSplit.length == 0) {
+  }
+
+  //if both subject and owner field was filled w/ at least one entry
   if (command.includes("--intersect")) {
     //if data was selected to be intersected
     let counter = 0;
@@ -181,12 +211,14 @@ const separateQueries = (jsonData, command, subject, owner) => {
         jsonArr.push(jsonData[i]);
       }
     }
+
     addTotalTestAndTotalDesign(jsonArr);
-    if (jsonArr == jsonData) addTotalTestAndTotalDesign(jsonData);
+    if (jsonArr !== jsonData) addTotalTestAndTotalDesign(jsonData);
   } else {
     //if data wasn't selected to be intersected
     let counter = 0;
     let jsonArr = [];
+    let overlapArr = [];
     let index;
     for (let i = 0; i < jsonData.length; i++) {
       if (ownerSplit.includes(jsonData[i].user)) {
@@ -208,7 +240,6 @@ const separateQueries = (jsonData, command, subject, owner) => {
     }
 
     //Begin owner parsing process after subjects have been parsed
-    jsonArr = overlapArr;
     for (let i = index; i < jsonData.length; i++) {
       if (jsonData[i].user == ownerSplit[counter]) {
         jsonArr.push(jsonData[i]);
@@ -228,11 +259,11 @@ const separateQueries = (jsonData, command, subject, owner) => {
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
     (sum, commit) => sum + (commit.testCodeChurn || 0),
-    0
+    0,
   );
   let totalDesign = input.reduce(
     (sum, commit) => sum + (commit.sourceCodeChurn || 0),
-    0
+    0,
   );
   fillCumulativeCode(input, totalTest, totalDesign);
 };
@@ -294,19 +325,17 @@ const getFirstAndLastCommit = (input) => {
     "Last commit": input[input.length - 1]["updated"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
-      0
+      0,
     ),
     "Total test code churn": input.reduce(
       (a, b) => a + (b.testCodeChurn || 0),
-      0
+      0,
     ),
     "Total code churn":
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +
       input.reduce((a, b) => a + (b.testCodeChurn || 0), 0),
   });
-  //console.log(input);
   finalData.push(input);
-
   convertJsonToXlsx(input);
 };
 const convertJsonToXlsx = (jsonData) => {

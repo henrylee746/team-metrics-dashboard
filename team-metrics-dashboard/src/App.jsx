@@ -59,7 +59,7 @@ function App() {
   useEffect(() => {
     // Apply theme class to root element
     document.documentElement.classList.remove(
-      theme === "dark" ? "light" : "dark"
+      theme === "dark" ? "light" : "dark",
     );
     document.documentElement.classList.add(theme);
 
@@ -92,7 +92,7 @@ function App() {
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select Subject/Owner" />
                 </SelectTrigger>
-                <SelectContent className="links">
+                <SelectContent>
                   {responseData.intersect &&
                     responseData.data.map((arr, index) => {
                       if (index == responseData.data.length - 1) {
