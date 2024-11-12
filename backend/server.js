@@ -9,6 +9,7 @@ const cors = require("cors");
 const json = require("./message.json");
 const fs = require("fs");
 const jsonWithIntersect = require("./messageIntersect.json");
+const sql = require("mssql");
 
 let finalData = []; //represents final JSON arr after manipulations
 let command = "";
@@ -18,7 +19,7 @@ app.use(
     origin: "http://localhost:5173", // Frontend URL
     methods: ["GET", "POST"],
     credentials: true,
-  }),
+  })
 );
 app.use(express.static("public"));
 app.use(express.json());
@@ -26,7 +27,6 @@ app.use(express.json());
 app.post("/submit", (req, res) => {
   finalData = [];
 
-  /*
   const { intersect } = req.body;
 
   if (intersect) {
@@ -38,15 +38,33 @@ app.post("/submit", (req, res) => {
     finalData = json;
   }
 
-  res.status(200).send({
-    status: "success",
-    message: "Data processed",
-    data: finalData,
-    subjectSplit: 2,
-    ownerSplit: 1,
-    intersect: intersect,
-  });
-  */
+  (async () => {
+    try {
+      // make sure that any items are correctly URL encoded in the connection string
+      await sql.connect(
+        "Server=pemdbsrvssp.internal.ericsson.com,1433;Database=LMR;User Id=lmr-ddpeg1;Password=y469.23Axy#;"
+      );
+      const result =
+        await sql.query`select * from vwLmrFptFeaturesDenormalized`;
+      console.dir(result);
+    } catch (err) {
+      console.log(err);
+    }
+  })();
+
+  setTimeout(() => {
+    //timeout to imitate script calltime
+    res.status(200).send({
+      status: "success",
+      message: "Data processed",
+      data: finalData,
+      subjectSplit: 2,
+      ownerSplit: 1,
+      intersect: intersect,
+    });
+  }, 2000);
+
+  /*
   const {
     subject,
     owner,
@@ -106,6 +124,7 @@ app.post("/submit", (req, res) => {
       intersect: intersect,
     });
   });
+  */
 });
 
 app.get("*", (req, res) => {
@@ -284,11 +303,11 @@ it must be included in overlapArr as well
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
     (sum, commit) => sum + (commit.testCodeChurn || 0),
-    0,
+    0
   );
   let totalDesign = input.reduce(
     (sum, commit) => sum + (commit.sourceCodeChurn || 0),
-    0,
+    0
   );
   fillCumulativeCode(input, totalTest, totalDesign);
 };
@@ -350,11 +369,11 @@ const getFirstAndLastCommit = (input) => {
     "Last commit": input[input.length - 1]["updated"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
-      0,
+      0
     ),
     "Total test code churn": input.reduce(
       (a, b) => a + (b.testCodeChurn || 0),
-      0,
+      0
     ),
     "Total code churn":
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +

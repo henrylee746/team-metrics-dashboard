@@ -87,7 +87,7 @@ function ProfileForm({ onSubmit, loading }) {
     <Form {...form}>
       {/*handleSubmit: from react-hook-form*/}
       <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-        <div className="grid grid-cols-2 gap-8 items-center p-4">
+        <div className="w-screen grid grid-cols-2 gap-8 items-center p-4">
           <FormField
             control={form.control}
             name="subject"

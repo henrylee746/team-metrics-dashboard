@@ -46,10 +46,10 @@ import { cn } from "@/lib/utils";
 /*Form Validation (Client-Side) via Zod
 Form Schema*/
 const formSchema = z.object({
-  subject: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  team: z.string().min(2, {
+    message: "Teamname must be at least 2 characters.",
   }),
-  owner: z.string().optional(),
+  subject: z.string().optional(),
   dateRange: z
     .object({
       from: z.date().optional(),
@@ -68,8 +68,8 @@ function ProfileForm({ onSubmit, loading }) {
     //Defining the form
     resolver: zodResolver(formSchema),
     defaultValues: {
+      team: "",
       subject: "",
-      owner: "",
       dateRange: { from: null, to: null },
       gerrit: true,
       gerritDelta: true,
@@ -90,25 +90,7 @@ function ProfileForm({ onSubmit, loading }) {
         <div className="grid grid-cols-2 gap-8 items-center p-4">
           <FormField
             control={form.control}
-            name="subject"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Subject(s)</FormLabel>
-                <FormControl>
-                  <Input
-                    //className={`[&:not(:focus)]:placeholder-transparent`}
-                    placeholder="11022-SP12"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>Comma or semicolon separated</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="owner"
+            name="team"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Team(s)</FormLabel>
@@ -122,6 +104,27 @@ function ProfileForm({ onSubmit, loading }) {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Subject(s)</FormLabel>
+                <FormControl>
+                  <Input
+                    //className={`[&:not(:focus)]:placeholder-transparent`}
+                    placeholder="11022-SP12"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Comma or semicolon separated (Optional)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Controller
             control={form.control}
             name="dateRange"
@@ -306,8 +309,11 @@ function PopoverComponent({ form }) {
                     )}
                   />
                   <p className="text-sm text-muted-foreground">
-                    Filter results which satisfy Subject(s) and Owner(s)/
+                    Filter results which satisfy Subject(s) and Team/
                     simutaeneously
+                    <p>
+                      (only valid if at least one subject has been filled in)
+                    </p>
                   </p>
                 </div>
               </div>
@@ -325,8 +331,8 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
     const {
+      team,
       subject,
-      owner,
       dateRange,
       gerrit,
       gerritArchive,
@@ -334,7 +340,7 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
       intersect,
     } = values;
 
-    if (!subject && !owner) {
+    if (!subject && !team) {
       return;
     } else {
       setLoading(true);
@@ -348,8 +354,8 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          team: team,
           subject: subject,
-          owner: owner,
           dateRange: dateRange,
           gerrit: gerrit,
           gerritArchive: gerritArchive,

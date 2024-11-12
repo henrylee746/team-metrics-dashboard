@@ -1,7 +1,7 @@
 import "./output.css"; // Import global styles
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
-import SearchForm from "./components/SearchForm.jsx";
+import SearchForm2 from "./components/SearchForm2.jsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -89,7 +89,7 @@ function App() {
         />
         <div className="container">
           <main className={`main-content`}>
-            <SearchForm
+            <SearchForm2
               setResponseData={setResponseData}
               loading={loading}
               setLoading={setLoading}
