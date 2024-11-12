@@ -13,7 +13,7 @@ function Data() {
   return (
     <>
       <KPISection responseData={currentData} />
-      <ChartsSection responseData={currentData} index={index} />
+      <ChartsSection responseData={currentData} />
     </>
   );
 }

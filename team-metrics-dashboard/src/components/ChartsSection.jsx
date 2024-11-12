@@ -14,6 +14,8 @@ import {
   PolarGrid,
   Radar,
   RadarChart,
+  Area,
+  AreaChart,
 } from "recharts";
 
 import {
@@ -31,9 +33,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 
-const ChartsSection = ({ responseData, index }) => {
+const ChartsSection = ({ responseData }) => {
   const chartConfig = {
     oneOverX: {
       label: "1/x",
@@ -47,11 +48,15 @@ const ChartsSection = ({ responseData, index }) => {
       label: "% of total design (cumulative)",
       color: "hsl(var(--chart-3))",
     },
+    oneOverXArea: {
+      label: "1/x",
+      color: "hsl(var(--chart-4))",
+    },
   };
 
   return (
     <section
-      className="charts-section w-screen grid sm:grid-cols-1 lg:grid-cols-2 gap-12 p-8  justify-center items-center"
+      className="charts-section w-screen grid sm:grid-cols-1 lg:grid-cols-2 gap-12 p-8 justify-center items-center"
       id="charts-section"
     >
       <Card>
@@ -78,7 +83,9 @@ const ChartsSection = ({ responseData, index }) => {
                 tickCount={3}
               />
               <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
+              <ChartLegend
+                content={<ChartLegendContent nameKey="days from 1st commit" />}
+              />
 
               <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
             </BarChart>
@@ -87,8 +94,46 @@ const ChartsSection = ({ responseData, index }) => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle></CardTitle>
+          <CardTitle>1/x Area Chart</CardTitle>
+          <CardDescription>Showing 1/x in continuous format</CardDescription>
         </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig}>
+            <AreaChart
+              accessibilityLayer
+              data={responseData}
+              margin={{
+                left: 12,
+                right: 12,
+              }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="days from 1st commit"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickCount={3}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="line" />}
+              />
+              <Area
+                dataKey="1/x"
+                type="natural"
+                fill="var(--color-oneOverXArea)"
+                fillOpacity={0.4}
+                stroke="var(--color-oneOverXArea)"
+              />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
       </Card>
       <Card>
         <CardHeader>

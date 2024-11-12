@@ -18,8 +18,14 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "team",
+    path: "/team",
     element: <App2 />,
+    children: [
+      {
+        path: ":index", // Dynamic route parameter for index
+        element: <Data />,
+      },
+    ],
   },
 ]);
 

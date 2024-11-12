@@ -15,6 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSidebar from "./components/AppSidebar.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -59,7 +61,7 @@ function App() {
   useEffect(() => {
     // Apply theme class to root element
     document.documentElement.classList.remove(
-      theme === "dark" ? "light" : "dark",
+      theme === "dark" ? "light" : "dark"
     );
     document.documentElement.classList.add(theme);
 
@@ -72,62 +74,70 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <Header
-        toggleTheme={toggleTheme}
-        currentTheme={theme}
-        className="header"
-      />
-      <div className="container">
-        <main className={`main-content`}>
-          <SearchForm
-            setResponseData={setResponseData}
-            setLoading={setLoading}
-            setError={setError}
-          />
+    <SidebarProvider
+      style={{
+        "--sidebar-width": "14rem",
+        "--sidebar-width-mobile": "16rem",
+      }}
+    >
+      <AppSidebar />
+      <div className="App">
+        <Header
+          toggleTheme={toggleTheme}
+          currentTheme={theme}
+          className="header"
+        />
+        <div className="container">
+          <main className={`main-content`}>
+            <SearchForm
+              setResponseData={setResponseData}
+              loading={loading}
+              setLoading={setLoading}
+              setError={setError}
+            />
 
-          {responseData && (
-            <div className="px-4 w-screen">
-              <Select onValueChange={handleLinkChange}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select Subject/Owner" />
-                </SelectTrigger>
-                <SelectContent>
-                  {responseData.intersect &&
-                    responseData.data.map((arr, index) => {
-                      return (
-                        <SelectItem key={index} value={`${index}`}>
-                          Subject: {arr[0]["reason"]}
-                        </SelectItem>
-                      );
-                    })}
-                  {!responseData.intersect &&
-                    responseData.data.map((arr, index) => {
-                      if (index + 1 > responseData.subjectSplit) {
-                        return (
-                          <SelectItem key={index} value={`${index}`}>
-                            Owner: {arr[0]["name"]}
-                          </SelectItem>
-                        );
-                      } else {
+            {responseData && (
+              <div className="w-screen">
+                <Select onValueChange={handleLinkChange}>
+                  <SelectTrigger className="w-[180px] ml-4">
+                    <SelectValue placeholder="Select Subject/Owner" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {responseData.intersect &&
+                      responseData.data.map((arr, index) => {
                         return (
                           <SelectItem key={index} value={`${index}`}>
                             Subject: {arr[0]["reason"]}
                           </SelectItem>
                         );
-                      }
-                    })}
-                </SelectContent>
-              </Select>
-              {<Outlet context={[responseData.data]} />}
-            </div>
-          )}
-          {loading && <div className="loader"></div>}
-          {error && <p>{error}.</p>}
-        </main>
+                      })}
+                    {!responseData.intersect &&
+                      responseData.data.map((arr, index) => {
+                        if (index + 1 > responseData.subjectSplit) {
+                          return (
+                            <SelectItem key={index} value={`${index}`}>
+                              Owner: {arr[0]["name"]}
+                            </SelectItem>
+                          );
+                        } else {
+                          return (
+                            <SelectItem key={index} value={`${index}`}>
+                              Subject: {arr[0]["reason"]}
+                            </SelectItem>
+                          );
+                        }
+                      })}
+                  </SelectContent>
+                </Select>
+                {<Outlet context={[responseData.data]} />}
+              </div>
+            )}
+            {error && <p>{error}.</p>}
+          </main>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </SidebarProvider>
   );
 }
 

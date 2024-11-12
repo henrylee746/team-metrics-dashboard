@@ -111,12 +111,12 @@ function ProfileForm({ onSubmit, loading }) {
             name="owner"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Owner(s)</FormLabel>
+                <FormLabel>Team(s)</FormLabel>
                 <FormControl>
-                  <Input placeholder="henry.lee.a@ericsson.com" {...field} />
+                  <Input placeholder="KB-2, Hurricanes" {...field} />
                 </FormControl>
                 <FormDescription>
-                  Comma or semicolon separated by email/signum
+                  Comma or semicolon separated by team name
                 </FormDescription>
                 <FormMessage />
               </FormItem>

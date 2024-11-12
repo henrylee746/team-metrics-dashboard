@@ -20,21 +20,21 @@ import Autoplay from "embla-carousel-autoplay";
 
 const KPISection = ({ responseData }) => {
   const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: false }),
+    Autoplay({ delay: 2000, stopOnInteraction: false })
   );
 
   return (
     <section className="kpi-section flex justify-center items-center gap-5 my-12">
       <Carousel
-        className="w-[350px]"
+        className="sm:w-[500px] md:w-[800px] lg:w-[1000px]"
         plugins={[plugin.current]}
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.play}
       >
         <CarouselContent>
-          <CarouselItem className="basis-1/2 ">
-            <Card className="w-[150px] h-[150px]">
-              <CardContent className="flex aspect-square items-center justify-center text-center p-6">
+          <CarouselItem className="basis-1/3">
+            <Card className="lg:w-[300px] md:w-[250px] h-[150px] sm:w-[150px] flex items-center">
+              <CardContent>
                 <span>
                   <p>
                     First Commit:{" "}
@@ -57,9 +57,9 @@ const KPISection = ({ responseData }) => {
               </CardContent>
             </Card>
           </CarouselItem>
-          <CarouselItem className="basis-1/2 ">
-            <Card className="w-[150px] h-[150px] flex items-center">
-              <CardContent className="aspect-square text-center p-6">
+          <CarouselItem className="basis-1/3 ">
+            <Card className="lg:w-[300px] md:w-[250px] h-[150px] sm:w-[150px] flex items-center">
+              <CardContent>
                 <span>
                   <h4>
                     Last Commit - First Commit:
@@ -77,9 +77,33 @@ const KPISection = ({ responseData }) => {
               </CardContent>
             </Card>
           </CarouselItem>
-          <CarouselItem className="basis-1/2">
-            <Card className="w-[150px] h-[150px]">
-              <CardContent className="flex aspect-square items-center justify-center text-center p-6">
+          <CarouselItem className="basis-1/3 ">
+            <Card className="lg:w-[300px] md:w-[250px] h-[150px] sm:w-[150px] flex items-center">
+              <CardContent>
+                <span>
+                  <h4>
+                    Average days between each commit:
+                    <i className="text-md font-semibold"></i>
+                  </h4>
+                </span>
+              </CardContent>
+            </Card>
+          </CarouselItem>
+          <CarouselItem className="basis-1/3 ">
+            <Card className="lg:w-[300px] md:w-[250px] h-[150px] sm:w-[150px] flex items-center">
+              <CardContent>
+                <span>
+                  <h4>
+                    Average design & test code per commit:
+                    <i className="text-md font-semibold"></i>
+                  </h4>
+                </span>
+              </CardContent>
+            </Card>
+          </CarouselItem>
+          <CarouselItem className="basis-1/3">
+            <Card className="lg:w-[300px] md:w-[250px] h-[150px] sm:w-[150px] flex items-center">
+              <CardContent>
                 <h4>
                   Total Code Churn:{"   "}
                   <i className="text-xl font-semibold">
