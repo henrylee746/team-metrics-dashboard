@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc"; // Use SWC instead of Babel
 import path from "path";
 
 export default defineConfig({
@@ -13,17 +13,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  server: {
-    proxy: {
-      "/api": {
-        //all requests w/ api route are proxied to server address
-        target: "http://localhost:5000", // Your backend server's address
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""), //strips the /api portion of the route before request gets sent to backend
-      },
     },
   },
 });

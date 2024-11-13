@@ -348,7 +348,7 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
     navigate("/"); //resets URL back to homepage
 
     try {
-      const response = await fetch("/api/submit", {
+      const response = await fetch("http://localhost:5000/submit/team", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

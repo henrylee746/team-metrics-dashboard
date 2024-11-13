@@ -23,6 +23,9 @@ importers:
       mssql:
         specifier: ^11.0.1
         version: 11.0.1
+      tedious:
+        specifier: ^18.6.1
+        version: 18.6.1
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5

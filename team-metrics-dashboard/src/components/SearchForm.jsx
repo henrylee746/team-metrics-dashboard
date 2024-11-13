@@ -342,7 +342,7 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
     navigate("/"); //resets URL back to homepage
 
     try {
-      const response = await fetch("/api/submit", {
+      const response = await fetch("http://localhost:5000/submit/owner", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -356,6 +356,7 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
           gerritDelta: gerritDelta,
           intersect: intersect,
         }),
+        //credentials: "include", This includes cookies if needed for session handling
       });
 
       if (!response.ok) {
