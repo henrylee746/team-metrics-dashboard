@@ -160,10 +160,14 @@ const KPISection = ({ responseData }) => {
                 <AccordionItem value={`item-${index + 1}`}>
                   <div className="text-md flex justify-between items-center gap-12 p-4">
                     <span>
-                      {commit["name"]}: {commit["subject"]}
+                      {commit["name"]}:{" "}
+                      <span className="text-muted-foreground">
+                        {commit["subject"]}
+                      </span>
                     </span>
-                    <div className="flex items-center gap-4">
-                      Merged: {commit["merged"]}
+                    <div className="flex items-center gap-2">
+                      Merged:{" "}
+                      <span className="font-bold">{commit["merged"]}</span>
                       <AccordionTrigger></AccordionTrigger>
                     </div>
                   </div>
