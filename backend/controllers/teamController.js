@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const { format } = require("date-fns");
 const { exec } = require("child_process");
 const xlsx = require("xlsx");
@@ -18,82 +17,18 @@ function getCommits(req, res) {
   const { intersect } = req.body;
 
   if (intersect) {
-    //Owner: ehsxmng
-    //11022-SP12, 11160-SP4 w/ Intersect
     finalData = jsonWithIntersect;
   } else {
-    //11022-SP12, 11160-SP4 (no date range, all servers selected)
     finalData = json;
   }
-
-  /* SQL connection through config object
-  var Connection = require("tedious").Connection;
-  var config = {
-    server: "pemdbsrvssp.internal.ericsson.com,1433", //update me
-    authentication: {
-      type: "default",
-      options: {
-        userName: "lmr-ddpeg1", //update me
-        password: "y469.23Axy#", //update me
-      },
-    },
-    options: {
-      database: "LMR", //update me
-    },
-  };
-  var connection = new Connection(config);
-  connection.on("connect", function (err) {
-    // If no error, then good to proceed.
-    console.log("Connected");
-  });
-
-  connection.connect();
-
-  var Request = require("tedious").Request;
-  var TYPES = require("tedious").TYPES;
-
-  function executeStatement() {
-    var request = new Request(
-      "SELECT * FROM vwLmrFptFeaturesDenormalized;",
-      function (err) {
-        if (err) {
-          console.log(err);
-        }
-      }
-    );
-    var result = "";
-    request.on("row", function (columns) {
-      columns.forEach(function (column) {
-        if (column.value === null) {
-          console.log("NULL");
-        } else {
-          result += column.value + " ";
-        }
-      });
-      console.log(result);
-      result = "";
-    });
-
-    request.on("done", function (rowCount, more) {
-      console.log(rowCount + " rows returned");
-    });
-
-    // Close the connection after the final event emitted by the request, after the callback passes
-    request.on("requestCompleted", function (rowCount, more) {
-      connection.close();
-    });
-    connection.execSql(request);
-  }
-  */
 
   (async () => {
     try {
       // make sure that any items are correctly URL encoded in the connection string
       await sql.connect(
-        "Server=pemdbsrvssp.internal.ericsson.com,1433;Database=LMR;User Id=lmr-ddpeg1;Password=y469.23Axy#;"
+        `Server=${process.env.SQL_SERVER_URL};Database=${process.env.SQL_DATABASE};User Id=${process.env.SQL_USERNAME};Password=${process.env.SQL_PASSWORD};`
       );
-      const result =
-        await sql.query`select * from vwLmrFptFeaturesDenormalized`;
+      const result = await sql.query`select * from ${process.env.SQL_TABLE}`;
       console.dir(result);
     } catch (err) {
       console.log(err);
@@ -145,7 +80,7 @@ function getCommits(req, res) {
     intersect: intersect,
   };
 
-  command = "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
+  command = process.ENV.COMMAND;
 
   command = buildCommand(objData, command);
 

@@ -6,6 +6,7 @@ import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { MousePointer2 } from "lucide-react";
 
 /*UI components*/
 import {
@@ -15,8 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "./components/AppSidebar.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -74,33 +73,33 @@ function App() {
   };
 
   return (
-    <SidebarProvider
-      style={{
-        "--sidebar-width": "14rem",
-        "--sidebar-width-mobile": "16rem",
-      }}
-    >
-      <AppSidebar />
-      <div className="App">
-        <Header
-          toggleTheme={toggleTheme}
-          currentTheme={theme}
-          className="header"
-        />
-        <div className="container">
-          <main className={`main-content`}>
-            <SearchForm
-              setResponseData={setResponseData}
-              loading={loading}
-              setLoading={setLoading}
-              setError={setError}
-            />
+    <div className="App box-border">
+      <Header
+        toggleTheme={toggleTheme}
+        currentTheme={theme}
+        className="header"
+      />
+      <div className="container">
+        <main className={`main-content`}>
+          <SearchForm
+            setResponseData={setResponseData}
+            loading={loading}
+            setLoading={setLoading}
+            setError={setError}
+          />
 
-            {responseData && (
+          {responseData && (
+            <>
               <div className="w-screen">
                 <Select onValueChange={handleLinkChange}>
-                  <SelectTrigger className="w-[180px] ml-4">
-                    <SelectValue placeholder="Select Subject/Owner" />
+                  <SelectTrigger className="w-3/12 ml-4">
+                    <SelectValue
+                      placeholder={
+                        <div className="flex items-center ">
+                          Select Subject/Owner... <MousePointer2 height={15} />
+                        </div>
+                      }
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {responseData.intersect &&
@@ -131,13 +130,13 @@ function App() {
                 </Select>
                 {<Outlet context={[responseData.data]} />}
               </div>
-            )}
-            {error && <p>{error}.</p>}
-          </main>
-        </div>
-        <Footer />
+            </>
+          )}
+          {error && <p>{error}.</p>}
+        </main>
       </div>
-    </SidebarProvider>
+      <Footer />
+    </div>
   );
 }
 

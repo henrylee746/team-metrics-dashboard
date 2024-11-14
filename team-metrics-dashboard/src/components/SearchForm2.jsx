@@ -40,6 +40,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -93,13 +101,24 @@ function ProfileForm({ onSubmit, loading }) {
             name="team"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Team(s)</FormLabel>
-                <FormControl>
-                  <Input placeholder="KB-2, Hurricanes" {...field} />
-                </FormControl>
-                <FormDescription>
-                  Comma or semicolon separated by team name
-                </FormDescription>
+                <FormLabel>Team</FormLabel>
+
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a Team.." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="m@example.com">KB-2</SelectItem>
+                    <SelectItem value="m@google.com">Hurrcanes</SelectItem>
+                    <SelectItem value="m@support.com">Eh-Team</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription>{"Ericsson Team Names"}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

@@ -1,7 +1,7 @@
 import "./output.css"; // Import global styles
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
-import SearchForm2 from "./components/SearchForm2.jsx";
+import SearchForm from "./components/SearchForm.jsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -82,49 +82,7 @@ function App() {
       />
       <div className="container">
         <main className={`main-content`}>
-          <SearchForm2
-            setResponseData={setResponseData}
-            loading={loading}
-            setLoading={setLoading}
-            setError={setError}
-          />
-
-          {responseData && (
-            <div className="w-screen">
-              <Select onValueChange={handleLinkChange}>
-                <SelectTrigger className="w-[180px] ml-4">
-                  <SelectValue placeholder="Select Subject/Owner" />
-                </SelectTrigger>
-                <SelectContent>
-                  {responseData.intersect &&
-                    responseData.data.map((arr, index) => {
-                      return (
-                        <SelectItem key={index} value={`${index}`}>
-                          Subject: {arr[0]["reason"]}
-                        </SelectItem>
-                      );
-                    })}
-                  {!responseData.intersect &&
-                    responseData.data.map((arr, index) => {
-                      if (index + 1 > responseData.subjectSplit) {
-                        return (
-                          <SelectItem key={index} value={`${index}`}>
-                            Owner: {arr[0]["name"]}
-                          </SelectItem>
-                        );
-                      } else {
-                        return (
-                          <SelectItem key={index} value={`${index}`}>
-                            Subject: {arr[0]["reason"]}
-                          </SelectItem>
-                        );
-                      }
-                    })}
-                </SelectContent>
-              </Select>
-              {<Outlet context={[responseData.data]} />}
-            </div>
-          )}
+          {responseData && <Outlet context={[responseData.data]} />}
           {error && <p>{error}.</p>}
         </main>
       </div>

@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config(); //load env vars
 const { format } = require("date-fns");
 const { exec } = require("child_process");
 const xlsx = require("xlsx");
@@ -7,6 +7,7 @@ const json = require("../message.json");
 const fs = require("fs");
 const jsonWithIntersect = require("../messageIntersect.json");
 const sql = require("mssql");
+const { config } = require("../config.js");
 
 let finalData = []; //represents final JSON arr after manipulations
 let command = "";
@@ -17,87 +18,21 @@ function getCommits(req, res) {
   const { intersect } = req.body;
 
   if (intersect) {
-    //Owner: ehsxmng
-    //11022-SP12, 11160-SP4 w/ Intersect
     finalData = jsonWithIntersect;
   } else {
-    //11022-SP12, 11160-SP4 (no date range, all servers selected)
     finalData = json;
   }
 
-  /* SQL connection through config object
-  var Connection = require("tedious").Connection;
-  var config = {
-    server: "pemdbsrvssp.internal.ericsson.com,1433", //update me
-    authentication: {
-      type: "default",
-      options: {
-        userName: "lmr-ddpeg1", //update me
-        password: "y469.23Axy#", //update me
-      },
-    },
-    options: {
-      database: "LMR", //update me
-    },
-  };
-  var connection = new Connection(config);
-  connection.on("connect", function (err) {
-    // If no error, then good to proceed.
-    console.log("Connected");
-  });
-
-  connection.connect();
-
-  var Request = require("tedious").Request;
-  var TYPES = require("tedious").TYPES;
-
-  function executeStatement() {
-    var request = new Request(
-      "SELECT * FROM vwLmrFptFeaturesDenormalized;",
-      function (err) {
-        if (err) {
-          console.log(err);
-        }
-      }
-    );
-    var result = "";
-    request.on("row", function (columns) {
-      columns.forEach(function (column) {
-        if (column.value === null) {
-          console.log("NULL");
-        } else {
-          result += column.value + " ";
-        }
-      });
-      console.log(result);
-      result = "";
-    });
-
-    request.on("done", function (rowCount, more) {
-      console.log(rowCount + " rows returned");
-    });
-
-    // Close the connection after the final event emitted by the request, after the callback passes
-    request.on("requestCompleted", function (rowCount, more) {
-      connection.close();
-    });
-    connection.execSql(request);
-  }
-  */
-
-  (async () => {
+  const connect = async () => {
     try {
-      // make sure that any items are correctly URL encoded in the connection string
-      await sql.connect(
-        "Server=pemdbsrvssp.internal.ericsson.com,1433;Database=LMR;User Id=lmr-ddpeg1;Password=y469.23Axy#;"
-      );
-      const result =
-        await sql.query`select * from vwLmrFptFeaturesDenormalized`;
-      console.dir(result);
+      await sql.connect(config);
+      console.log("Connected to the database!");
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
-  })();
+  };
+
+  connect();
 
   setTimeout(() => {
     //timeout to imitate script calltime
@@ -144,7 +79,7 @@ function getCommits(req, res) {
     intersect: intersect,
   };
 
-  command = "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
+  command = process.ENV.COMMAND;
 
   command = buildCommand(objData, command);
 

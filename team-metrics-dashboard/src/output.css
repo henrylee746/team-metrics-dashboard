@@ -746,6 +746,10 @@ body {
   left: 50%;
 }
 
+.left-2 {
+  left: 0.5rem;
+}
+
 .right-0 {
   right: 0px;
 }
@@ -823,9 +827,9 @@ body {
   margin-bottom: 0.25rem;
 }
 
-.my-12 {
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .my-6 {
@@ -841,8 +845,16 @@ body {
   margin-top: -1rem;
 }
 
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
 .ml-4 {
   margin-left: 1rem;
+}
+
+.ml-auto {
+  margin-left: auto;
 }
 
 .mr-2 {
@@ -853,12 +865,20 @@ body {
   margin-top: 0.125rem;
 }
 
+.mt-16 {
+  margin-top: 4rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
 
 .mt-4 {
   margin-top: 1rem;
+}
+
+.box-border {
+  box-sizing: border-box;
 }
 
 .block {
@@ -942,12 +962,16 @@ body {
   height: 2.25rem;
 }
 
-.h-\[150px\] {
-  height: 150px;
+.h-96 {
+  height: 24rem;
 }
 
 .h-\[1px\] {
   height: 1px;
+}
+
+.h-\[50px\] {
+  height: 50px;
 }
 
 .h-\[var\(--radix-select-trigger-height\)\] {
@@ -1006,6 +1030,10 @@ body {
   width: 0.875rem;
 }
 
+.w-3\/12 {
+  width: 25%;
+}
+
 .w-3\/4 {
   width: 75%;
 }
@@ -1042,6 +1070,10 @@ body {
   width: var(--sidebar-width);
 }
 
+.w-\[100px\] {
+  width: 100px;
+}
+
 .w-\[180px\] {
   width: 180px;
 }
@@ -1070,6 +1102,10 @@ body {
   min-width: 1.25rem;
 }
 
+.min-w-\[12rem\] {
+  min-width: 12rem;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1080,6 +1116,10 @@ body {
 
 .max-w-\[--skeleton-width\] {
   max-width: var(--skeleton-width);
+}
+
+.max-w-xs {
+  max-width: 20rem;
 }
 
 .flex-1 {
@@ -1100,6 +1140,14 @@ body {
 
 .basis-full {
   flex-basis: 100%;
+}
+
+.basis-1\/2 {
+  flex-basis: 50%;
+}
+
+.caption-bottom {
+  caption-side: bottom;
 }
 
 .border-collapse {
@@ -1157,6 +1205,10 @@ body {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.touch-none {
+  touch-action: none;
 }
 
 .select-none {
@@ -1299,6 +1351,10 @@ body {
   border-radius: 2px;
 }
 
+.rounded-\[inherit\] {
+  border-radius: inherit;
+}
+
 .rounded-full {
   border-radius: 9999px;
 }
@@ -1375,6 +1431,14 @@ body {
   border-color: transparent;
 }
 
+.border-l-transparent {
+  border-left-color: transparent;
+}
+
+.border-t-transparent {
+  border-top-color: transparent;
+}
+
 .bg-\[--color-bg\] {
   background-color: var(--color-bg);
 }
@@ -1407,6 +1471,10 @@ body {
   background-color: hsl(var(--muted));
 }
 
+.bg-muted\/50 {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
 .bg-popover {
   background-color: hsl(var(--popover));
 }
@@ -1435,6 +1503,10 @@ body {
   background-color: transparent;
 }
 
+.fill-current {
+  fill: currentColor;
+}
+
 .p-0 {
   padding: 0px;
 }
@@ -1461,6 +1533,10 @@ body {
 
 .p-8 {
   padding: 2rem;
+}
+
+.p-\[1px\] {
+  padding: 1px;
 }
 
 .px-1 {
@@ -1513,8 +1589,17 @@ body {
   padding-bottom: 0.5rem;
 }
 
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .pb-3 {
   padding-bottom: 0.75rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
 }
 
 .pl-2 {
@@ -1523,6 +1608,14 @@ body {
 
 .pl-4 {
   padding-left: 1rem;
+}
+
+.pl-8 {
+  padding-left: 2rem;
+}
+
+.pr-2 {
+  padding-right: 0.5rem;
 }
 
 .pr-8 {
@@ -1551,6 +1644,14 @@ body {
 
 .text-center {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.align-middle {
+  vertical-align: middle;
 }
 
 .font-mono {
@@ -1613,6 +1714,10 @@ body {
 
 .tracking-tight {
   letter-spacing: -0.025em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em;
 }
 
 .text-accent-foreground {
@@ -1935,6 +2040,10 @@ body {
   background-color: hsl(var(--destructive) / 0.9);
 }
 
+.hover\:bg-muted\/50:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
 .hover\:bg-primary:hover {
   background-color: hsl(var(--primary));
 }
@@ -2166,6 +2275,34 @@ body {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+
+  to {
+    height: 0;
+  }
+}
+
+.data-\[state\=closed\]\:animate-accordion-up[data-state="closed"] {
+  animation: accordion-up 0.2s ease-out;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+.data-\[state\=open\]\:animate-accordion-down[data-state="open"] {
+  animation: accordion-down 0.2s ease-out;
+}
+
 .data-\[active\=true\]\:bg-sidebar-accent[data-active="true"] {
   background-color: hsl(var(--sidebar-accent));
 }
@@ -2174,8 +2311,16 @@ body {
   background-color: hsl(var(--primary));
 }
 
+.data-\[state\=open\]\:bg-accent[data-state="open"] {
+  background-color: hsl(var(--accent));
+}
+
 .data-\[state\=open\]\:bg-secondary[data-state="open"] {
   background-color: hsl(var(--secondary));
+}
+
+.data-\[state\=selected\]\:bg-muted[data-state="selected"] {
+  background-color: hsl(var(--muted));
 }
 
 .data-\[state\=unchecked\]\:bg-input[data-state="unchecked"] {
@@ -2192,6 +2337,10 @@ body {
 
 .data-\[state\=checked\]\:text-primary-foreground[data-state="checked"] {
   color: hsl(var(--primary-foreground));
+}
+
+.data-\[state\=open\]\:text-accent-foreground[data-state="open"] {
+  color: hsl(var(--accent-foreground));
 }
 
 .data-\[disabled\]\:opacity-50[data-disabled] {
@@ -2441,14 +2590,6 @@ body {
     display: flex;
   }
 
-  .sm\:w-\[150px\] {
-    width: 150px;
-  }
-
-  .sm\:w-\[500px\] {
-    width: 500px;
-  }
-
   .sm\:max-w-sm {
     max-width: 24rem;
   }
@@ -2497,14 +2638,6 @@ body {
     display: flex;
   }
 
-  .md\:w-\[250px\] {
-    width: 250px;
-  }
-
-  .md\:w-\[800px\] {
-    width: 800px;
-  }
-
   .md\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -2543,14 +2676,6 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .lg\:w-\[1000px\] {
-    width: 1000px;
-  }
-
-  .lg\:w-\[300px\] {
-    width: 300px;
-  }
-
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2598,12 +2723,21 @@ body {
   border-bottom-right-radius: calc(var(--radius) - 2px);
 }
 
+.\[\&\:has\(\[role\=checkbox\]\)\]\:pr-0:has([role=checkbox]) {
+  padding-right: 0px;
+}
+
 .\[\&\:not\(\:focus\)\]\:placeholder-transparent:not(:focus)::-moz-placeholder {
   color: transparent;
 }
 
 .\[\&\:not\(\:focus\)\]\:placeholder-transparent:not(:focus)::placeholder {
   color: transparent;
+}
+
+.\[\&\>\[role\=checkbox\]\]\:translate-y-\[2px\]>[role=checkbox] {
+  --tw-translate-y: 2px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .\[\&\>button\]\:hidden>button {
@@ -2654,6 +2788,15 @@ body {
 
 .\[\&\>svg\]\:text-sidebar-accent-foreground>svg {
   color: hsl(var(--sidebar-accent-foreground));
+}
+
+.\[\&\>tr\]\:last\:border-b-0:last-child>tr {
+  border-bottom-width: 0px;
+}
+
+.\[\&\[data-state\=open\]\>svg\]\:rotate-180[data-state=open]>svg {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .\[\&_\.recharts-cartesian-axis-tick_text\]\:fill-muted-foreground .recharts-cartesian-axis-tick text {
@@ -2718,6 +2861,14 @@ body {
 
 .\[\&_svg\]\:shrink-0 svg {
   flex-shrink: 0;
+}
+
+.\[\&_tr\:last-child\]\:border-0 tr:last-child {
+  border-width: 0px;
+}
+
+.\[\&_tr\]\:border-b tr {
+  border-bottom-width: 1px;
 }
 
 [data-side=left][data-collapsible=offcanvas] .\[\[data-side\=left\]\[data-collapsible\=offcanvas\]_\&\]\:-right-2 {

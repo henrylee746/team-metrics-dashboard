@@ -1,4 +1,4 @@
-import { Users, Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Users, User, Home, Calculator } from "lucide-react";
 
 import {
   Sidebar,
@@ -10,30 +10,36 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "Subject/Owner Search",
     url: "/",
-    icon: Home,
+    icon: User,
   },
   {
     title: "Team Search",
     url: "/team",
     icon: Users,
   },
+  {
+    title: "Leadtime Calculator",
+    url: "/leadtime",
+    icon: Calculator,
+  },
 ];
 
 export default function AppSidebar() {
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <div className="flex justify-between items-center">
             <SidebarGroupLabel>Velocity Project</SidebarGroupLabel>
-            <SidebarTrigger />
+            <SidebarTrigger exit="exit" />
           </div>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -51,6 +57,7 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarRail />
     </Sidebar>
   );
 }

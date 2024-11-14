@@ -17,6 +17,7 @@ import {
   Area,
   AreaChart,
 } from "recharts";
+import { Clock, ChartArea, TestTube, TestTubes } from "lucide-react";
 
 import {
   ChartContainer,
@@ -56,12 +57,14 @@ const ChartsSection = ({ responseData }) => {
 
   return (
     <section
-      className="charts-section w-screen grid sm:grid-cols-1 lg:grid-cols-2 gap-12 p-8 justify-center items-center"
+      className="charts-section grid sm:grid-cols-1 lg:grid-cols-2 gap-12 p-8 justify-center items-center"
       id="charts-section"
     >
       <Card>
         <CardHeader>
-          <CardTitle>1/x</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            1/x <Clock height={20} />
+          </CardTitle>
           <CardDescription>
             Displays amount of days in between each respective commit done
           </CardDescription>
@@ -94,7 +97,9 @@ const ChartsSection = ({ responseData }) => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>1/x Area Chart</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            1/x Area Chart <ChartArea height={20} />
+          </CardTitle>{" "}
           <CardDescription>Showing 1/x in continuous format</CardDescription>
         </CardHeader>
         <CardContent>
@@ -137,7 +142,9 @@ const ChartsSection = ({ responseData }) => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Total Test and Total Design Code</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            Total Test and Design code <TestTube height={20} />
+          </CardTitle>{" "}
           <CardDescription>
             Displays percentage of total test and design code over time
           </CardDescription>
@@ -181,7 +188,9 @@ const ChartsSection = ({ responseData }) => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Total Test and Design Code (Line Graph)</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            Total Test and Design Code (Line Graph) <TestTubes height={20} />
+          </CardTitle>{" "}
           <CardDescription>
             Test and Design Code over time, but in lines
           </CardDescription>
