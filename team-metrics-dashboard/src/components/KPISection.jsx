@@ -178,7 +178,7 @@ const KPISection = ({ responseData }) => {
               if (index == responseData.length - 1) return;
               return (
                 <AccordionItem value={`item-${index + 1}`} def>
-                  <div className="xl:text-sm lg:text-xs flex justify-between items-center gap-8">
+                  <div className="text-xs xl:text-sm lg:text-xs flex justify-between items-center gap-8">
                     <span>
                       {commit["name"]}:{" "}
                       <span className="text-muted-foreground">

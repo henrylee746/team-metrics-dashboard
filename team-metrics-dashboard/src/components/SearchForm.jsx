@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 /*Form Imports*/
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { date, z } from "zod";
 import { useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
@@ -107,7 +107,7 @@ function ProfileForm({ onSubmit, loading }) {
                 <FormControl>
                   <Input
                     //className={`[&:not(:focus)]:placeholder-transparent`}
-                    placeholder="11022-SP12"
+                    placeholder="11022-SP12, 11160-SP4"
                     {...field}
                   />
                 </FormControl>
@@ -123,7 +123,7 @@ function ProfileForm({ onSubmit, loading }) {
               <FormItem>
                 <FormLabel>Owner(s)</FormLabel>
                 <FormControl>
-                  <Input placeholder="henry.lee.a@ericsson.com" {...field} />
+                  <Input placeholder="ehsxmng" {...field} />
                 </FormControl>
                 <FormDescription>
                   Comma or semicolon separated by email/signum

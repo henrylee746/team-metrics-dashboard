@@ -3,9 +3,21 @@ import { FaSun, FaMoon, FaBars } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
+import { ChevronsUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Header = ({ sidebarToggle, toggleTheme, currentTheme }) => {
+  const [tab, setTab] = useState(null);
   const navigate = useNavigate();
+
+  const handleChange = (value) => {
+    setTab(value);
+  };
+
+  useEffect(() => {
+    console.log(tab);
+    navigate(tab);
+  }, [tab]);
 
   return (
     <header className="header flex items-center p-8 gap-8 justify-between w-screen">
@@ -19,10 +31,13 @@ const Header = ({ sidebarToggle, toggleTheme, currentTheme }) => {
           </div>
         </div>
         <Separator orientation="vertical" className="h-[50px]" />
-        <div className="text-sm text-muted-foreground">Velocity Project</div>
+        <div className="flex gap-2 items-center text-sm text-muted-foreground">
+          Velocity Project
+          <ChevronsUp />
+        </div>
       </div>
       <div className="flex flex-wrap justify-center items-center gap-2 right-header-icon cursor-pointer ">
-        <Tabs className="w-[450px]" defaultValue="/">
+        <Tabs value={tab} onValueChange={handleChange} className="w-[450px]">
           <TabsList>
             <TabsTrigger value="/">Subject/Owner Search</TabsTrigger>
             <TabsTrigger value="/team">Team Search</TabsTrigger>
