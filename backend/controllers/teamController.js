@@ -22,6 +22,7 @@ function getCommits(req, res) {
     finalData = json;
   }
 
+  /*
   (async () => {
     try {
       // make sure that any items are correctly URL encoded in the connection string
@@ -34,6 +35,7 @@ function getCommits(req, res) {
       console.log(err);
     }
   })();
+  */
 
   setTimeout(() => {
     //timeout to imitate script calltime
@@ -282,11 +284,11 @@ it must be included in overlapArr as well
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
     (sum, commit) => sum + (commit.testCodeChurn || 0),
-    0
+    0,
   );
   let totalDesign = input.reduce(
     (sum, commit) => sum + (commit.sourceCodeChurn || 0),
-    0
+    0,
   );
   fillCumulativeCode(input, totalTest, totalDesign);
 };
@@ -348,11 +350,11 @@ const getFirstAndLastCommit = (input) => {
     "Last commit": input[input.length - 1]["updated"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
-      0
+      0,
     ),
     "Total test code churn": input.reduce(
       (a, b) => a + (b.testCodeChurn || 0),
-      0
+      0,
     ),
     "Total code churn":
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +

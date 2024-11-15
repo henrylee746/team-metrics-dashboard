@@ -1,4 +1,3 @@
-import "dotenv/config";
 export const config = {
   user: process.env.SQL_USERNAME,
   password: process.env.SQL_PASSWORD,

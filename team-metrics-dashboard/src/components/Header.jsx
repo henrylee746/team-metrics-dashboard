@@ -36,7 +36,7 @@ const Header = ({ sidebarToggle, toggleTheme, currentTheme }) => {
           <ChevronsUp />
         </div>
       </div>
-      <div className="flex flex-wrap justify-center items-center gap-2 right-header-icon cursor-pointer ">
+      <div className="flex flex-wrap justify-center items-center gap-8 right-header-icon cursor-pointer">
         <Tabs value={tab} onValueChange={handleChange} className="w-[450px]">
           <TabsList>
             <TabsTrigger value="/">Subject/Owner Search</TabsTrigger>
