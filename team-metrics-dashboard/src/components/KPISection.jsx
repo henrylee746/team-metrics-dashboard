@@ -10,12 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import {
   Accordion,
   AccordionContent,
@@ -45,45 +43,39 @@ const KPISection = ({ responseData }) => {
 
   return (
     <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-16">
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        plugins={[plugin.current]}
-        onMouseEnter={plugin.current.stop}
-        onMouseLeave={plugin.current.play}
-        orientation="vertical"
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="max-w-full rounded-lg border text-center"
       >
-        <CarouselContent className="p-8">
-          <CarouselItem className="basis-1/2">
-            <Card className="text-center">
-              <CardContent>
-                <span>
-                  <p>
-                    First Commit:{" "}
-                    <i className="text-sm font-semibold">
-                      {responseData.length > 0
-                        ? responseData[responseData.length - 1]["First Commit"]
-                        : null}
-                    </i>
-                  </p>
-                  <p>
-                    {" "}
-                    Last Commit:{" "}
-                    <i className="text-sm font-semibold">
-                      {responseData.length > 0
-                        ? responseData[responseData.length - 1]["Last commit"]
-                        : null}
-                    </i>
-                  </p>
-                </span>
-              </CardContent>
-            </Card>
-          </CarouselItem>
-          <CarouselItem className="basis-1/2 ">
-            <Card className="text-center">
-              <CardContent>
-                <span>
+        <ResizablePanel defaultSize={33}>
+          <div className="flex  items-center justify-center p-6">
+            <span className="font-semibold">
+              <p>
+                First Commit:{" "}
+                <i className="text-sm font-semibold">
+                  {responseData.length > 0
+                    ? responseData[responseData.length - 1]["First Commit"]
+                    : null}
+                </i>
+              </p>
+              <p>
+                {" "}
+                Last Commit:{" "}
+                <i className="text-sm font-semibold">
+                  {responseData.length > 0
+                    ? responseData[responseData.length - 1]["Last commit"]
+                    : null}
+                </i>
+              </p>
+            </span>
+          </div>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize={33}>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel defaultSize={50}>
+              <div className="flex items-center justify-center p-6">
+                <span className="font-semibold">
                   <h4>
                     Last Commit - First Commit:
                     <i className="text-sm font-semibold">
@@ -97,24 +89,52 @@ const KPISection = ({ responseData }) => {
                     </i>
                   </h4>
                 </span>
-              </CardContent>
-            </Card>
-          </CarouselItem>
-          <CarouselItem className="basis-1/2 ">
-            <Card className="text-center">
-              <CardContent>
-                <span>
+              </div>
+            </ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={50}>
+              <div className="flex  items-center justify-center p-6">
+                <span className="font-semibold">
                   <h4>
                     Average days between each commit:
                     <i className="text-sm font-semibold"></i>
                   </h4>
                 </span>
-              </CardContent>
-            </Card>
-          </CarouselItem>
-          <CarouselItem className="basis-1/2 ">
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize={33}>
+          <ResizablePanelGroup direction="vertical">
+            <div className="flex  items-center justify-center p-6">
+              <span className="font-semibold">
+                <h4>
+                  Average design & test code per commit:
+                  <i className="text-sm font-semibold"></i>
+                </h4>
+              </span>
+            </div>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+
+      {/*<Carousel
+        opts={{
+          align: "start",
+        }}
+        plugins={[plugin.current]}
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={plugin.current.play}
+        orientation="horizontal"
+        style={{
+          width: "300px",
+        }}
+      >
+        <CarouselContent>
+          <CarouselItem>
             <Card className="text-center">
-              <CardContent>
+              <CardContent className="flex aspect-square items-center justify-center">
                 <span>
                   <h4>
                     Average design & test code per commit:
@@ -124,9 +144,9 @@ const KPISection = ({ responseData }) => {
               </CardContent>
             </Card>
           </CarouselItem>
-          <CarouselItem className="basis-1/2">
+          <CarouselItem>
             <Card className="text-center">
-              <CardContent>
+              <CardContent className="flex aspect-square items-center justify-center">
                 <h4>
                   Total Code Churn:{"   "}
                   <i className="text-sm font-semibold">
@@ -144,7 +164,7 @@ const KPISection = ({ responseData }) => {
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
-      </Carousel>
+                      </Carousel>*/}
 
       <ScrollArea className="h-96 rounded-md border">
         <div className="p-4">
@@ -153,12 +173,12 @@ const KPISection = ({ responseData }) => {
             <Code className="text-muted-foreground" />
           </h4>
           <Separator className="my-4" />
-          <Accordion type="multiple" collapsible>
+          <Accordion type="multiple" defaultValue={["item-1"]} collapsible>
             {responseData.map((commit, index) => {
               if (index == responseData.length - 1) return;
               return (
-                <AccordionItem value={`item-${index + 1}`}>
-                  <div className="text-md flex justify-between items-center gap-12 p-4">
+                <AccordionItem value={`item-${index + 1}`} def>
+                  <div className="xl:text-sm lg:text-xs flex justify-between items-center gap-8">
                     <span>
                       {commit["name"]}:{" "}
                       <span className="text-muted-foreground">
@@ -176,9 +196,7 @@ const KPISection = ({ responseData }) => {
                       <TableCaption>Commit {index + 1}</TableCaption>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="w-[100px]">
-                            Days since First Commit
-                          </TableHead>
+                          <TableHead>Days since First Commit</TableHead>
                           <TableHead>Days since Last Commit</TableHead>
                           <TableHead>Total Test Code %</TableHead>
                           <TableHead className="text-right">

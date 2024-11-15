@@ -3,6 +3,7 @@ const app = express();
 const port = 5000;
 const cors = require("cors");
 const submitRouter = require("./routes/submitRouter.js");
+const json = require("./message.json");
 
 app.use(
   cors({

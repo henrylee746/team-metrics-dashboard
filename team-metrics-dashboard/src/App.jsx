@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function App() {
   const navigate = useNavigate();
@@ -80,15 +81,33 @@ function App() {
         className="header"
       />
       <div className="container">
-        <main className={`main-content`}>
+        <main className={`main-content w-screen`}>
           <SearchForm
             setResponseData={setResponseData}
             loading={loading}
             setLoading={setLoading}
             setError={setError}
           />
+          {loading && (
+            <div className="flex flex-wrap gap-16 items-center justify-center">
+              <div className="flex flex-col space-y-3">
+                <Skeleton className="h-[250px] xl:w-[800px] lg:w-[450px] md:w-[500px] sm:w-[350px] rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[350px]" />
+                  <Skeleton className="h-4 w-[300px]" />
+                </div>
+              </div>
+              <div className="flex flex-col space-y-3">
+                <Skeleton className="h-[250px] xl:w-[800px] lg:w-[450px]  md:w-[500px] sm:w-[350px] rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[350px]" />
+                  <Skeleton className="h-4 w-[300px]" />
+                </div>
+              </div>
+            </div>
+          )}
 
-          {responseData && (
+          {responseData && !loading && (
             <>
               <div className="w-screen">
                 <Select onValueChange={handleLinkChange}>

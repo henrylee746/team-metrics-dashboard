@@ -4,8 +4,8 @@ const { exec } = require("child_process");
 const xlsx = require("xlsx");
 const path = require("path");
 const json = require("../message.json");
-const fs = require("fs");
 const jsonWithIntersect = require("../messageIntersect.json");
+const fs = require("fs");
 const sql = require("mssql");
 const { config } = require("../config.js");
 

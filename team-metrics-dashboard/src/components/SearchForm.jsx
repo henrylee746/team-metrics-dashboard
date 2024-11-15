@@ -247,7 +247,7 @@ function PopoverComponent({ form }) {
                 </p>
               </div>
               <div className="flex flex-col gap-5">
-                <div className="flex gap-8 items-center ">
+                <div className="flex gap-8 items-center justify-center ">
                   <Controller
                     control={form.control}
                     name="gerrit"
@@ -343,6 +343,19 @@ function PopoverComponent({ form }) {
 
 const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
   const navigate = useNavigate();
+
+  /*Fetches some initial data when page is started*/
+  useEffect(() => {
+    handleSubmit({
+      subject: "11022-SP12, 11160-SP4",
+      owner: "ehsxmng",
+      dateRange: "",
+      gerrit: true,
+      gerritArchive: true,
+      gerritDelta: true,
+      intersect: false,
+    });
+  }, []);
 
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
