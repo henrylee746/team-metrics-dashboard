@@ -7,6 +7,8 @@ import "./output.css";
 import Data from "./components/Data.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+//theme state should be lifted up here
+
 const router = createBrowserRouter([
   {
     path: "/",

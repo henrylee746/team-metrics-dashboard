@@ -341,7 +341,13 @@ function PopoverComponent({ form }) {
   );
 }
 
-const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
+const SearchForm = ({
+  setResponseData,
+  loading,
+  setLoading,
+  setError,
+  className,
+}) => {
   const navigate = useNavigate();
 
   /*Fetches some initial data when page is started*/
@@ -416,7 +422,8 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
 
   return (
     <section
-      className="flex flex-col justify-center items-center search-section w-screen"
+      className={`flex flex-col justify-center items-center search-section w-screen
+${className}`}
       id="overview"
     >
       <ProfileForm onSubmit={handleSubmit} loading={loading}></ProfileForm>

@@ -1,7 +1,7 @@
 import "./output.css"; // Import global styles
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
-import SearchForm2 from "./components/SearchForm2.jsx";
+import SearchForm2 from "./components/SearchForm2.tsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";

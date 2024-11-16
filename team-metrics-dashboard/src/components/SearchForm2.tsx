@@ -47,16 +47,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 /*Form Validation (Client-Side) via Zod
 Form Schema*/
+const teamEnum = ["KB-2", "Hurricanes", "Eh-Team"] as const;
+
 const formSchema = z.object({
-  team: z.string().min(2, {
-    message: "Teamname must be at least 2 characters.",
-  }),
+  team: z.enum(teamEnum), //use zod enums
   subject: z.string().optional(),
   dateRange: z
     .object({
@@ -70,6 +80,16 @@ const formSchema = z.object({
   gerritArchive: z.boolean().optional(), // For Gerrit Archive checkbox
   intersect: z.boolean().optional(), // For Switch button
 });
+
+const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
+  //Error handler (creates the form handler msgs)
+  if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+    return { message: "Team must be selected" };
+  }
+  return { message: ctx.defaultError };
+};
+
+z.setErrorMap(customErrorMap);
 
 function ProfileForm({ onSubmit, loading }) {
   const form = useForm({
@@ -113,9 +133,9 @@ function ProfileForm({ onSubmit, loading }) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="m@example.com">KB-2</SelectItem>
-                    <SelectItem value="m@google.com">Hurrcanes</SelectItem>
-                    <SelectItem value="m@support.com">Eh-Team</SelectItem>
+                    <SelectItem value="KB-2">KB-2</SelectItem>
+                    <SelectItem value="Hurricanes">Hurricanes</SelectItem>
+                    <SelectItem value="Eh-Team">Eh-Team</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormDescription>{"Ericsson Team Names"}</FormDescription>
@@ -244,82 +264,31 @@ function DatePickerWithRange({ value, onChange }) {
 function PopoverComponent({ form }) {
   return (
     <>
-      <Popover>
-        <PopoverTrigger asChild>
+      <Drawer>
+        <DrawerTrigger asChild>
           <Button variant="outline">Advanced</Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto mt-0.5" align="end">
-          <div className="flex flex-col gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
-              <p className="text-sm text-muted-foreground">
-                Selects which Gerrit servers to look through ( selects all by
-                default )
-              </p>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="flex gap-8 justify-center items-center">
-                <Controller
-                  control={form.control}
-                  name="gerrit"
-                  render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
-                      <Label htmlFor="gerrit">Gerrit</Label>
-                      <FormControl>
-                        <Checkbox
-                          id="gerrit"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <Controller
-                  control={form.control}
-                  name="gerritDelta"
-                  render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
-                      <Label htmlFor="gerritDelta">Gerrit Delta</Label>
-                      <FormControl>
-                        <Checkbox
-                          id="gerritDelta"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <Controller
-                  control={form.control}
-                  name="gerritArchive"
-                  render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
-                      <Label htmlFor="gerritArchive">Gerrit Archive</Label>
-                      <FormControl>
-                        <Checkbox
-                          id="gerritArchive"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <div className="flex flex-col items-center gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
+                <p className="text-sm text-muted-foreground">
+                  Selects which Gerrit servers to look through ( selects all by
+                  default )
+                </p>
               </div>
-              <Separator />
               <div className="flex flex-col gap-5">
-                <div className="space-y-3">
+                <div className="flex gap-8 items-center justify-center ">
                   <Controller
                     control={form.control}
-                    name="intersect"
+                    name="gerrit"
                     render={({ field }) => (
                       <FormItem className="flex items-end gap-2">
-                        <Label htmlFor="intersect">Intersect</Label>
+                        <Label htmlFor="gerrit">Gerrit</Label>
                         <FormControl>
-                          <Switch
-                            id="intersect"
+                          <Checkbox
+                            id="gerrit"
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
@@ -327,19 +296,79 @@ function PopoverComponent({ form }) {
                       </FormItem>
                     )}
                   />
-                  <p className="text-sm text-muted-foreground">
-                    Filter results which satisfy Subject(s) and Team/
-                    simutaeneously
-                    <p>
-                      (only valid if at least one subject has been filled in)
+                  <Controller
+                    control={form.control}
+                    name="gerritDelta"
+                    render={({ field }) => (
+                      <FormItem className="flex items-end gap-2">
+                        <Label htmlFor="gerritDelta">Gerrit Delta</Label>
+                        <FormControl>
+                          <Checkbox
+                            id="gerritDelta"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Controller
+                    control={form.control}
+                    name="gerritArchive"
+                    render={({ field }) => (
+                      <FormItem className="flex items-end gap-2">
+                        <Label htmlFor="gerritArchive">Gerrit Archive</Label>
+                        <FormControl>
+                          <Checkbox
+                            id="gerritArchive"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <Separator />
+                <div className="flex flex-col gap-5">
+                  <div className="space-y-3">
+                    <Controller
+                      control={form.control}
+                      name="intersect"
+                      render={({ field }) => (
+                        <FormItem className="flex items-end gap-3">
+                          <Label
+                            htmlFor="intersect"
+                            className="-translate-y-0.5"
+                          >
+                            Intersect
+                          </Label>
+                          <FormControl>
+                            <Switch
+                              id="intersect"
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Filter results which satisfy Subject(s) and Owner(s)/
+                      simutaeneously
                     </p>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </PopoverContent>
-      </Popover>
+          </DrawerHeader>
+          <DrawerFooter>
+            <DrawerClose>
+              <Button variant="outline">Exit</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }

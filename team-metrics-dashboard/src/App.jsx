@@ -4,7 +4,6 @@ import Header from "./components/Header.jsx";
 import SearchForm from "./components/SearchForm.jsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { MousePointer2 } from "lucide-react";
 
@@ -21,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 function App() {
   const navigate = useNavigate();
   const [responseData, setResponseData] = useState(null);
+  const [isRendered, setIsRendered] = useState(false);
   const [theme, setTheme] = useState("dark"); // Default to dark mode
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -33,6 +33,7 @@ function App() {
     if (savedTheme) {
       setTheme(savedTheme);
     }
+    setIsRendered(true);
   }, []);
 
   //Once data is fetched, redirect to first array of data
@@ -74,11 +75,13 @@ function App() {
   };
 
   return (
-    <div className="App box-border">
+    <div className={`App box-border`}>
       <Header
         toggleTheme={toggleTheme}
         currentTheme={theme}
-        className="header"
+        className={`header transition-opacity transition-transform duration-500 delay-100 ${
+          isRendered ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
+        }`}
       />
       <div className="container">
         <main className={`main-content w-screen`}>
@@ -87,9 +90,14 @@ function App() {
             loading={loading}
             setLoading={setLoading}
             setError={setError}
+            className={`transition-opacity transition-transform duration-1000 delay-200 ${
+              isRendered
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-10"
+            }`}
           />
           {loading && (
-            <div className="flex flex-wrap gap-16 items-center justify-center">
+            <div className="flex flex-wrap gap-16 items-center justify-center ">
               <div className="flex flex-col space-y-3">
                 <Skeleton className="h-[250px] xl:w-[800px] lg:w-[450px] md:w-[500px] sm:w-[350px] rounded-xl" />
                 <div className="space-y-2">

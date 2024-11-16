@@ -2,26 +2,32 @@ import "../output.css";
 import { FaSun, FaMoon, FaBars } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNavigate } from "react-router-dom";
-import { ChevronsUp } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ChevronsUp, UserPen, Calculator, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const Header = ({ sidebarToggle, toggleTheme, currentTheme }) => {
-  const [tab, setTab] = useState(null);
+const Header = ({ toggleTheme, currentTheme, className }) => {
+  const location = useLocation(); //keeps a persistent value on url params
   const navigate = useNavigate();
+  const [tab, setTab] = useState(location.pathname);
 
   const handleChange = (value) => {
-    setTab(value);
+    navigate(value);
   };
 
   useEffect(() => {
-    console.log(tab);
-    navigate(tab);
-  }, [tab]);
+    if (/\/\d+/.test(location.pathname)) {
+      setTab("/"); // Update the tab when the route changes
+    } else {
+      setTab(location.pathname);
+    }
+  }, [location]);
 
   return (
-    <header className="header flex items-center p-8 gap-8 justify-between w-screen">
-      <div className="left-header-icon flex gap-4 items-center ">
+    <header
+      className={`header flex items-center p-8 gap-8 justify-between w-screen ${className}`}
+    >
+      <div className="left-header-icon flex gap-4 items-center">
         <div className="flex items-center">
           <div className="title space-y-1">
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
@@ -36,12 +42,21 @@ const Header = ({ sidebarToggle, toggleTheme, currentTheme }) => {
           <ChevronsUp />
         </div>
       </div>
-      <div className="flex flex-wrap justify-center items-center gap-8 right-header-icon cursor-pointer">
-        <Tabs value={tab} onValueChange={handleChange} className="w-[450px]">
+      <div className="flex flex-wrap justify-center items-center gap-4 right-header-icon cursor-pointer">
+        <Tabs value={tab} onValueChange={handleChange}>
           <TabsList>
-            <TabsTrigger value="/">Subject/Owner Search</TabsTrigger>
-            <TabsTrigger value="/team">Team Search</TabsTrigger>
-            <TabsTrigger value="/leadtime">Leadtime Calculator</TabsTrigger>
+            <TabsTrigger className="flex gap-2" value="/">
+              <UserPen />
+              <div className={`hidden lg:block`}>Subject/Owner Search</div>
+            </TabsTrigger>
+            <TabsTrigger className="flex gap-2" value="/team">
+              <Users />
+              <div className={`hidden lg:block`}>Team Search</div>
+            </TabsTrigger>
+            <TabsTrigger className="flex gap-2" value="/leadtime">
+              <Calculator />
+              <div className={`hidden lg:block`}>Leadtime</div>
+            </TabsTrigger>
           </TabsList>
         </Tabs>
         {currentTheme == "dark" ? (

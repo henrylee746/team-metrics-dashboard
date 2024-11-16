@@ -3,25 +3,24 @@ import KPISection from "../components/KPISection.jsx";
 import ChartsSection from "../components/ChartsSection.jsx";
 import { useOutletContext } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 function Data() {
   const [responseData] = useOutletContext();
+  const [isRendered, setIsRendered] = useState(false);
   const { index } = useParams(); //grabs current index in URL
-  const ref = useRef(null);
 
   useEffect(() => {
-    const div = ref.current;
-    div.classList.add("dataIn");
+    setIsRendered(true);
   }, [responseData]);
 
   const currentData = responseData[index]; //sets data according to option chosen
   return (
     <div
-      ref={ref}
-      className={`transition ease-in-out delay-150 duration-300 "translate-y-100"${
-        "dataIn" ? "translate-y-0" : null
-      }`}
+      className={`transition-opacity duration-500 delay-100 ${
+        isRendered ? "opacity-100 " : "opacity-0"
+      }
+      `}
     >
       <KPISection responseData={currentData} />
       <ChartsSection responseData={currentData} />

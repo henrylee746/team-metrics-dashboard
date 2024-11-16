@@ -71,7 +71,7 @@ const KPISection = ({ responseData }) => {
           </div>
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel defaultSize={33}>
+        <ResizablePanel defaultSize={34}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={50}>
               <div className="flex items-center justify-center p-6">
@@ -177,7 +177,7 @@ const KPISection = ({ responseData }) => {
             {responseData.map((commit, index) => {
               if (index == responseData.length - 1) return;
               return (
-                <AccordionItem value={`item-${index + 1}`} def>
+                <AccordionItem key={index} value={`item-${index + 1}`} def>
                   <div className="text-xs xl:text-sm lg:text-xs flex justify-between items-center gap-8">
                     <span>
                       {commit["name"]}:{" "}
