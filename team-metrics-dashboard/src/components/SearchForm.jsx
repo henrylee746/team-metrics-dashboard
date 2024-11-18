@@ -196,7 +196,7 @@ function DatePickerWithRange({ value, onChange }) {
             variant={"outline"}
             className={cn(
               "justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground",
             )}
           >
             <CalendarIcon />
@@ -350,7 +350,8 @@ const SearchForm = ({
 }) => {
   const navigate = useNavigate();
 
-  /*Fetches some initial data when page is started*/
+  /*
+  /*Fetches some initial data when page is started
   useEffect(() => {
     handleSubmit({
       subject: "11022-SP12, 11160-SP4",
@@ -362,6 +363,7 @@ const SearchForm = ({
       intersect: false,
     });
   }, []);
+  */
 
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
@@ -403,7 +405,7 @@ const SearchForm = ({
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `HTTP Error: ${response.status} - ${errorData.message}`
+          `HTTP Error: ${response.status} - ${errorData.message}`,
         );
       }
 

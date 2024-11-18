@@ -57,7 +57,7 @@ const ChartsSection = ({ responseData }) => {
 
   return (
     <section
-      className="charts-section grid sm:grid-cols-1 lg:grid-cols-2 gap-12 p-8 justify-center items-center"
+      className="charts-section grid lg:grid-cols-2 sm:grid-cols-1 gap-12 p-8 justify-center items-center"
       id="charts-section"
     >
       <Card>
@@ -159,28 +159,30 @@ const ChartsSection = ({ responseData }) => {
               <XAxis
                 dataKey="days from 1st commit"
                 tickLine={false}
-                tickMargin={10}
+                tickMargin={20}
                 axisLine={false}
               />
               <YAxis
                 tickLine={false}
                 axisLine={false}
-                tickMargin={8}
+                tickMargin={15}
                 tickCount={3}
               />
-              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
               <ChartLegend content={<ChartLegendContent />} />
 
               <Bar
                 dataKey="% of total test (cumulative)"
+                stackId={"a"}
                 fill="var(--color-totalTest)"
-                radius={4}
+                radius={[0, 0, 4, 4]}
               />
 
               <Bar
                 dataKey="% of total design (cumulative)"
+                stackId={"a"}
                 fill="var(--color-totalDesign)"
-                radius={4}
+                radius={[0, 0, 4, 4]}
               />
             </BarChart>
           </ChartContainer>
