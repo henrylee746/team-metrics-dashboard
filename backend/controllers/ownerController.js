@@ -11,6 +11,7 @@ const { config } = require("../config.js");
 
 let finalData = []; //represents final JSON arr after manipulations
 let command = "";
+let prefix = "";
 
 function getCommits(req, res) {
   finalData = [];
@@ -23,7 +24,6 @@ function getCommits(req, res) {
     finalData = json;
   }
 
-  /*
   const connect = async () => {
     try {
       await sql.connect(config);
@@ -34,7 +34,6 @@ function getCommits(req, res) {
   };
 
   connect();
-  */
 
   setTimeout(() => {
     //timeout to imitate script calltime
@@ -47,8 +46,8 @@ function getCommits(req, res) {
       intersect: intersect,
     });
   }, 3000);
-
   /*
+
   const {
     subject,
     owner,
@@ -59,9 +58,11 @@ function getCommits(req, res) {
     intersect,
   } = req.body;
 
+  finalData = []; //reset the array
+
   //Format Dates then create a new obj w/ formatted dates
-  const startDate = format(dateRange.from, "yyyy-MM-dd");
-  const endDate = format(dateRange.to, "yyyy-MM-dd");
+  //const startDate = format(dateRange.from, "yyyy-MM-dd");
+  //const endDate = format(dateRange.to, "yyyy-MM-dd");
 
   //to remove all whitespace from inputs (e.g. 11022-SP12,  11160-SP4)
   const subjectTrimmed = subject.replace(/\s+/g, "");
@@ -73,17 +74,18 @@ function getCommits(req, res) {
   const objData = {
     subject: subjectTrimmed,
     owner: ownerTrimmed,
-    startDate: "", //startDate
-    endDate: "", //endDate
+    startDate: startDate
+    endDate: endDate
     gerrit: gerrit,
     gerritArchive: gerritArchive,
     gerritDelta: gerritDelta,
     intersect: intersect,
   };
 
-  command = process.ENV.COMMAND;
+  command = "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
 
-  command = buildCommand(objData, command);
+  prefix = `${subjectTrimmed},${ownerTrimmed}`; //for saving csv in its own unique name
+  command = buildCommand(objData, command, prefix);
 
   console.log(`Executing command: ${command}`);
 
@@ -97,7 +99,7 @@ function getCommits(req, res) {
       return res.status(500).send({ status: "error", message: stderr });
     }
     console.log(`Stdout:\n${stdout}`);
-    processXlsxToJson(subjectSplit, ownerSplit);
+    processXlsxToJson(subjectSplit, ownerSplit, prefix);
 
     res.status(200).send({
       status: "success",
@@ -112,7 +114,7 @@ function getCommits(req, res) {
 }
 
 /*Fuctions Called (Stack Trace) in Top to Bottom Order */
-const buildCommand = (objData, command) => {
+const buildCommand = (objData, command, prefix) => {
   const keys = Object.keys(objData);
   const values = Object.values(objData);
 
@@ -153,12 +155,15 @@ const buildCommand = (objData, command) => {
         break;
     }
   }
-  command += `--saveData`;
+  command += `--saveData `;
+  command += `--savePrefix=${prefix}`;
   return command;
 };
 
-const processXlsxToJson = (subject, owner) => {
-  const workbook = xlsx.readFile(path.join(__dirname, "./csv/churnQuery.xlsx"));
+const processXlsxToJson = (subject, owner, prefix) => {
+  const workbook = xlsx.readFile(
+    path.join(__dirname, `./csv/${prefix}churnQuery.xlsx`)
+  );
   const sheet_name = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[sheet_name];
 
@@ -198,6 +203,8 @@ it must be included in overlapArr as well
         jsonArr.push(jsonData[i]);
       } else {
         counter++;
+        console.log(jsonData[i]);
+        console.log(subjectSplit[counter]);
         addTotalTestAndTotalDesign(jsonArr);
         jsonArr = [];
         jsonArr.push(jsonData[i]);
@@ -322,13 +329,13 @@ const fillCumulativeCode = (input, totalTest, totalDesign) => {
 // Calculate days from the first commit
 const calculateDaysFromFirstCommit = (input) => {
   input = input.slice().reverse();
-  const originalDate = new Date(input[0]["updated"]);
+  const originalDate = new Date(input[0]["merged"]);
   [input[0]["days from 1st commit"], input[0]["x"]] = [0, 0];
 
   for (let i = 1; i < input.length; i++) {
-    const iterDate = new Date(input[i]["updated"]);
+    const iterDate = new Date(input[i]["merged"]);
     input[i]["days from 1st commit"] = processDates(originalDate, iterDate);
-    const iterDateMinus1 = new Date(input[i - 1]["updated"]);
+    const iterDateMinus1 = new Date(input[i - 1]["merged"]);
     input[i]["x"] = processDates(iterDateMinus1, iterDate);
     input[i]["1/x"] =
       iterDateMinus1.getTime() !== iterDate.getTime()
@@ -340,13 +347,13 @@ const calculateDaysFromFirstCommit = (input) => {
 };
 
 const getFirstAndLastCommit = (input) => {
-  const firstCommit = new Date(input[0]["updated"]);
-  const lastCommit = new Date(input[input.length - 1]["updated"]);
+  const firstCommit = new Date(input[0]["merged"]);
+  const lastCommit = new Date(input[input.length - 1]["merged"]);
   const difference = processDates(firstCommit, lastCommit);
   input.push({
     "Last Commit-First Commit": difference, // difference
-    "First Commit": input[0]["updated"], // firstCommit
-    "Last commit": input[input.length - 1]["updated"], // lastCommit
+    "First Commit": input[0]["merged"], // firstCommit
+    "Last commit": input[input.length - 1]["merged"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
       0
@@ -355,10 +362,17 @@ const getFirstAndLastCommit = (input) => {
       (a, b) => a + (b.testCodeChurn || 0),
       0
     ),
+
     "Total code churn":
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +
       input.reduce((a, b) => a + (b.testCodeChurn || 0), 0),
   });
+  input[input.length - 1]["Average days between each commit"] =
+    input[input.length - 1]["Last Commit-First Commit"] / input.length; //insert avg days between each commit metric
+  input[input.length - 1]["Average design code % per commit"] =
+    input[input.length - 1]["Total design code churn"] / input.length;
+  input[input.length - 1]["Average test code % per commit"] =
+    input[input.length - 1]["Total test code churn"] / input.length;
   finalData.push(input);
   convertJsonToXlsx(input);
 };
@@ -373,9 +387,12 @@ const convertJsonToXlsx = (jsonData) => {
   xlsx.utils.book_append_sheet(newWorkbook, newWorksheet, "Sheet1");
 
   // Write the workbook back to a file
-  xlsx.writeFile(newWorkbook, path.join(__dirname, "./csv/modifiedData.xlsx"));
+  xlsx.writeFile(
+    newWorkbook,
+    path.join(__dirname, `./csv/${prefix}modifiedData.xlsx`)
+  );
 
-  console.log(`File saved to ./csv/modifiedData.xlsx`);
+  console.log(`File saved to ./csv/${prefix}modifiedData.xlsx`);
 };
 
 /*************************************************/

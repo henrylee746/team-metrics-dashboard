@@ -45,11 +45,14 @@ const KPISection = ({ responseData }) => {
     <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-16">
       <ResizablePanelGroup
         direction="horizontal"
-        className="max-w-full rounded-lg border text-center"
+        className="max-w-full rounded-lg border text-center min-h-[200px]"
       >
-        <ResizablePanel defaultSize={33}>
-          <div className="flex  items-center justify-center p-6">
-            <span className="font-semibold">
+        <ResizablePanel
+          defaultSize={25}
+          className="flex items-center justify-center"
+        >
+          <div className=" xl:text-lg md:text-md sm:text-sm p-2">
+            <span>
               <p>
                 First Commit:{" "}
                 <i className="text-sm font-semibold">
@@ -58,6 +61,7 @@ const KPISection = ({ responseData }) => {
                     : null}
                 </i>
               </p>
+              <br />
               <p>
                 {" "}
                 Last Commit:{" "}
@@ -71,11 +75,14 @@ const KPISection = ({ responseData }) => {
           </div>
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel defaultSize={34}>
+        <ResizablePanel defaultSize={25}>
           <ResizablePanelGroup direction="vertical">
-            <ResizablePanel defaultSize={50}>
-              <div className="flex items-center justify-center p-6">
-                <span className="font-semibold">
+            <ResizablePanel
+              defaultSize={50}
+              className="flex items-center justify-center"
+            >
+              <div className="flex xl:text-lg md:text-md sm:text-sm  items-center justify-center p-2">
+                <span>
                   <h4>
                     Last Commit - First Commit:
                     <i className="text-sm font-semibold">
@@ -92,12 +99,15 @@ const KPISection = ({ responseData }) => {
               </div>
             </ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel defaultSize={50}>
-              <div className="flex  items-center justify-center p-6">
-                <span className="font-semibold">
+            <ResizablePanel
+              defaultSize={50}
+              className="flex items-center justify-center"
+            >
+              <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
+                <span>
                   <h4>
-                    Average days between each commit:
-                    <i className="text-sm font-semibold"></i>
+                    Avg. days between each commit:
+                    <i className="text-sm font-semibold"> 2022</i>
                   </h4>
                 </span>
               </div>
@@ -105,16 +115,50 @@ const KPISection = ({ responseData }) => {
           </ResizablePanelGroup>
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel defaultSize={33}>
+        <ResizablePanel defaultSize={25}>
           <ResizablePanelGroup direction="vertical">
-            <div className="flex  items-center justify-center p-6">
-              <span className="font-semibold">
-                <h4>
-                  Average design & test code per commit:
-                  <i className="text-sm font-semibold"></i>
-                </h4>
-              </span>
-            </div>
+            <ResizablePanel
+              defaultSize={100}
+              className="flex items-center justify-center"
+            >
+              <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
+                <span>
+                  <h4 className="text-sm lg:text-md">
+                    Average design code % per commit:
+                    <i className="text-sm font-semibold"> 23054235</i>
+                  </h4>
+                  <br />
+                  <h4 className="text-sm lg:text-md">
+                    Average design code % per commit:
+                    <i className="text-sm font-semibold"> 23054235</i>
+                  </h4>
+                </span>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize={25}>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel
+              defaultSize={100}
+              className="flex items-center justify-center"
+            >
+              <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
+                <span>
+                  <h4>
+                    Total Code Churn:{" "}
+                    <i className="text-sm font-semibold">
+                      {responseData.length > 0
+                        ? responseData[responseData.length - 1][
+                            "Total code churn"
+                          ]
+                        : null}
+                    </i>
+                  </h4>
+                </span>
+              </div>
+            </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
       </ResizablePanelGroup>

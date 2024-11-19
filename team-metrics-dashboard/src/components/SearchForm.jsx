@@ -55,23 +55,39 @@ import { cn } from "@/lib/utils";
 
 /*Form Validation (Client-Side) via Zod
 Form Schema*/
-const formSchema = z.object({
-  subject: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  owner: z.string().optional(),
-  dateRange: z
-    .object({
-      from: z.date().optional(),
-      to: z.date().optional(),
-    })
-    .optional(),
-  gerrit: z.boolean().optional(), // For Gerrit checkbox
-
-  gerritDelta: z.boolean().optional(), // For Gerrit Delta checkbox
-  gerritArchive: z.boolean().optional(), // For Gerrit Archive checkbox
-  intersect: z.boolean().optional(), // For Switch button
-});
+const formSchema = z
+  .object({
+    subject: z.string().optional(),
+    owner: z.string().optional(),
+    dateRange: z
+      .object({
+        from: z.preprocess(
+          //parses date strings using a transformer, converts into Date obj
+          (val) => (val ? new Date(val) : undefined),
+          z.date().optional()
+        ),
+        to: z.preprocess(
+          (val) => (val ? new Date(val) : undefined),
+          z.date().optional()
+        ),
+      })
+      .optional(),
+    gerrit: z.boolean().optional(),
+    gerritDelta: z.boolean().optional(),
+    gerritArchive: z.boolean().optional(),
+    intersect: z.boolean().optional(),
+  })
+  .refine(
+    (data) => data.subject?.trim() || data.owner?.trim(), // Ensure at least one is filled
+    {
+      message: "Either a Subject and/or Owner must be filled in.",
+      path: ["subject"], // Apply the error to `subject` (you can add more if needed)
+    }
+  )
+  .refine((data) => data.subject?.trim() || data.owner?.trim(), {
+    message: "Either a Subject and/or Owner must be filled in.",
+    path: ["owner"], // Apply the error to `owner` as well
+  });
 
 function ProfileForm({ onSubmit, loading }) {
   const form = useForm({
@@ -137,7 +153,7 @@ function ProfileForm({ onSubmit, loading }) {
             name="dateRange"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date Range (Start-End)</FormLabel>
+                <FormLabel>Date Range (Start-End, Optional Field)</FormLabel>
                 <FormControl>
                   <DatePickerWithRange
                     value={field.value}
@@ -174,8 +190,8 @@ function ProfileForm({ onSubmit, loading }) {
 
 function DatePickerWithRange({ value, onChange }) {
   const [date, setDate] = React.useState({
-    from: value?.from || subDays(new Date(), 20),
-    to: value?.to || new Date(),
+    from: null,
+    to: null,
   });
 
   useEffect(() => {
@@ -234,7 +250,7 @@ function PopoverComponent({ form }) {
     <>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline">Advanced</Button>
+          <Button variant="outline">Advanced (Optional)</Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
@@ -351,6 +367,7 @@ const SearchForm = ({
   const navigate = useNavigate();
 
   /*Fetches some initial data when page is started*/
+  /*
   useEffect(() => {
     handleSubmit({
       subject: "11022-SP12, 11160-SP4",
@@ -362,6 +379,7 @@ const SearchForm = ({
       intersect: false,
     });
   }, []);
+  */
 
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
