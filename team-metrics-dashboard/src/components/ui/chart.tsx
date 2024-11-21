@@ -283,7 +283,7 @@ const ChartLegendContent = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "flex items-center justify-center gap-4",
+          "flex items-center justify-center gap-4 ",
           verticalAlign === "top" ? "pb-3" : "pt-3",
           className
         )}
@@ -328,6 +328,8 @@ function getPayloadConfigFromPayload(
   if (typeof payload !== "object" || payload === null) {
     return undefined;
   }
+
+  //console.log(key);
 
   const payloadPayload =
     "payload" in payload &&

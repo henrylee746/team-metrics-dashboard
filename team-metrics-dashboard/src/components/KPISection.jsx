@@ -103,7 +103,7 @@ const KPISection = ({ responseData }) => {
               defaultSize={50}
               className="flex items-center justify-center"
             >
-              <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
+              <div className="flex text-xs xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
                 <span>
                   <h4>
                     Avg. days between each commit:
@@ -117,10 +117,7 @@ const KPISection = ({ responseData }) => {
         <ResizableHandle />
         <ResizablePanel defaultSize={25}>
           <ResizablePanelGroup direction="vertical">
-            <ResizablePanel
-              defaultSize={100}
-              className="flex items-center justify-center"
-            >
+            <ResizablePanel className="flex items-center justify-center">
               <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
                 <span>
                   <h4 className="text-sm lg:text-md">
@@ -139,28 +136,24 @@ const KPISection = ({ responseData }) => {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={25}>
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel
-              defaultSize={100}
-              className="flex items-center justify-center"
-            >
-              <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
-                <span>
-                  <h4>
-                    Total Code Churn:{" "}
-                    <i className="text-sm font-semibold">
-                      {responseData.length > 0
-                        ? responseData[responseData.length - 1][
-                            "Total code churn"
-                          ]
-                        : null}
-                    </i>
-                  </h4>
-                </span>
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+          <ResizablePanel className="flex items-center justify-center">
+            <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
+              <span>
+                <h4>
+                  Total Code Churn:{" "}
+                  <i className="text-sm font-semibold">
+                    {responseData.length > 0
+                      ? responseData[responseData.length - 1][
+                          "Total code churn"
+                        ]
+                      : null}
+                  </i>
+                </h4>
+              </span>
+            </div>
+          </ResizablePanel>
         </ResizablePanel>
+        <ResizableHandle />
       </ResizablePanelGroup>
 
       {/*<Carousel
@@ -217,11 +210,15 @@ const KPISection = ({ responseData }) => {
             <Code className="text-muted-foreground" />
           </h4>
           <Separator className="my-4" />
-          <Accordion type="multiple" defaultValue={["item-1"]} collapsible>
+          <Accordion
+            type="multiple"
+            defaultValue={["item-1"]}
+            collapsible="true"
+          >
             {responseData.map((commit, index) => {
               if (index == responseData.length - 1) return;
               return (
-                <AccordionItem key={index} value={`item-${index + 1}`} def>
+                <AccordionItem key={index} value={`item-${index + 1}`}>
                   <div className="text-xs xl:text-sm lg:text-xs flex justify-between items-center gap-8">
                     <span>
                       {commit["name"]}:{" "}

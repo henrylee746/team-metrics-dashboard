@@ -57,7 +57,7 @@ const ChartsSection = ({ responseData }) => {
 
   return (
     <section
-      className="charts-section grid sm:grid-cols-1 lg:grid-cols-2 gap-12 p-8 justify-center items-center"
+      className="charts-section grid lg:grid-cols-2 sm:grid-cols-1 gap-12 p-8 justify-center items-center"
       id="charts-section"
     >
       <Card>
@@ -87,9 +87,38 @@ const ChartsSection = ({ responseData }) => {
               />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend
-                content={<ChartLegendContent nameKey="days from 1st commit" />}
+                content={(props) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {props.payload.map((entry, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                          fontSize: "14px",
+                          margin: "16px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "10px",
+                            height: "10px",
+                            backgroundColor: entry.color,
+                          }}
+                        />
+                        <span>{entry.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               />
-
               <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
             </BarChart>
           </ChartContainer>
@@ -129,6 +158,39 @@ const ChartsSection = ({ responseData }) => {
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
               />
+              <ChartLegend
+                content={(props) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {props.payload.map((entry, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                          fontSize: "14px",
+                          margin: "16px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "10px",
+                            height: "10px",
+                            backgroundColor: entry.color,
+                          }}
+                        />
+                        <span>{entry.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              />
               <Area
                 dataKey="1/x"
                 type="natural"
@@ -159,28 +221,61 @@ const ChartsSection = ({ responseData }) => {
               <XAxis
                 dataKey="days from 1st commit"
                 tickLine={false}
-                tickMargin={10}
+                tickMargin={20}
                 axisLine={false}
               />
               <YAxis
                 tickLine={false}
                 axisLine={false}
-                tickMargin={8}
+                tickMargin={15}
                 tickCount={3}
               />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
-
+              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+              <ChartLegend
+                content={(props) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {props.payload.map((entry, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                          fontSize: "14px",
+                          margin: "16px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "10px",
+                            height: "10px",
+                            backgroundColor: entry.color,
+                          }}
+                        />
+                        <span>{entry.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              />
               <Bar
                 dataKey="% of total test (cumulative)"
+                stackId={"a"}
                 fill="var(--color-totalTest)"
-                radius={4}
+                radius={[0, 0, 4, 4]}
               />
 
               <Bar
                 dataKey="% of total design (cumulative)"
+                stackId={"a"}
                 fill="var(--color-totalDesign)"
-                radius={4}
+                radius={[0, 0, 4, 4]}
               />
             </BarChart>
           </ChartContainer>
@@ -221,6 +316,39 @@ const ChartsSection = ({ responseData }) => {
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
+              />
+              <ChartLegend
+                content={(props) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {props.payload.map((entry, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                          fontSize: "14px",
+                          margin: "16px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "10px",
+                            height: "10px",
+                            backgroundColor: entry.color,
+                          }}
+                        />
+                        <span>{entry.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               />
               <Line
                 dataKey="% of total test (cumulative)"

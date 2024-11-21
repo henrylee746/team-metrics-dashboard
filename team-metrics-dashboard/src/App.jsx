@@ -25,11 +25,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  //Saving preferred viewing mode currently does not work..
   useEffect(() => {
     // Check for saved theme in localStorage
     const savedTheme = localStorage.getItem("theme");
-    console.log(savedTheme);
+    console.log(`${savedTheme} mode is currently on`);
     if (savedTheme) {
       setTheme(savedTheme);
     }
