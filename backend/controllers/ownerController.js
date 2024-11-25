@@ -14,6 +14,7 @@ let command = "";
 let prefix = "";
 
 function getCommits(req, res) {
+  /*
   finalData = [];
 
   const { intersect } = req.body;
@@ -35,6 +36,7 @@ function getCommits(req, res) {
 
   connect();
 
+
   setTimeout(() => {
     //timeout to imitate script calltime
     res.status(200).json({
@@ -46,7 +48,7 @@ function getCommits(req, res) {
       intersect: intersect,
     });
   }, 3000);
-  /*
+  */
 
   const {
     subject,
@@ -61,8 +63,8 @@ function getCommits(req, res) {
   finalData = []; //reset the array
 
   //Format Dates then create a new obj w/ formatted dates
-  //const startDate = format(dateRange.from, "yyyy-MM-dd");
-  //const endDate = format(dateRange.to, "yyyy-MM-dd");
+  const startDate = !dateRange.from ? "" : format(dateRange.from, "yyyy-MM-dd");
+  const endDate = !dateRange.to ? "" : format(dateRange.to, "yyyy-MM-dd");
 
   //to remove all whitespace from inputs (e.g. 11022-SP12,  11160-SP4)
   const subjectTrimmed = subject.replace(/\s+/g, "");
@@ -74,8 +76,8 @@ function getCommits(req, res) {
   const objData = {
     subject: subjectTrimmed,
     owner: ownerTrimmed,
-    startDate: startDate
-    endDate: endDate
+    startDate: startDate,
+    endDate: endDate,
     gerrit: gerrit,
     gerritArchive: gerritArchive,
     gerritDelta: gerritDelta,
@@ -110,7 +112,6 @@ function getCommits(req, res) {
       intersect: intersect,
     });
   });
-  */
 }
 
 /*Fuctions Called (Stack Trace) in Top to Bottom Order */
@@ -162,7 +163,7 @@ const buildCommand = (objData, command, prefix) => {
 
 const processXlsxToJson = (subject, owner, prefix) => {
   const workbook = xlsx.readFile(
-    path.join(__dirname, `./csv/${prefix}churnQuery.xlsx`)
+    path.join(__dirname, `../csv/${prefix}ChurnQuery.xlsx`),
   );
   const sheet_name = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[sheet_name];
@@ -290,11 +291,11 @@ it must be included in overlapArr as well
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
     (sum, commit) => sum + (commit.testCodeChurn || 0),
-    0
+    0,
   );
   let totalDesign = input.reduce(
     (sum, commit) => sum + (commit.sourceCodeChurn || 0),
-    0
+    0,
   );
   fillCumulativeCode(input, totalTest, totalDesign);
 };
@@ -356,11 +357,11 @@ const getFirstAndLastCommit = (input) => {
     "Last commit": input[input.length - 1]["merged"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
-      0
+      0,
     ),
     "Total test code churn": input.reduce(
       (a, b) => a + (b.testCodeChurn || 0),
-      0
+      0,
     ),
 
     "Total code churn":
@@ -368,11 +369,18 @@ const getFirstAndLastCommit = (input) => {
       input.reduce((a, b) => a + (b.testCodeChurn || 0), 0),
   });
   input[input.length - 1]["Average days between each commit"] =
-    input[input.length - 1]["Last Commit-First Commit"] / input.length; //insert avg days between each commit metric
-  input[input.length - 1]["Average design code % per commit"] =
-    input[input.length - 1]["Total design code churn"] / input.length;
-  input[input.length - 1]["Average test code % per commit"] =
-    input[input.length - 1]["Total test code churn"] / input.length;
+    Math.round(
+      (input[input.length - 1]["Last Commit-First Commit"] / input.length) *
+        100,
+    ) / 100; //insert avg days between each commit metric
+  input[input.length - 1]["Average design code churn per commit"] =
+    Math.round(
+      (input[input.length - 1]["Total design code churn"] / input.length) * 100,
+    ) / 100;
+  input[input.length - 1]["Average test code churn per commit"] =
+    Math.round(
+      (input[input.length - 1]["Total test code churn"] / input.length) * 100,
+    ) / 100;
   finalData.push(input);
   convertJsonToXlsx(input);
 };
@@ -389,7 +397,7 @@ const convertJsonToXlsx = (jsonData) => {
   // Write the workbook back to a file
   xlsx.writeFile(
     newWorkbook,
-    path.join(__dirname, `./csv/${prefix}modifiedData.xlsx`)
+    path.join(__dirname, `./csv/${prefix}modifiedData.xlsx`),
   );
 
   console.log(`File saved to ./csv/${prefix}modifiedData.xlsx`);

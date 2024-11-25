@@ -38,7 +38,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 const KPISection = ({ responseData }) => {
   const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: false })
+    Autoplay({ delay: 2000, stopOnInteraction: false }),
   );
 
   return (
@@ -107,7 +107,14 @@ const KPISection = ({ responseData }) => {
                 <span>
                   <h4>
                     Avg. days between each commit:
-                    <i className="text-sm font-semibold"> 2022</i>
+                    <i className="text-sm font-semibold">
+                      {" "}
+                      {
+                        responseData[responseData.length - 1][
+                          "Average days between each commit"
+                        ]
+                      }
+                    </i>
                   </h4>
                 </span>
               </div>
@@ -121,13 +128,27 @@ const KPISection = ({ responseData }) => {
               <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
                 <span>
                   <h4 className="text-sm lg:text-md">
-                    Average design code % per commit:
-                    <i className="text-sm font-semibold"> 23054235</i>
+                    Average design code churn per commit:
+                    <i className="text-sm font-semibold">
+                      {" "}
+                      {
+                        responseData[responseData.length - 1][
+                          "Average design code churn per commit"
+                        ]
+                      }
+                    </i>
                   </h4>
                   <br />
                   <h4 className="text-sm lg:text-md">
-                    Average design code % per commit:
-                    <i className="text-sm font-semibold"> 23054235</i>
+                    Average test code churn per commit:
+                    <i className="text-sm font-semibold">
+                      {" "}
+                      {
+                        responseData[responseData.length - 1][
+                          "Average test code churn per commit"
+                        ]
+                      }
+                    </i>
                   </h4>
                 </span>
               </div>
