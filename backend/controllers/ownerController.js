@@ -330,17 +330,17 @@ const fillCumulativeCode = (input, totalTest, totalDesign) => {
 // Calculate days from the first commit
 const calculateDaysFromFirstCommit = (input) => {
   input = input.slice().reverse();
-  const originalDate = new Date(input[0]["merged"]);
+  const originalDate = new Date(input[0]["updated"]);
   [input[0]["days from 1st commit"], input[0]["x"]] = [0, 0];
 
   for (let i = 1; i < input.length; i++) {
-    const iterDate = new Date(input[i]["merged"]);
+    const iterDate = new Date(input[i]["updated"]);
     input[i]["days from 1st commit"] = processDates(originalDate, iterDate);
-    const iterDateMinus1 = new Date(input[i - 1]["merged"]);
+    const iterDateMinus1 = new Date(input[i - 1]["updated"]);
     input[i]["x"] = processDates(iterDateMinus1, iterDate);
     input[i]["1/x"] =
       iterDateMinus1.getTime() !== iterDate.getTime()
-        ? parseFloat(((1 / input[i]["x"]) * 100).toFixed(2))
+        ? Math.round(parseFloat((1 / input[i]["x"]).toFixed(2) * 100)) / 100
         : 0;
   }
 
@@ -348,13 +348,13 @@ const calculateDaysFromFirstCommit = (input) => {
 };
 
 const getFirstAndLastCommit = (input) => {
-  const firstCommit = new Date(input[0]["merged"]);
-  const lastCommit = new Date(input[input.length - 1]["merged"]);
+  const firstCommit = new Date(input[0]["updated"]);
+  const lastCommit = new Date(input[input.length - 1]["updated"]);
   const difference = processDates(firstCommit, lastCommit);
   input.push({
     "Last Commit-First Commit": difference, // difference
-    "First Commit": input[0]["merged"], // firstCommit
-    "Last commit": input[input.length - 1]["merged"], // lastCommit
+    "First Commit": input[0]["updated"], // firstCommit
+    "Last commit": input[input.length - 1]["updated"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
       0,
