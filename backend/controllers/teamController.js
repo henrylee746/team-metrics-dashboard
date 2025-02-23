@@ -7,6 +7,7 @@ const json = require("../message.json");
 const jsonWithIntersect = require("../messageIntersect.json");
 const fs = require("fs");
 const sql = require("mssql");
+const teamData = require("../team.json"); //would normally be retrieved
 const { config } = require("../config.js");
 
 let finalData = []; //represents final JSON arr after manipulations
@@ -14,43 +15,9 @@ let command = "";
 let prefix = "";
 
 function getCommits(req, res) {
-  finalData = [];
-
-  const { intersect } = req.body;
-
-  if (intersect) {
-    finalData = jsonWithIntersect;
-  } else {
-    finalData = json;
-  }
-
-  const connect = async () => {
-    try {
-      await sql.connect(config);
-      console.log("Connected to the database!");
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  connect();
-
-  setTimeout(() => {
-    //timeout to imitate script calltime
-    res.status(200).json({
-      status: "success",
-      message: "Data processed",
-      data: finalData,
-      subjectSplit: 2,
-      ownerSplit: 1,
-      intersect: intersect,
-    });
-  }, 3000);
-  /*
-
   const {
+    team,
     subject,
-    owner,
     dateRange,
     gerrit,
     gerritArchive,
@@ -61,30 +28,34 @@ function getCommits(req, res) {
   finalData = []; //reset the array
 
   //Format Dates then create a new obj w/ formatted dates
-  //const startDate = format(dateRange.from, "yyyy-MM-dd");
-  //const endDate = format(dateRange.to, "yyyy-MM-dd");
+  const startDate = !dateRange.from ? "" : format(dateRange.from, "yyyy-MM-dd");
+  const endDate = !dateRange.to ? "" : format(dateRange.to, "yyyy-MM-dd");
 
   //to remove all whitespace from inputs (e.g. 11022-SP12,  11160-SP4)
   const subjectTrimmed = subject.replace(/\s+/g, "");
-  const ownerTrimmed = owner.replace(/\s+/g, "");
-
   const subjectSplit = subjectTrimmed.split(/[,;]+/);
-  const ownerSplit = ownerTrimmed.split(/[,;]+/);
 
   const objData = {
-    subject: subjectTrimmed,
-    owner: ownerTrimmed,
-    startDate: "", //startDate
-    endDate: "", //endDate
+    team: team,
+    subject: subjectSplit,
+    startDate: startDate,
+    endDate: endDate,
     gerrit: gerrit,
     gerritArchive: gerritArchive,
     gerritDelta: gerritDelta,
     intersect: intersect,
   };
 
+  separateQueries(objData);
+
+  //Need some logic here eventually on fetching team data.. querying using the tool takes well over 1m+
+  //In addition, looping through the array of commits and filtering by subject (could just use filter() for this)
+  //If team data is going to be queried in some other way besides the tool then all the commented-out code is unnecessary
+
+  /*
   command = "/proj/nrbbtools/nrbbdevtools/codeChurn/codeChurnQuery.py ";
 
-  prefix = `${subjectTrimmed},${ownerTrimmed}`; //for saving csv in its own unique name
+  prefix = `${team},${subjectTrimmed}`; //for saving csv in its own unique name
   command = buildCommand(objData, command, prefix);
 
   console.log(`Executing command: ${command}`);
@@ -106,14 +77,13 @@ function getCommits(req, res) {
       message: "Data processed",
       data: finalData,
       subjectSplit: subjectSplit.length,
-      ownerSplit: ownerSplit.length,
       intersect: intersect,
     });
   });
   */
 }
 
-/*Fuctions Called (Stack Trace) in Top to Bottom Order */
+/*
 const buildCommand = (objData, command, prefix) => {
   const keys = Object.keys(objData);
   const values = Object.values(objData);
@@ -121,11 +91,12 @@ const buildCommand = (objData, command, prefix) => {
   for (let i = 0; i < keys.length; i++) {
     if (values[i] === "" || !values[i]) continue;
     switch (keys[i]) {
+      case "team":
+        //perform some sort of data fetching here to get the
+        //owners of the team
+        break;
       case "subject":
         command += `--reasons=${values[i]} `;
-        break;
-      case "owner":
-        command += `--owners=${values[i]} `;
         break;
       case "startDate":
         command += `--begin=${values[i]} `;
@@ -160,129 +131,36 @@ const buildCommand = (objData, command, prefix) => {
   return command;
 };
 
+
 const processXlsxToJson = (subject, owner, prefix) => {
   const workbook = xlsx.readFile(
-    path.join(__dirname, `./csv/${prefix}churnQuery.xlsx`)
+    path.join(__dirname, `../csv/${prefix}ChurnQuery.xlsx`),
   );
   const sheet_name = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[sheet_name];
 
   // Convert the worksheet to JSON data
-  const jsonData = xlsx.utils.sheet_to_json(worksheet);
-  separateQueries(jsonData, command, subject, owner); //passing in subject = subjectSplit, owner = ownerSplit
+  const teamData = xlsx.utils.sheet_to_json(worksheet);
+  separateQueries(teamData, command, subject, owner); //passing in subject = subjectSplit, owner = ownerSplit
 };
-
-const separateQueries = (jsonData, command, subject, owner) => {
-  //TODO:
-  /*
-1. Add total of all subjects/owners 
-(final object in jsonData must be sorted by date to do this)
-
-
-2. When parsing through subjects, 
-if a selected owner worked on that subject, 
-it must be included in overlapArr as well 
-(but must be inserted in the correct index in jsonArr by date.)
 */
 
-  let [subjectSplit, ownerSplit] = [subject, owner];
-
-  //clear the arrays if the split element is empty quotes
-  if (subjectSplit[0] === "") subjectSplit = [];
-  if (ownerSplit[0] === "") ownerSplit = [];
-
-  console.log(subjectSplit.length);
-  console.log(ownerSplit.length);
-
-  //if only the subject field was filled
-  if (ownerSplit.length == 0) {
-    let counter = 0;
-    let jsonArr = [];
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i].reason == subjectSplit[counter]) {
-        jsonArr.push(jsonData[i]);
-      } else {
-        counter++;
-        console.log(jsonData[i]);
-        console.log(subjectSplit[counter]);
-        addTotalTestAndTotalDesign(jsonArr);
-        jsonArr = [];
-        jsonArr.push(jsonData[i]);
-      }
+const separateQueries = (objData) => {
+  const keys = Object.keys(objData);
+  const values = Object.values(objData);
+  for (let i = 0; i < keys.length; i++) {
+    if (!values[i] || values[i] === "") continue;
+    switch (keys[i]) {
+      case "subject":
+        finalData = separateBySubject(values[i]);
+        break;
     }
-    addTotalTestAndTotalDesign(jsonArr);
-    return;
-  } else if (subjectSplit.length == 0) {
-    let counter = 0;
-    let jsonArr = [];
-    for (let i = index; i < jsonData.length; i++) {
-      if (jsonData[i].user == ownerSplit[counter]) {
-        jsonArr.push(jsonData[i]);
-      } else {
-        counter++;
-        addTotalTestAndTotalDesign(jsonArr);
-        jsonArr = [];
-        jsonArr.push(jsonData[i]);
-      }
-    }
-    addTotalTestAndTotalDesign(jsonArr);
-    return;
   }
+};
 
-  //if both subject and owner field was filled w/ at least one entry
-  if (command.includes("--intersect")) {
-    //if data was selected to be intersected
-    let counter = 0;
-    let jsonArr = [];
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i].reason == subjectSplit[counter]) {
-        jsonArr.push(jsonData[i]);
-      } else {
-        counter++;
-        addTotalTestAndTotalDesign(jsonArr);
-        jsonArr = [];
-        jsonArr.push(jsonData[i]);
-      }
-    }
-    addTotalTestAndTotalDesign(jsonArr);
-  } else {
-    //if data wasn't selected to be intersected
-    let counter = 0;
-    let jsonArr = [];
-    let overlapArr = [];
-    let index;
-    for (let i = 0; i < jsonData.length; i++) {
-      if (ownerSplit.includes(jsonData[i].user)) {
-        overlapArr.push(jsonData[i]);
-      }
-      if (jsonData[i].reason == subjectSplit[counter]) {
-        jsonArr.push(jsonData[i]);
-      } else {
-        ++counter;
-        addTotalTestAndTotalDesign(jsonArr);
-        jsonArr = [];
-        if (counter + 1 > subjectSplit.length) {
-          index = i;
-          counter = 0;
-          break;
-        }
-        jsonArr.push(jsonData[i]);
-      }
-    }
-
-    //Begin owner parsing process after subjects have been parsed
-    for (let i = index; i < jsonData.length; i++) {
-      if (jsonData[i].user == ownerSplit[counter]) {
-        jsonArr.push(jsonData[i]);
-      } else {
-        counter++;
-        addTotalTestAndTotalDesign(jsonArr);
-        jsonArr = [];
-        jsonArr.push(jsonData[i]);
-      }
-    }
-    addTotalTestAndTotalDesign(jsonArr);
-  }
+/*Helper Functions for separateQueries*/
+const separateBySubject = (subjects) => {
+  for (let i = 0; i < subjects.length; i++) {}
 };
 
 //Each option (jsonArr) goes through data manipulation starting here
@@ -290,14 +168,15 @@ it must be included in overlapArr as well
 const addTotalTestAndTotalDesign = (input) => {
   let totalTest = input.reduce(
     (sum, commit) => sum + (commit.testCodeChurn || 0),
-    0
+    0,
   );
   let totalDesign = input.reduce(
     (sum, commit) => sum + (commit.sourceCodeChurn || 0),
-    0
+    0,
   );
   fillCumulativeCode(input, totalTest, totalDesign);
 };
+4;
 
 // Adds two JSON properties to each commit: totalTest% (cumulative) as well as for totalDesign%
 const fillCumulativeCode = (input, totalTest, totalDesign) => {
@@ -356,22 +235,36 @@ const getFirstAndLastCommit = (input) => {
     "Last commit": input[input.length - 1]["merged"], // lastCommit
     "Total design code churn": input.reduce(
       (a, b) => a + (b.sourceCodeChurn || 0),
-      0
+      0,
     ),
     "Total test code churn": input.reduce(
       (a, b) => a + (b.testCodeChurn || 0),
-      0
+      0,
     ),
+
     "Total code churn":
       input.reduce((a, b) => a + (b.sourceCodeChurn || 0), 0) +
       input.reduce((a, b) => a + (b.testCodeChurn || 0), 0),
   });
+  input[input.length - 1]["Average days between each commit"] =
+    Math.round(
+      (input[input.length - 1]["Last Commit-First Commit"] / input.length) *
+        100,
+    ) / 100; //insert avg days between each commit metric
+  input[input.length - 1]["Average design code churn per commit"] =
+    Math.round(
+      (input[input.length - 1]["Total design code churn"] / input.length) * 100,
+    ) / 100;
+  input[input.length - 1]["Average test code churn per commit"] =
+    Math.round(
+      (input[input.length - 1]["Total test code churn"] / input.length) * 100,
+    ) / 100;
   finalData.push(input);
   convertJsonToXlsx(input);
 };
-const convertJsonToXlsx = (jsonData) => {
+const convertJsonToXlsx = (teamData) => {
   // Convert JSON to a worksheet
-  const newWorksheet = xlsx.utils.json_to_sheet(jsonData);
+  const newWorksheet = xlsx.utils.json_to_sheet(teamData);
 
   // Create a new workbook
   const newWorkbook = xlsx.utils.book_new();
@@ -382,7 +275,7 @@ const convertJsonToXlsx = (jsonData) => {
   // Write the workbook back to a file
   xlsx.writeFile(
     newWorkbook,
-    path.join(__dirname, `./csv/${prefix}modifiedData.xlsx`)
+    path.join(__dirname, `./csv/${prefix}modifiedData.xlsx`),
   );
 
   console.log(`File saved to ./csv/${prefix}modifiedData.xlsx`);

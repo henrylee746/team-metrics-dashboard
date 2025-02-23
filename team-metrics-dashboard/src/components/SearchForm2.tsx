@@ -70,15 +70,20 @@ const formSchema = z.object({
   subject: z.string().optional(),
   dateRange: z
     .object({
-      from: z.date().optional(),
-      to: z.date().optional(),
+      from: z.preprocess(
+        //parses date strings using a transformer, converts into Date obj
+        (val: string | Date | undefined) => (val ? new Date(val) : undefined),
+        z.date().optional(),
+      ),
+      to: z.preprocess(
+        (val: string | Date | undefined) => (val ? new Date(val) : undefined),
+        z.date().optional(),
+      ),
     })
     .optional(),
   gerrit: z.boolean().optional(), // For Gerrit checkbox
-
   gerritDelta: z.boolean().optional(), // For Gerrit Delta checkbox
   gerritArchive: z.boolean().optional(), // For Gerrit Archive checkbox
-  intersect: z.boolean().optional(), // For Switch button
 });
 
 const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
@@ -102,7 +107,6 @@ function ProfileForm({ onSubmit, loading }) {
       gerrit: true,
       gerritDelta: true,
       gerritArchive: true,
-      intersect: false,
     },
   });
 
@@ -206,8 +210,8 @@ function ProfileForm({ onSubmit, loading }) {
 
 function DatePickerWithRange({ value, onChange }) {
   const [date, setDate] = React.useState({
-    from: value?.from || subDays(new Date(), 20),
-    to: value?.to || new Date(),
+    from: null,
+    to: null,
   });
 
   useEffect(() => {
@@ -228,7 +232,7 @@ function DatePickerWithRange({ value, onChange }) {
             variant={"outline"}
             className={cn(
               "justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground",
             )}
           >
             <CalendarIcon />
@@ -329,36 +333,6 @@ function PopoverComponent({ form }) {
                     )}
                   />
                 </div>
-                <Separator />
-                <div className="flex flex-col gap-5">
-                  <div className="space-y-3">
-                    <Controller
-                      control={form.control}
-                      name="intersect"
-                      render={({ field }) => (
-                        <FormItem className="flex items-end gap-3">
-                          <Label
-                            htmlFor="intersect"
-                            className="-translate-y-0.5"
-                          >
-                            Intersect
-                          </Label>
-                          <FormControl>
-                            <Switch
-                              id="intersect"
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <p className="text-sm text-muted-foreground">
-                      Filter results which satisfy Subject(s) and Owner(s)/
-                      simutaeneously
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           </DrawerHeader>
@@ -378,15 +352,10 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
 
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
-    const {
-      team,
-      subject,
-      dateRange,
-      gerrit,
-      gerritArchive,
-      gerritDelta,
-      intersect,
-    } = values;
+    const { team, subject, dateRange, gerrit, gerritArchive, gerritDelta } =
+      values;
+
+    console.log(values);
 
     if (!subject && !team) {
       return;
@@ -408,14 +377,13 @@ const SearchForm = ({ setResponseData, loading, setLoading, setError }) => {
           gerrit: gerrit,
           gerritArchive: gerritArchive,
           gerritDelta: gerritDelta,
-          intersect: intersect,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `HTTP Error: ${response.status} - ${errorData.message}`
+          `HTTP Error: ${response.status} - ${errorData.message}`,
         );
       }
 
