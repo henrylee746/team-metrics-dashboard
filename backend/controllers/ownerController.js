@@ -24,6 +24,7 @@ function getCommits(req, res) {
     finalData = json;
   }
 
+  /*
   const connect = async () => {
     try {
       await sql.connect(config);
@@ -34,6 +35,7 @@ function getCommits(req, res) {
   };
 
   connect();
+  */
 
   setTimeout(() => {
     //timeout to imitate script calltime

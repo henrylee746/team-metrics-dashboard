@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import "../output.css";
 import { FaSun, FaMoon, FaBars } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";

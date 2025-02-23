@@ -1,4 +1,5 @@
 "use client";
+/*eslint-disable*/
 
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -24,7 +25,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,

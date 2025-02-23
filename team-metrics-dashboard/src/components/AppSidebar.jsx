@@ -1,4 +1,5 @@
-import { Users, User, Home, Calculator } from "lucide-react";
+
+import { Users, User, Calculator } from "lucide-react";
 
 import {
   Sidebar,

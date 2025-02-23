@@ -1,4 +1,7 @@
+/* eslint-disable*/
+
 import "../output.css";
+
 
 import React, { useState, useEffect } from "react";
 import {

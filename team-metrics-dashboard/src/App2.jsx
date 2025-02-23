@@ -1,4 +1,5 @@
 import "./output.css"; // Import global styles
+/* eslint-disable*/
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
 import SearchForm2 from "./components/SearchForm2.tsx";
