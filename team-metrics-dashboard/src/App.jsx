@@ -24,6 +24,7 @@ function App() {
   const [theme, setTheme] = useState("dark"); // Default to dark mode
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [value, setValue] = useState("0");
 
   useEffect(() => {
     // Check for saved theme in localStorage
@@ -46,6 +47,7 @@ function App() {
   const handleLinkChange = (e) => {
     //handles option changes, modifies URL based on selected option
     if (e) {
+      setValue(e);
       navigate(e); //triggers re-render of Data component as it's dependent on dynamic parameter of :index
     }
   };
@@ -61,7 +63,7 @@ function App() {
   useEffect(() => {
     // Apply theme class to root element
     document.documentElement.classList.remove(
-      theme === "dark" ? "light" : "dark"
+      theme === "dark" ? "light" : "dark",
     );
     document.documentElement.classList.add(theme);
 
@@ -117,22 +119,16 @@ function App() {
           {responseData && !loading && (
             <>
               <div className="w-screen">
-                <Select onValueChange={handleLinkChange}>
+                <Select value={value} onValueChange={handleLinkChange}>
                   <SelectTrigger className="w-3/12 ml-4">
-                    <SelectValue
-                      placeholder={
-                        <div className="flex items-center ">
-                          Select Subject/Owner... <MousePointer2 height={15} />
-                        </div>
-                      }
-                    />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {responseData.intersect &&
                       responseData.data.map((arr, index) => {
                         return (
                           <SelectItem key={index} value={`${index}`}>
-                            Subject: {arr[0]["reason"]}
+                            Subject: {arr[0]["reason"].replace(/[\[\]]/g, "")}
                           </SelectItem>
                         );
                       })}
@@ -147,7 +143,7 @@ function App() {
                         } else {
                           return (
                             <SelectItem key={index} value={`${index}`}>
-                              Subject: {arr[0]["reason"]}
+                              Subject: {arr[0]["reason"].replace(/[\[\]]/g, "")}
                             </SelectItem>
                           );
                         }

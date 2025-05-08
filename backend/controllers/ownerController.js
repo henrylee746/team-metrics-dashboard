@@ -14,6 +14,7 @@ let command = "";
 let prefix = "";
 
 function getCommits(req, res) {
+  /*
   finalData = [];
 
   const { intersect } = req.body;
@@ -23,6 +24,18 @@ function getCommits(req, res) {
   } else {
     finalData = json;
   }
+
+  const connect = async () => {
+    try {
+      await sql.connect(config);
+      console.log("Connected to the database!");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  connect();
+
 
   setTimeout(() => {
     //timeout to imitate script calltime
@@ -35,8 +48,8 @@ function getCommits(req, res) {
       intersect: intersect,
     });
   }, 3000);
+  */
 
-  /*
   const {
     subject,
     owner,
@@ -101,7 +114,7 @@ function getCommits(req, res) {
   });
 }
 
-/*Functions Called (Stack Trace) in Top to Bottom Order */
+/*Fuctions Called (Stack Trace) in Top to Bottom Order */
 const buildCommand = (objData, command, prefix) => {
   const keys = Object.keys(objData);
   const values = Object.values(objData);
@@ -187,12 +200,10 @@ it must be included in overlapArr as well
     let counter = 0;
     let jsonArr = [];
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i].reason == subjectSplit[counter]) {
+      if (jsonData[i].reason.includes(subjectSplit[counter])) {
         jsonArr.push(jsonData[i]);
       } else {
         counter++;
-        console.log(jsonData[i]);
-        console.log(subjectSplit[counter]);
         addTotalTestAndTotalDesign(jsonArr);
         jsonArr = [];
         jsonArr.push(jsonData[i]);
@@ -201,10 +212,11 @@ it must be included in overlapArr as well
     addTotalTestAndTotalDesign(jsonArr);
     return;
   } else if (subjectSplit.length == 0) {
+    //if only owner entry was filled
     let counter = 0;
     let jsonArr = [];
-    for (let i = index; i < jsonData.length; i++) {
-      if (jsonData[i].user == ownerSplit[counter]) {
+    for (let i = 0; i < jsonData.length; i++) {
+      if (ownerSplit[counter].includes(jsonData[i].user)) {
         jsonArr.push(jsonData[i]);
       } else {
         counter++;
@@ -223,7 +235,7 @@ it must be included in overlapArr as well
     let counter = 0;
     let jsonArr = [];
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i].reason == subjectSplit[counter]) {
+      if (jsonData[i].reason.includes(subjectSplit[counter])) {
         jsonArr.push(jsonData[i]);
       } else {
         counter++;
@@ -243,10 +255,15 @@ it must be included in overlapArr as well
       if (ownerSplit.includes(jsonData[i].user)) {
         overlapArr.push(jsonData[i]);
       }
-      if (jsonData[i].reason == subjectSplit[counter]) {
+      console.log(jsonData[i].reason);
+      console.log(subjectSplit[counter]);
+      if (jsonData[i].reason.includes(subjectSplit[counter])) {
         jsonArr.push(jsonData[i]);
+        console.log("here1");
       } else {
         ++counter;
+        console.log("here2");
+
         addTotalTestAndTotalDesign(jsonArr);
         jsonArr = [];
         if (counter + 1 > subjectSplit.length) {
@@ -389,8 +406,6 @@ const convertJsonToXlsx = (jsonData) => {
 
   console.log(`File saved to ./csv/${prefix}modifiedData.xlsx`);
 };
-}
-
 
 /*************************************************/
 // Helper function for getting difference in days

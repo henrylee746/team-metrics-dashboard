@@ -11,7 +11,7 @@ app.use(
     origin: "http://localhost:5173", // Frontend URL
     methods: ["GET", "POST"],
     credentials: true,
-  })
+  }),
 );
 //application-level middleware for every incoming request
 app.use(express.static("public"));
