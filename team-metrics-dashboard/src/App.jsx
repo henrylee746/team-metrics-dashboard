@@ -134,13 +134,17 @@ function App() {
                       })}
                     {!responseData.intersect &&
                       responseData.data.map((arr, index) => {
-                        if (index + 1 > responseData.subjectSplit) {
+                        if (
+                          index + 1 > responseData.subjectSplit ||
+                          responseData.subjectSplit === 1
+                        ) {
                           return (
                             <SelectItem key={index} value={`${index}`}>
                               Owner: {arr[0]["name"]}
                             </SelectItem>
                           );
                         } else {
+                          console.log(responseData.subjectSplit);
                           return (
                             <SelectItem key={index} value={`${index}`}>
                               Subject: {arr[0]["reason"].replace(/[\[\]]/g, "")}

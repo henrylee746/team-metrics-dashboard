@@ -171,6 +171,14 @@ const KPISection = ({ responseData }) => {
                       : null}
                   </i>
                 </h4>
+                <h4>
+                  Velocity:{" "}
+                  <i className="text-sm font-semibold">
+                    {responseData.length > 0
+                      ? responseData[responseData.length - 1]["Velocity (4/x)"]
+                      : null}
+                  </i>
+                </h4>
               </span>
             </div>
           </ResizablePanel>

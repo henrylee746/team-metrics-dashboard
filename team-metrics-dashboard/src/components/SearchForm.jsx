@@ -64,17 +64,20 @@ const formSchema = z
         from: z.preprocess(
           //parses date strings using a transformer, converts into Date obj
           (val) => (val ? new Date(val) : undefined),
-          z.date().optional()
+          z.date().optional(),
         ),
         to: z.preprocess(
           (val) => (val ? new Date(val) : undefined),
-          z.date().optional()
+          z.date().optional(),
         ),
       })
       .optional(),
     gerrit: z.boolean().optional(),
     gerritDelta: z.boolean().optional(),
     gerritArchive: z.boolean().optional(),
+    gerritReview: z.boolean().optional(),
+    gerritSigma: z.boolean().optional(),
+
     intersect: z.boolean().optional(),
   })
   .refine(
@@ -82,7 +85,7 @@ const formSchema = z
     {
       message: "Either a Subject and/or Owner must be filled in.",
       path: ["subject"], // Apply the error to `subject` (you can add more if needed)
-    }
+    },
   )
   .refine((data) => data.subject?.trim() || data.owner?.trim(), {
     message: "Either a Subject and/or Owner must be filled in.",
@@ -100,6 +103,8 @@ function ProfileForm({ onSubmit, loading }) {
       gerrit: true,
       gerritDelta: true,
       gerritArchive: true,
+      gerritReview: true,
+      gerritSigma: true,
       intersect: false,
     },
   });
@@ -212,7 +217,7 @@ function DatePickerWithRange({ value, onChange }) {
             variant={"outline"}
             className={cn(
               "justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground",
             )}
           >
             <CalendarIcon />
@@ -280,6 +285,7 @@ function PopoverComponent({ form }) {
                       </FormItem>
                     )}
                   />
+
                   <Controller
                     control={form.control}
                     name="gerritDelta"
@@ -305,6 +311,38 @@ function PopoverComponent({ form }) {
                         <FormControl>
                           <Checkbox
                             id="gerritArchive"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Controller
+                    control={form.control}
+                    name="gerritReview"
+                    render={({ field }) => (
+                      <FormItem className="flex items-end gap-2">
+                        <Label htmlFor="gerritReview">Gerrit Review</Label>
+                        <FormControl>
+                          <Checkbox
+                            id="gerritReview"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Controller
+                    control={form.control}
+                    name="gerritSigma"
+                    render={({ field }) => (
+                      <FormItem className="flex items-end gap-2">
+                        <Label htmlFor="gerritSigma">Gerrit Sigma</Label>
+                        <FormControl>
+                          <Checkbox
+                            id="gerritSigma"
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
@@ -421,7 +459,7 @@ const SearchForm = ({
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `HTTP Error: ${response.status} - ${errorData.message}`
+          `HTTP Error: ${response.status} - ${errorData.message}`,
         );
       }
 

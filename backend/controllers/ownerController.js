@@ -14,9 +14,9 @@ let command = "";
 let prefix = "";
 
 function getCommits(req, res) {
-  /*
   finalData = [];
 
+  /*
   const { intersect } = req.body;
 
   if (intersect) {
@@ -57,6 +57,8 @@ function getCommits(req, res) {
     gerrit,
     gerritArchive,
     gerritDelta,
+    gerritReview,
+    gerritSigma,
     intersect,
   } = req.body;
 
@@ -81,6 +83,8 @@ function getCommits(req, res) {
     gerrit: gerrit,
     gerritArchive: gerritArchive,
     gerritDelta: gerritDelta,
+    gerritReview: gerritReview,
+    gerritSigma: gerritSigma,
     intersect: intersect,
   };
 
@@ -137,20 +141,41 @@ const buildCommand = (objData, command, prefix) => {
       case "gerrit":
         command += `--gerrit=gerrit`;
         break;
+
       case "gerritArchive":
         if (!values[i - 1]) {
-          command += `--gerrit=gerritArchive`;
+          command += `--gerrit=gerrit-archive`;
           break;
         }
-        command += `,gerritArchive`;
+        command += `,gerrit-archive`;
         break;
       case "gerritDelta":
         if (!values[i - 2] && !values[i - 1]) {
-          command += `--gerrit=gerritDelta`;
+          command += `--gerrit=gerrit-delta`;
           break;
         }
-        command += `,gerritDelta `;
+        command += `,gerrit-delta `;
         break;
+      case "gerritReview":
+        if (!values[i - 3] && !values[i - 2] && !values[i - 1]) {
+          command += `--gerrit=gerrit-review`;
+          break;
+        }
+        command += `,gerrit-review `;
+        break;
+      case "gerritSigma":
+        if (
+          !values[i - 4] &&
+          !values[i - 3] &&
+          !values[i - 2] &&
+          !values[i - 1]
+        ) {
+          command += `--gerrit=gerrit-sigma`;
+          break;
+        }
+        command += `,gerrit-sigma `;
+        break;
+
       case "intersect":
         command += `--intersect `;
         break;
@@ -213,6 +238,7 @@ it must be included in overlapArr as well
     return;
   } else if (subjectSplit.length == 0) {
     //if only owner entry was filled
+    console.log("Owner entry filled");
     let counter = 0;
     let jsonArr = [];
     for (let i = 0; i < jsonData.length; i++) {
@@ -255,8 +281,7 @@ it must be included in overlapArr as well
       if (ownerSplit.includes(jsonData[i].user)) {
         overlapArr.push(jsonData[i]);
       }
-      console.log(jsonData[i].reason);
-      console.log(subjectSplit[counter]);
+
       if (jsonData[i].reason.includes(subjectSplit[counter])) {
         jsonArr.push(jsonData[i]);
         console.log("here1");
@@ -346,6 +371,7 @@ const calculateDaysFromFirstCommit = (input) => {
       iterDateMinus1.getTime() !== iterDate.getTime()
         ? Math.round(parseFloat((1 / input[i]["x"]).toFixed(2) * 100)) / 100
         : 0;
+    if (input[i]["1/x"] < 0) input[i]["1/x"] = 0;
   }
 
   getFirstAndLastCommit(input);
@@ -384,6 +410,10 @@ const getFirstAndLastCommit = (input) => {
   input[input.length - 1]["Average test code churn per commit"] =
     Math.round(
       (input[input.length - 1]["Total test code churn"] / input.length) * 100,
+    ) / 100;
+  input[input.length - 1]["Velocity (4/x)"] =
+    Math.round(
+      (4 / input[input.length - 1]["Average days between each commit"]) * 100,
     ) / 100;
   finalData.push(input);
   convertJsonToXlsx(input);
