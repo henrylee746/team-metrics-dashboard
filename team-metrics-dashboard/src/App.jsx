@@ -126,6 +126,13 @@ function App() {
                   <SelectContent>
                     {responseData.intersect &&
                       responseData.data.map((arr, index) => {
+                        if (index == responseData.data.length - 1) {
+                          return (
+                            <SelectItem key={index} value={`${index}`}>
+                              All
+                            </SelectItem>
+                          );
+                        }
                         return (
                           <SelectItem key={index} value={`${index}`}>
                             Subject: {arr[0]["reason"].replace(/[\[\]]/g, "")}
@@ -134,6 +141,13 @@ function App() {
                       })}
                     {!responseData.intersect &&
                       responseData.data.map((arr, index) => {
+                        if (index == responseData.data.length - 1) {
+                          return (
+                            <SelectItem key={index} value={`${index}`}>
+                              All
+                            </SelectItem>
+                          );
+                        }
                         if (
                           index + 1 > responseData.subjectSplit ||
                           responseData.subjectSplit === 1

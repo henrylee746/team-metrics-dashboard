@@ -196,6 +196,7 @@ const processXlsxToJson = (subject, owner, prefix) => {
   // Convert the worksheet to JSON data
   const jsonData = xlsx.utils.sheet_to_json(worksheet);
   separateQueries(jsonData, command, subject, owner); //passing in subject = subjectSplit, owner = ownerSplit
+  passAllEntries(jsonData);
 };
 
 const separateQueries = (jsonData, command, subject, owner) => {
@@ -235,6 +236,7 @@ it must be included in overlapArr as well
       }
     }
     addTotalTestAndTotalDesign(jsonArr);
+
     return;
   } else if (subjectSplit.length == 0) {
     //if only owner entry was filled
@@ -252,6 +254,7 @@ it must be included in overlapArr as well
       }
     }
     addTotalTestAndTotalDesign(jsonArr);
+
     return;
   }
 
@@ -284,10 +287,8 @@ it must be included in overlapArr as well
 
       if (jsonData[i].reason.includes(subjectSplit[counter])) {
         jsonArr.push(jsonData[i]);
-        console.log("here1");
       } else {
         ++counter;
-        console.log("here2");
 
         addTotalTestAndTotalDesign(jsonArr);
         jsonArr = [];
@@ -315,6 +316,15 @@ it must be included in overlapArr as well
   }
 };
 
+const passAllEntries = (jsonData) => {
+  sortDates(jsonData);
+};
+
+const sortDates = (jsonData) => {
+  jsonData.sort((a, b) => new Date(a.updated) - new Date(b.updated));
+  jsonData.reverse();
+  addTotalTestAndTotalDesign(jsonData);
+};
 //Each option (jsonArr) goes through data manipulation starting here
 // Loops through objects and gets totalTest and totalDesign totals out of all commits
 const addTotalTestAndTotalDesign = (input) => {

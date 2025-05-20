@@ -158,30 +158,37 @@ const KPISection = ({ responseData }) => {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={25}>
-          <ResizablePanel className="flex items-center justify-center">
-            <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
-              <span>
-                <h4>
-                  Total Code Churn:{" "}
-                  <i className="text-sm font-semibold">
-                    {responseData.length > 0
-                      ? responseData[responseData.length - 1][
-                          "Total code churn"
-                        ]
-                      : null}
-                  </i>
-                </h4>
-                <h4>
-                  Velocity:{" "}
-                  <i className="text-sm font-semibold">
-                    {responseData.length > 0
-                      ? responseData[responseData.length - 1]["Velocity (4/x)"]
-                      : null}
-                  </i>
-                </h4>
-              </span>
-            </div>
-          </ResizablePanel>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel className="flex items-center justify-center">
+              <div
+                className="flex 
+              xl:text-lg md:text-md sm:text-sm items-center justify-center p-12"
+              >
+                <span>
+                  <h4>
+                    Total Code Churn:{" "}
+                    <i className="text-sm font-semibold">
+                      {responseData.length > 0
+                        ? responseData[responseData.length - 1][
+                            "Total code churn"
+                          ]
+                        : null}
+                    </i>
+                  </h4>
+                  <h4>
+                    Velocity:{" "}
+                    <i className="text-sm font-semibold">
+                      {responseData.length > 0
+                        ? responseData[responseData.length - 1][
+                            "Velocity (4/x)"
+                          ]
+                        : null}
+                    </i>
+                  </h4>
+                </span>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </ResizablePanel>
         <ResizableHandle />
       </ResizablePanelGroup>
