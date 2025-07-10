@@ -2,7 +2,7 @@ import "./output.css"; // Import global styles
 /* eslint-disable*/
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
-import SearchForm from "./components/SearchForm.jsx";
+import SearchForm from "./components/SearchForm.tsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -60,7 +60,7 @@ function App() {
   useEffect(() => {
     // Apply theme class to root element
     document.documentElement.classList.remove(
-      theme === "dark" ? "light" : "dark"
+      theme === "dark" ? "light" : "dark",
     );
     document.documentElement.classList.add(theme);
 

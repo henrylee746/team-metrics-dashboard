@@ -42,6 +42,8 @@ const KPISection = ({ responseData }) => {
     Autoplay({ delay: 2000, stopOnInteraction: false }),
   );
 
+  console.log(responseData);
+
   return (
     <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-16">
       <ResizablePanelGroup
@@ -110,11 +112,11 @@ const KPISection = ({ responseData }) => {
                     Avg. days between each commit:
                     <i className="text-sm font-semibold">
                       {" "}
-                      {
-                        responseData[responseData.length - 1][
-                          "Average days between each commit"
-                        ]
-                      }
+                      {responseData.intersect
+                        ? responseData[responseData.length - 1][
+                            "Average days between each commit"
+                          ]
+                        : null}
                     </i>
                   </h4>
                 </span>
@@ -132,11 +134,11 @@ const KPISection = ({ responseData }) => {
                     Average design code churn per commit:
                     <i className="text-sm font-semibold">
                       {" "}
-                      {
-                        responseData[responseData.length - 1][
-                          "Average design code churn per commit"
-                        ]
-                      }
+                      {responseData.intersect
+                        ? responseData[responseData.length - 1][
+                            "Average design code churn per commit"
+                          ]
+                        : null}
                     </i>
                   </h4>
                   <br />
@@ -144,11 +146,11 @@ const KPISection = ({ responseData }) => {
                     Average test code churn per commit:
                     <i className="text-sm font-semibold">
                       {" "}
-                      {
-                        responseData[responseData.length - 1][
-                          "Average test code churn per commit"
-                        ]
-                      }
+                      {responseData.intersect
+                        ? responseData[responseData.length - 1][
+                            "Average test code churn per commit"
+                          ]
+                        : null}
                     </i>
                   </h4>
                 </span>

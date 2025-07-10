@@ -1,10 +1,11 @@
-"use client";
 /*eslint-disable*/
+"use client";
 
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; //example of named exports
 import "../output.css";
 import { useNavigate } from "react-router-dom";
+import MultipleSelector, { Option } from "@/components/ui/multipleselect";
 
 /*Form Imports*/
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +43,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -50,26 +58,30 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-/*Form Validation (Client-Side) via Zod
-Form Schema*/
-const formSchema = z
+/** <option value="x">Foo</option> */
+const optionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+  disable: z.boolean().optional(),
+});
+
+/** Helper for parsing various date inputs */
+const dateFromUnknown = (val: unknown) =>
+  val instanceof Date || typeof val === "string" || typeof val === "number"
+    ? new Date(val)
+    : undefined;
+
+/** Form validation schema */
+export const formSchema = z
   .object({
-    subject: z.string().optional(),
+    subject: z.array(optionSchema).min(1).optional(), // now optional – we’ll enforce rules in superRefine
     owner: z.string().optional(),
     dateRange: z
       .object({
-        from: z.preprocess(
-          //parses date strings using a transformer, converts into Date obj
-          (val) => (val ? new Date(val) : undefined),
-          z.date().optional(),
-        ),
-        to: z.preprocess(
-          (val) => (val ? new Date(val) : undefined),
-          z.date().optional(),
-        ),
+        from: z.preprocess(dateFromUnknown, z.date().optional()),
+        to: z.preprocess(dateFromUnknown, z.date().optional()),
       })
       .optional(),
     gerrit: z.boolean().optional(),
@@ -77,27 +89,60 @@ const formSchema = z
     gerritArchive: z.boolean().optional(),
     gerritReview: z.boolean().optional(),
     gerritSigma: z.boolean().optional(),
-
     intersect: z.boolean().optional(),
   })
-  .refine(
-    (data) => data.subject?.trim() || data.owner?.trim(), // Ensure at least one is filled
-    {
-      message: "Either a Subject and/or Owner must be filled in.",
-      path: ["subject"], // Apply the error to `subject` (you can add more if needed)
-    },
-  )
-  .refine((data) => data.subject?.trim() || data.owner?.trim(), {
-    message: "Either a Subject and/or Owner must be filled in.",
-    path: ["owner"], // Apply the error to `owner` as well
+  .superRefine((data, ctx) => {
+    const subjectFilled =
+      Array.isArray(data.subject) && data.subject.length > 0;
+    const ownerFilled =
+      typeof data.owner === "string" && data.owner.trim().length > 0;
+    const mustBoth = data.intersect === true;
+
+    // 1️⃣ intersect = true  → both must be present
+    if (mustBoth) {
+      if (!subjectFilled) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Subject is required when Intersect is checked.",
+          path: ["subject"],
+        });
+      }
+      if (!ownerFilled) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Owner is required when Intersect is checked.",
+          path: ["owner"],
+        });
+      }
+      return; // no need to run the “either/or” rule below
+    }
+
+    // 2️⃣ intersect ≠ true  → at least one must be present
+    if (!subjectFilled && !ownerFilled) {
+      const msg = "Either Subject or Owner must be provided.";
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: msg,
+        path: ["subject"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: msg,
+        path: ["owner"],
+      });
+    }
   });
 
 function ProfileForm({ onSubmit, loading }) {
+  const OPTIONS: Option[] = [
+    { label: "11022-SP12", value: "11022-SP12" },
+    { label: "11160-SP4", value: "11160-SP4" },
+  ];
   const form = useForm({
     //Defining the form
     resolver: zodResolver(formSchema),
     defaultValues: {
-      subject: "",
+      subject: undefined,
       owner: "",
       dateRange: { from: null, to: null },
       gerrit: true,
@@ -109,7 +154,7 @@ function ProfileForm({ onSubmit, loading }) {
     },
   });
 
-  function handleFormSubmit(values) {
+  function handleFormSubmit(values: z.infer<typeof formSchema>) {
     //Defining the submit handler
     onSubmit(values); // Invokes the function from parent component
   }
@@ -125,30 +170,44 @@ function ProfileForm({ onSubmit, loading }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Subject(s)</FormLabel>
-                <FormControl>
-                  <Input
-                    //className={`[&:not(:focus)]:placeholder-transparent`}
-                    placeholder="11022-SP12, 11160-SP4"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>Comma or semicolon separated</FormDescription>
+
+                <MultipleSelector /* bind it! */
+                  value={field.value ?? []} // RHF → component
+                  onChange={field.onChange} // component → RHF
+                  defaultOptions={OPTIONS}
+                  hideClearAllButton
+                  placeholder="Select subject(s)..."
+                />
+
+                <FormDescription>
+                  Select subject(s) you would like to see data for.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="owner"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Owner(s)</FormLabel>
-                <FormControl>
-                  <Input placeholder="ehsxmng" {...field} />
-                </FormControl>
-                <FormDescription>
-                  Comma or semicolon separated by email/signum
-                </FormDescription>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an Owner..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="ezjeuju">Julius Jeuthe</SelectItem>
+                    <SelectItem value="etobkon">Tobias König</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription>Select an Owner</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -263,8 +322,8 @@ function PopoverComponent({ form }) {
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
                 <p className="text-sm text-muted-foreground">
-                  Selects which Gerrit servers to look through ( selects all by
-                  default )
+                  Selects which Gerrit servers to look through (this doesn't
+                  affect the search results)
                 </p>
               </div>
               <div className="flex flex-col gap-5">
@@ -464,6 +523,7 @@ const SearchForm = ({
       }
 
       const promise = await response.json();
+      console.log(promise);
       setResponseData(promise); // Set all response data together if needed
     } catch (error) {
       console.error("Form submission failed:", error);

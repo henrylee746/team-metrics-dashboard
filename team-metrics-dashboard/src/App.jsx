@@ -1,11 +1,11 @@
+/*eslint-disable*/
 import "./output.css"; // Import global styles
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
-import SearchForm from "./components/SearchForm.jsx";
+import SearchForm from "./components/SearchForm.tsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { MousePointer2 } from "lucide-react";
 
 /*UI components*/
 import {
@@ -118,58 +118,50 @@ function App() {
 
           {responseData && !loading && (
             <>
-              <div className="w-screen">
-                <Select value={value} onValueChange={handleLinkChange}>
-                  <SelectTrigger className="w-3/12 ml-4">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {responseData.intersect &&
-                      responseData.data.map((arr, index) => {
-                        if (index == responseData.data.length - 1) {
+              {responseData.data.length > 0 ? (
+                <div className="w-screen">
+                  <Select value={value} onValueChange={handleLinkChange}>
+                    <SelectTrigger className="w-3/12 ml-4">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {responseData.intersect &&
+                        responseData.data.map((arr, index) => {
                           return (
                             <SelectItem key={index} value={`${index}`}>
-                              All
+                              Owner: {arr[0]["name"].replace(/[\[\]]/g, "")}
                             </SelectItem>
                           );
-                        }
-                        return (
-                          <SelectItem key={index} value={`${index}`}>
-                            Subject: {arr[0]["reason"].replace(/[\[\]]/g, "")}
-                          </SelectItem>
-                        );
-                      })}
-                    {!responseData.intersect &&
-                      responseData.data.map((arr, index) => {
-                        if (index == responseData.data.length - 1) {
-                          return (
-                            <SelectItem key={index} value={`${index}`}>
-                              All
-                            </SelectItem>
-                          );
-                        }
-                        if (
-                          index + 1 > responseData.subjectSplit ||
-                          responseData.subjectSplit === 1
-                        ) {
-                          return (
-                            <SelectItem key={index} value={`${index}`}>
-                              Owner: {arr[0]["name"]}
-                            </SelectItem>
-                          );
-                        } else {
-                          console.log(responseData.subjectSplit);
-                          return (
-                            <SelectItem key={index} value={`${index}`}>
-                              Subject: {arr[0]["reason"].replace(/[\[\]]/g, "")}
-                            </SelectItem>
-                          );
-                        }
-                      })}
-                  </SelectContent>
-                </Select>
-                {<Outlet context={[responseData.data]} />}
-              </div>
+                        })}
+                      {!responseData.intersect &&
+                        responseData.data.map((arr, index) => {
+                          if (index + 1 <= responseData.subjectSplit) {
+                            return (
+                              <SelectItem key={index} value={`${index}`}>
+                                Subject:{" "}
+                                {arr[0]["reason"].replace(/[\[\]]/g, "")}
+                              </SelectItem>
+                            );
+                          } else {
+                            return (
+                              <SelectItem key={index} value={`${index}`}>
+                                Owner: {arr[0]["name"].replace(/[\[\]]/g, "")}
+                              </SelectItem>
+                            );
+                          }
+                        })}
+                    </SelectContent>
+                  </Select>
+                  {responseData.data.length > 0 ? (
+                    <Outlet context={[responseData.data]} />
+                  ) : null}
+                  {/*Only renders the Outlet components (Data.jsx and descendants) if results from query were found*/}
+                </div>
+              ) : (
+                <p className="flex items-center justify-center font-medium italic">
+                  No results found, please try another query.
+                </p>
+              )}
             </>
           )}
           {error && <p>{error}.</p>}
