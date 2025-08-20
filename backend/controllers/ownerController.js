@@ -1,10 +1,9 @@
+/*eslint-disable*/
 require("dotenv").config(); //load env vars
 const { format } = require("date-fns");
 const { exec } = require("child_process");
 const xlsx = require("xlsx");
 const path = require("path");
-const json = require("../message.json");
-const jsonWithIntersect = require("../messageIntersect.json");
 const fs = require("fs");
 const sql = require("mssql");
 const { config } = require("../config.js");
@@ -16,15 +15,15 @@ let prefix = "";
 function getCommits(req, res) {
   finalData = [];
 
-  /*
+  console.log(req.body);
+
   const { intersect } = req.body;
 
-  if (intersect) {
-    finalData = jsonWithIntersect;
-  } else {
-    finalData = json;
-  }
+  //imitating pulling data from a database
+  if (intersect) pullDataWithIntersectEnabled(req);
+  else pullDataWithIntersectDisabled(req);
 
+  /*
   const connect = async () => {
     try {
       await sql.connect(config);
@@ -35,21 +34,29 @@ function getCommits(req, res) {
   };
 
   connect();
+  */
 
+  console.log(
+    "Final data length prior to being returned to client (should have one more than prev. print unless no results returned): " +
+      finalData.length,
+  );
 
+  //timeout to imitate script calltime
   setTimeout(() => {
-    //timeout to imitate script calltime
     res.status(200).json({
       status: "success",
       message: "Data processed",
       data: finalData,
-      subjectSplit: 2,
+      subjectSplit: req.body.subject ? req.body.subject.length : 0,
       ownerSplit: 1,
       intersect: intersect,
     });
-  }, 3000);
-  */
+  }, 1000);
 
+  /* Any code below this line is irrelevant to the replicate and was used during the original 
+  prototype*/
+
+  /*
   const {
     subject,
     owner,
@@ -68,7 +75,7 @@ function getCommits(req, res) {
   const startDate = !dateRange.from ? "" : format(dateRange.from, "yyyy-MM-dd");
   const endDate = !dateRange.to ? "" : format(dateRange.to, "yyyy-MM-dd");
 
-  //to remove all whitespace from inputs (e.g. 11022-SP12,  11160-SP4)
+  //to remove all whitespace from inputs
   const subjectTrimmed = subject.replace(/\s+/g, "");
   const ownerTrimmed = owner.replace(/\s+/g, "");
 
@@ -116,9 +123,86 @@ function getCommits(req, res) {
       intersect: intersect,
     });
   });
+
+  */
 }
 
-/*Fuctions Called (Stack Trace) in Top to Bottom Order */
+const pullDataWithIntersectEnabled = (req) => {
+  const [json1, json2, json3, json4] = [
+    require("../messageem8kkjsam4.json").slice(
+      0,
+      require("../messageem8kkjsam4.json").length - 1,
+    ),
+    require("../messageXY789-ZT2.json").slice(
+      0,
+      require("../messageXY789-ZT2.json").length - 1,
+    ),
+    require("../messageBobSample.json").slice(
+      0,
+      require("../messageBobSample.json").length - 1,
+    ),
+    require("../messageCharlieDemo.json").slice(
+      0,
+      require("../messageCharlieDemo.json").length - 1,
+    ),
+  ];
+  const allCommits = [json1, json2, json3, json4];
+  const parsedCommits = [];
+  const { subject, owner } = req.body;
+  const labels = subject.map((subject) => subject.label);
+  allCommits.map((jsonData) => {
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        labels.includes(jsonData[i].reason) &&
+        jsonData[i].user === owner &&
+        !parsedCommits.includes(jsonData[i].commit)
+      ) {
+        finalData.push(jsonData[i]);
+        parsedCommits.push(jsonData[i].commit);
+      }
+    }
+  });
+  console.log(
+    "Final data before being passed into addTotalTestAndTotalDesign function: " +
+      finalData.length,
+  );
+  if (finalData.length == 0) {
+    return;
+  }
+  addTotalTestAndTotalDesign(finalData);
+  finalData = finalData[finalData.length - 1];
+  const tempArr = finalData;
+  finalData = [];
+  finalData.push(tempArr);
+};
+
+const pullDataWithIntersectDisabled = (req) => {
+  if (req.body.subject !== undefined && req.body.subject.length) {
+    //empty arrays don't evaluate to falsy so must evaluate using length instead
+    const { subject } = req.body;
+    subject.map((subject) => {
+      if (subject.label === "em8kkjsam4") {
+        const json = require("../messageem8kkjsam4.json");
+        finalData.push(json);
+      } else if (subject.label === "XY789-ZT2") {
+        const json = require("../messageXY789-ZT2.json");
+        finalData.push(json);
+      }
+    });
+  }
+  if (req.body.owner !== "") {
+    //empty strings do evaluate to falsy so can use !
+    const { owner } = req.body;
+    if (owner === "BobSample") {
+      const json = require("../messageBobSample.json");
+      finalData.push(json);
+    } else {
+      const json = require("../messageCharlieDemo.json");
+      finalData.push(json);
+    }
+  }
+};
+
 const buildCommand = (objData, command, prefix) => {
   const keys = Object.keys(objData);
   const values = Object.values(objData);
@@ -344,31 +428,28 @@ const fillCumulativeCode = (input, totalTest, totalDesign) => {
   let currentTest = 0;
   let currentDesign = 0;
 
-  input
-    .slice()
-    .reverse()
-    .forEach((commit) => {
-      currentTest += commit.testCodeChurn || 0;
-      currentDesign += commit.sourceCodeChurn || 0;
+  input.slice().forEach((commit) => {
+    currentTest += commit.testCodeChurn || 0;
+    currentDesign += commit.sourceCodeChurn || 0;
 
-      // Avoid division by zero
-      commit["% of total test (cumulative)"] =
-        totalTest !== 0
-          ? parseFloat(((currentTest / totalTest) * 100).toFixed(2))
-          : 0.0;
+    // Avoid division by zero
+    commit["% of total test (cumulative)"] =
+      totalTest !== 0
+        ? parseFloat(((currentTest / totalTest) * 100).toFixed(2))
+        : 0.0;
 
-      commit["% of total design (cumulative)"] =
-        totalDesign !== 0
-          ? parseFloat(((currentDesign / totalDesign) * 100).toFixed(2))
-          : 0.0;
-    });
+    commit["% of total design (cumulative)"] =
+      totalDesign !== 0
+        ? parseFloat(((currentDesign / totalDesign) * 100).toFixed(2))
+        : 0.0;
+  });
 
   calculateDaysFromFirstCommit(input);
 };
 
 // Calculate days from the first commit
 const calculateDaysFromFirstCommit = (input) => {
-  input = input.slice().reverse();
+  input = input.slice();
   const originalDate = new Date(input[0]["updated"]);
   [input[0]["days from 1st commit"], input[0]["x"]] = [0, 0];
 

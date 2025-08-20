@@ -135,8 +135,8 @@ export const formSchema = z
 
 function ProfileForm({ onSubmit, loading }) {
   const OPTIONS: Option[] = [
-    { label: "11022-SP12", value: "11022-SP12" },
-    { label: "11160-SP4", value: "11160-SP4" },
+    { label: "em8kkjsam4", value: "em8kkjsam4" },
+    { label: "XY789-ZT2", value: "XY789-ZT2" },
   ];
   const form = useForm({
     //Defining the form
@@ -203,8 +203,10 @@ function ProfileForm({ onSubmit, loading }) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="ezjeuju">Julius Jeuthe</SelectItem>
-                    <SelectItem value="etobkon">Tobias König</SelectItem>
+                    <SelectItem value="BobSample">
+                      Alice Demo/Bob Sample
+                    </SelectItem>
+                    <SelectItem value="CharlieDemo">Charlie Demo</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormDescription>Select an Owner</FormDescription>
@@ -467,7 +469,6 @@ const SearchForm = ({
   /*
   useEffect(() => {
     handleSubmit({
-      subject: "11022-SP12, 11160-SP4",
       owner: "ehsxmng",
       dateRange: "",
       gerrit: true,

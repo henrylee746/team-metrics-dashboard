@@ -1,10 +1,9 @@
+/*eslint-disable*/
 require("dotenv").config(); //load env vars
 const { format } = require("date-fns");
 const { exec } = require("child_process");
 const xlsx = require("xlsx");
 const path = require("path");
-const json = require("../message.json");
-const jsonWithIntersect = require("../messageIntersect.json");
 const fs = require("fs");
 const sql = require("mssql");
 const teamData = require("../team.json"); //would normally be retrieved
