@@ -1,6 +1,6 @@
-# Velocity Project
+# Team Metrics Dashboard
 
-Originally began development as a project for one of the line managers at Ericsson Canada, this tool's goal was to return performance metrics of any employee/contractor at Ericsson worldwide who has made at least 1 commit to any repo in Ericsson's Gerrit servers. This tool has since been liked by multiple line managers and retained since my departure from the company, but I continued to develop it into a personal project that could mock the ideal end result I was looking for in this tool without leaking any actual sensitive data. 
+Originally began development as a project at Ericsson Canada, this tool's goal is to return performance metrics of any employee/contractor at X company who has made at least 1 commit to any repo in X company's said codebase repositories. 
 
 ## Getting Started
 
