@@ -63,7 +63,7 @@ import { cn } from "@/lib/utils";
 
 /*Form Validation (Client-Side) via Zod
 Form Schema*/
-const teamEnum = ["KB-2", "Hurricanes", "Eh-Team"] as const;
+const teamEnum = ["Team 1", "Team 2", "Team 3"] as const;
 
 const formSchema = z.object({
   team: z.enum(teamEnum), //use zod enums
@@ -156,7 +156,7 @@ function ProfileForm({ onSubmit, loading }) {
                 <FormControl>
                   <Input
                     //className={`[&:not(:focus)]:placeholder-transparent`}
-                    placeholder="11022-SP12"
+                    placeholder="Subject.."
                     {...field}
                   />
                 </FormControl>
