@@ -1,6 +1,6 @@
 # Team Metrics Dashboard
 
-Originally began development as a project at Ericsson Canada, this tool's goal is to return performance metrics of any employee/contractor at X company who has made at least 1 commit to any repo in X company's said codebase repositories. 
+This tool's goal is to return performance metrics of any employee/contractor at X company who has made at least 1 commit to any repo in X company's said codebase repositories. 
 
 ## Getting Started
 
