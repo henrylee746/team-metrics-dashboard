@@ -52,18 +52,10 @@ function App() {
     }
   };
 
-  /*The theme can be manipulated using state.. 
-  but effects are necessary to directly change the DOM 
-  depending on dark/light mode
-  
-  Changes in state will rerender the whole app, while 
-  changes in effect are dependent upon the parameters in the 
-  dep. array
-  */
   useEffect(() => {
     // Apply theme class to root element
     document.documentElement.classList.remove(
-      theme === "dark" ? "light" : "dark",
+      theme === "dark" ? "light" : "dark"
     );
     document.documentElement.classList.add(theme);
 

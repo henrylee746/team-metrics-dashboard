@@ -34,7 +34,9 @@ const Header = ({ toggleTheme, currentTheme, className }) => {
             <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl">
               Team Metrics Dashboard
             </h1>
-            <p className="text-sm text-muted-foreground">Ericsson Canada</p>
+            <p className="text-sm text-muted-foreground">
+              Mock Performance Visual Tool
+            </p>
           </div>
         </div>
         <Separator orientation="vertical" className="h-[50px]" />
@@ -48,15 +50,11 @@ const Header = ({ toggleTheme, currentTheme, className }) => {
           <TabsList>
             <TabsTrigger className="flex gap-2" value="/">
               <UserPen />
-              <div className={`hidden lg:block`}>Subject/Owner Search</div>
+              <div className={`hidden lg:block`}>Search</div>
             </TabsTrigger>
             <TabsTrigger className="flex gap-2" value="/team">
               <Users />
-              <div className={`hidden lg:block`}>Team Search</div>
-            </TabsTrigger>
-            <TabsTrigger className="flex gap-2" value="/leadtime">
-              <Calculator />
-              <div className={`hidden lg:block`}>Leadtime</div>
+              <div className={`hidden lg:block`}>How to Use</div>
             </TabsTrigger>
           </TabsList>
         </Tabs>
