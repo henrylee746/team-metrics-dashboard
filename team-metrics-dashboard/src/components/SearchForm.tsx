@@ -203,10 +203,8 @@ function ProfileForm({ onSubmit, loading }) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="BobSample">
-                      Alice Demo/Bob Sample
-                    </SelectItem>
-                    <SelectItem value="CharlieDemo">Charlie Demo</SelectItem>
+                    <SelectItem value="Bob Sample">Bob Sample</SelectItem>
+                    <SelectItem value="Charlie Demo">Charlie Demo</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormDescription>Select an Owner</FormDescription>
@@ -278,7 +276,7 @@ function DatePickerWithRange({ value, onChange }) {
             variant={"outline"}
             className={cn(
               "justify-start text-left font-normal",
-              !date && "text-muted-foreground",
+              !date && "text-muted-foreground"
             )}
           >
             <CalendarIcon />
@@ -465,20 +463,6 @@ const SearchForm = ({
 }) => {
   const navigate = useNavigate();
 
-  /*Fetches some initial data when page is started*/
-  /*
-  useEffect(() => {
-    handleSubmit({
-      owner: "ehsxmng",
-      dateRange: "",
-      gerrit: true,
-      gerritArchive: true,
-      gerritDelta: true,
-      intersect: false,
-    });
-  }, []);
-  */
-
   const handleSubmit = async (values) => {
     console.log("Form values:", values); // Logs the submitted values
     const {
@@ -519,7 +503,7 @@ const SearchForm = ({
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `HTTP Error: ${response.status} - ${errorData.message}`,
+          `HTTP Error: ${response.status} - ${errorData.message}`
         );
       }
 

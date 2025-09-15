@@ -5,7 +5,7 @@
     "link": "https://gerrit/q/commit:a1b2c3d4e5f67890123456789abcdef012345678",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Demo",
+    "name": "Bob Sample",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/abc",
@@ -40,7 +40,7 @@
     "link": "https://gerrit/q/commit:b2c3d4e5f67890123456789abcdef0123456789a",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Demo",
+    "name": "Bob Sample",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/abc",
@@ -208,13 +208,5 @@
     "days from 1st commit": 35,
     "x": 1,
     "1/x": 100
-  },
-  {
-    "Last Commit-First Commit": 34,
-    "First Commit": "2023-07-15",
-    "Last commit": "2023-08-18",
-    "Total design code churn": 419,
-    "Total test code churn": 363,
-    "Total code churn": 782
   }
 ]

@@ -2,7 +2,6 @@
 
 import "../output.css";
 
-
 import React, { useState, useEffect } from "react";
 import {
   LabelList,
@@ -58,7 +57,7 @@ const ChartsSection = ({ responseData }) => {
     },
   };
 
-  return (
+  return responseData && responseData.length > 0 ? (
     <section
       className="charts-section grid lg:grid-cols-2 sm:grid-cols-1 gap-12 p-8 justify-center items-center"
       id="charts-section"
@@ -372,6 +371,10 @@ const ChartsSection = ({ responseData }) => {
         </CardContent>
       </Card>
     </section>
+  ) : (
+    <div className="text-center text-gray-500 p-8">
+      No results found for this subject/owner
+    </div>
   );
 };
 

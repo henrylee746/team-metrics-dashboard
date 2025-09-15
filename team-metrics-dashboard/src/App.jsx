@@ -131,13 +131,17 @@ function App() {
                             return (
                               <SelectItem key={index} value={`${index}`}>
                                 Subject:{" "}
-                                {arr[0]["reason"].replace(/[\[\]]/g, "")}
+                                {responseData.subject[index].label.replace(
+                                  /[\[\]]/g,
+                                  ""
+                                )}
                               </SelectItem>
                             );
                           } else {
                             return (
                               <SelectItem key={index} value={`${index}`}>
-                                Owner: {arr[0]["name"].replace(/[\[\]]/g, "")}
+                                Owner:{" "}
+                                {responseData.owner.replace(/[\[\]]/g, "")}
                               </SelectItem>
                             );
                           }

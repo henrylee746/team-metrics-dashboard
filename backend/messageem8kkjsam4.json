@@ -245,13 +245,5 @@
     "days from 1st commit": 90,
     "x": 42,
     "1/x": 2.38
-  },
-  {
-    "Last Commit-First Commit": 90,
-    "First Commit": "2023-11-18",
-    "Last commit": "2024-02-16",
-    "Total design code churn": 544,
-    "Total test code churn": 1978,
-    "Total code churn": 2522
   }
 ]

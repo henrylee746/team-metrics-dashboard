@@ -1,15 +1,15 @@
 [
   {
-    "reason": "AB321-ZX7",
+    "reason": "XY789-ZT2",
     "commit": "a1b2c3d4e5f67890123456789abcdef012345678",
     "link": "https://gerrit/q/commit:a1b2c3d4e5f67890123456789abcdef012345678",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Example",
+    "name": "Charlie Demo",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[AB321-ZX7] Add new button",
+    "subject": "[XY789-ZT2] Add new button",
     "merged": "2023-07-14",
     "updated": "2023-07-14",
     "stTag": "source",
@@ -34,7 +34,7 @@
     "x": 0
   },
   {
-    "reason": "AB321-ZX7",
+    "reason": "XY789-ZT2",
     "commit": "b2c3d4e5f67890123456789abcdef0123456789a",
     "link": "https://gerrit/q/commit:b2c3d4e5f67890123456789abcdef0123456789a",
     "server": "gerrit",
@@ -43,7 +43,7 @@
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[AB321-ZX7] Adds system constant to allow for fast cache storage",
+    "subject": "[XY789-ZT2] Adds system constant to allow for fast cache storage",
     "merged": "2023-07-15",
     "updated": "2023-07-15",
     "stTag": "source test",
@@ -69,7 +69,7 @@
     "1/x": 100
   },
   {
-    "reason": "AB321-ZX7",
+    "reason": "XY789-ZT2",
     "commit": "c3d4e5f67890123456789abcdef0123456789ab",
     "link": "https://gerrit/q/commit:c3d4e5f67890123456789abcdef0123456789ab",
     "server": "gerrit",
@@ -78,7 +78,7 @@
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[AB321-ZX7] Modify Dark/Light Mode transition",
+    "subject": "[XY789-ZT2] Modify Dark/Light Mode transition",
     "merged": "2023-07-17",
     "updated": "2023-07-17",
     "stTag": "source test",
@@ -104,7 +104,7 @@
     "1/x": 50
   },
   {
-    "reason": "AB321-ZX7",
+    "reason": "XY789-ZT2",
     "commit": "d4e5f67890123456789abcdef0123456789abcd",
     "link": "https://gerrit/q/commit:d4e5f67890123456789abcdef0123456789abcd",
     "server": "gerrit",
@@ -113,7 +113,7 @@
     "location": "Linköping",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[AB321-ZX7] Add new Button",
+    "subject": "[XY789-ZT2] Add new Button",
     "merged": "2023-07-18",
     "updated": "2023-07-18",
     "stTag": "source test",
@@ -139,16 +139,16 @@
     "1/x": 100
   },
   {
-    "reason": "AB321-ZX7",
+    "reason": "XY789-ZT2",
     "commit": "e5f67890123456789abcdef0123456789abcde",
     "link": "https://gerrit/q/commit:e5f67890123456789abcdef0123456789abcde",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Example",
+    "name": "Charlie Demo",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[AB321-ZX7] Add demo to setup",
+    "subject": "[XY789-ZT2] Add demo to setup",
     "merged": "2023-07-20",
     "updated": "2023-07-20",
     "sourceCodeAdded": 0,
@@ -173,16 +173,16 @@
     "1/x": 50
   },
   {
-    "reason": "CD456-QW9",
+    "reason": "XY789-ZT2",
     "commit": "f1a2b3c4d5e67890123456789abcdef012345679",
     "link": "https://gerrit/q/commit:f1a2b3c4d5e67890123456789abcdef012345679",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Example",
+    "name": "Charlie Demo",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[CD456-QW9] Low priority, add accessibility changes from prior meeting",
+    "subject": "[XY789-ZT2] Low priority, add accessibility changes from prior meeting",
     "merged": "2023-07-20",
     "updated": "2023-07-20",
     "sourceCodeAdded": 0,
@@ -207,16 +207,16 @@
     "1/x": 0
   },
   {
-    "reason": "CD456-QW9",
+    "reason": "XY789-ZT2",
     "commit": "a2b3c4d5e67890123456789abcdef0123456790",
     "link": "https://gerrit/q/commit:a2b3c4d5e67890123456789abcdef0123456790",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Example",
+    "name": "Charlie Demo",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[CD456-QW9] Sets default value of bwtishoWithRwrEnable to enabled",
+    "subject": "[XY789-ZT2] Sets default value of bwtishoWithRwrEnable to enabled",
     "merged": "2023-07-21",
     "updated": "2023-07-31",
     "stTag": "source",
@@ -242,7 +242,7 @@
     "1/x": 9.09
   },
   {
-    "reason": "CD456-QW9",
+    "reason": "XY789-ZT2",
     "commit": "b3c4d5e67890123456789abcdef01234567901",
     "link": "https://gerrit/q/commit:b3c4d5e67890123456789abcdef01234567901",
     "server": "gerrit",
@@ -251,7 +251,7 @@
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[CD456-QW9] Add counter to loop",
+    "subject": "[XY789-ZT2] Add counter to loop",
     "merged": "2023-08-02",
     "updated": "2023-08-02",
     "stTag": "source",
@@ -277,7 +277,7 @@
     "1/x": 50
   },
   {
-    "reason": "CD456-QW9",
+    "reason": "XY789-ZT2",
     "commit": "c4d5e67890123456789abcdef012345679012",
     "link": "https://gerrit/q/commit:c4d5e67890123456789abcdef012345679012",
     "server": "gerrit",
@@ -286,7 +286,7 @@
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[CD456-QW9] Add form verification to CD456",
+    "subject": "[XY789-ZT2] Add form verification to CD456",
     "merged": "2023-08-04",
     "updated": "2023-08-04",
     "sourceCodeAdded": 0,
@@ -311,16 +311,16 @@
     "1/x": 50
   },
   {
-    "reason": "CD456-QW9",
+    "reason": "XY789-ZT2",
     "commit": "d5e67890123456789abcdef0123456790123",
     "link": "https://gerrit/q/commit:d5e67890123456789abcdef0123456790123",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Example",
+    "name": "Charlie Demo",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[CD456-QW9]",
+    "subject": "[XY789-ZT2]",
     "merged": "2023-08-08",
     "updated": "2023-08-08",
     "sourceCodeAdded": 0,
@@ -345,16 +345,16 @@
     "1/x": 25
   },
   {
-    "reason": "CD456-QW9",
+    "reason": "XY789-ZT2",
     "commit": "e67890123456789abcdef01234567901234",
     "link": "https://gerrit/q/commit:e67890123456789abcdef01234567901234",
     "server": "gerrit",
     "user": "useralpha",
-    "name": "Alice Example",
+    "name": "Charlie Demo",
     "location": "SE",
     "country": "Sweden",
     "project": "proj/xyz",
-    "subject": "[CD456-QW9]",
+    "subject": "[XY789-ZT2]",
     "merged": "2023-08-09",
     "updated": "2023-08-09",
     "sourceCodeAdded": 0,
@@ -481,13 +481,5 @@
     "days from 1st commit": 35,
     "x": 1,
     "1/x": 100
-  },
-  {
-    "Last Commit-First Commit": 35,
-    "First Commit": "2023-07-14",
-    "Last commit": "2023-08-18",
-    "Total design code churn": 738,
-    "Total test code churn": 1254,
-    "Total code churn": 1992
   }
 ]
