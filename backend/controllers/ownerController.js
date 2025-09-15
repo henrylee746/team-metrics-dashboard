@@ -30,51 +30,38 @@ function getCommits(req, res) {
 }
 
 const pullDataWithIntersectEnabled = (req) => {
-  const [json1, json2, json3, json4] = [
-    require("../messageem8kkjsam4.json").slice(
-      0,
-      require("../messageem8kkjsam4.json").length - 1
-    ),
-    require("../messageXY789-ZT2.json").slice(
-      0,
-      require("../messageXY789-ZT2.json").length - 1
-    ),
-    require("../messageBobSample.json").slice(
-      0,
-      require("../messageBobSample.json").length - 1
-    ),
-    require("../messageCharlieDemo.json").slice(
-      0,
-      require("../messageCharlieDemo.json").length - 1
-    ),
+  const [json1, json2] = [
+    require("../messageem8kkjsam4.json"),
+    require("../messageXY789-ZT2.json"),
   ];
-  const allCommits = [json1, json2, json3, json4];
-  const parsedCommits = [];
+
   const { subject, owner } = req.body;
-  const labels = subject.map((subject) => subject.label);
-  console.log(labels, owner);
-  allCommits.map((jsonData) => {
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        labels.includes(jsonData[i].reason) &&
-        jsonData[i].name === owner &&
-        !parsedCommits.includes(jsonData[i].commit)
-      ) {
-        finalData.push(jsonData[i]);
-        parsedCommits.push(jsonData[i].commit);
-      }
+  subject.map((subject) => {
+    const jsonArr = [];
+    if (subject.label === "em8kkjsam4") {
+      json1.map((commit) => {
+        if (commit.name === owner) {
+          jsonArr.push(commit);
+        }
+      });
+    } else {
+      json2.map((commit) => {
+        if (commit.name === owner) {
+          jsonArr.push(commit);
+        }
+      });
     }
+    finalData.push(jsonArr);
   });
   console.log(finalData);
   if (finalData.length == 0) {
     return;
   }
-  /*
-  finalData = finalData[finalData.length - 1];
-  const tempArr = finalData;
-  finalData = [];
-  finalData.push(tempArr);
-  */
+  if (Object.keys(req.body.dateRange).length !== 0) {
+    finalData = filterCommitsByDates(req, finalData);
+  } else {
+    finalData = getSummativeNumbers(finalData);
+  }
 };
 
 const pullDataWithIntersectDisabled = (req) => {

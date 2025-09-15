@@ -121,7 +121,11 @@ function App() {
                         responseData.data.map((arr, index) => {
                           return (
                             <SelectItem key={index} value={`${index}`}>
-                              Owner: {arr[0]["name"].replace(/[\[\]]/g, "")}
+                              Subject:{" "}
+                              {responseData.subject[index].label.replace(
+                                /[\[\]]/g,
+                                ""
+                              )}
                             </SelectItem>
                           );
                         })}
