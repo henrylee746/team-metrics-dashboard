@@ -76,7 +76,7 @@ const dateFromUnknown = (val: unknown) =>
 /** Form validation schema */
 export const formSchema = z
   .object({
-    subject: z.array(optionSchema).min(1).optional(), // now optional – we’ll enforce rules in superRefine
+    subject: z.array(optionSchema).optional(), // now optional – we’ll enforce rules in superRefine
     owner: z.string().optional(),
     dateRange: z
       .object({
