@@ -46,7 +46,7 @@ const KPISection = ({ responseData }) => {
 
   return responseData && responseData.length > 0 ? (
     <>
-      <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-16">
+      <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-4">
         <ResizablePanelGroup
           direction="horizontal"
           className="max-w-full rounded-lg border text-center min-h-[200px]"
@@ -87,7 +87,7 @@ const KPISection = ({ responseData }) => {
               >
                 <div className="flex xl:text-lg md:text-md sm:text-sm  items-center justify-center p-2">
                   <span>
-                    <h4>
+                    <h2 className="text-xs">
                       Last Commit - First Commit:
                       <i className="text-sm font-semibold">
                         {" "}
@@ -98,7 +98,7 @@ const KPISection = ({ responseData }) => {
                           : null}{" "}
                         days
                       </i>
-                    </h4>
+                    </h2>
                   </span>
                 </div>
               </ResizablePanel>
@@ -132,7 +132,7 @@ const KPISection = ({ responseData }) => {
               <ResizablePanel className="flex items-center justify-center">
                 <div className="flex xl:text-lg md:text-md sm:text-sm items-center justify-center p-2">
                   <span>
-                    <h4 className="text-sm lg:text-md">
+                    <h4 className="text-xs lg:text-md">
                       Average design code churn per commit:
                       <i className="text-sm font-semibold">
                         {" "}
@@ -144,7 +144,7 @@ const KPISection = ({ responseData }) => {
                       </i>
                     </h4>
                     <br />
-                    <h4 className="text-sm lg:text-md">
+                    <h4 className="text-xs lg:text-md">
                       Average test code churn per commit:
                       <i className="text-sm font-semibold">
                         {" "}

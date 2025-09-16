@@ -163,7 +163,7 @@ function ProfileForm({ onSubmit, loading }) {
     <Form {...form}>
       {/*handleSubmit: from react-hook-form*/}
       <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-        <div className="w-screen grid grid-cols-2 gap-8 items-center p-4">
+        <div className="w-screen grid grid-cols-2 gap-8 items-center p-8">
           <FormField
             control={form.control}
             name="subject"
@@ -233,7 +233,7 @@ function ProfileForm({ onSubmit, loading }) {
           />
           <PopoverComponent form={form}></PopoverComponent>
         </div>
-        <div className="flex w-screen justify-center">
+        <div className="flex w-full justify-center">
           {loading && (
             <Button disabled>
               <Loader2 className="animate-spin" />
@@ -423,7 +423,7 @@ function PopoverComponent({ form }) {
                           onCheckedChange={field.onChange}
                         />
                         <Label htmlFor="intersect" className="text-md">
-                          Intersects
+                          Intersect
                         </Label>
                       </div>
                     </FormControl>
@@ -431,8 +431,8 @@ function PopoverComponent({ form }) {
                 )}
               />
               <p className="text-sm text-muted-foreground">
-                Filter results which satisfy Subject(s) and Owner(s)/
-                simutaeneously
+                Toggle on to filter results which satisfy Subject(s) and
+                Owner(s)/ simutaeneously
               </p>
             </div>
           </DrawerHeader>
@@ -516,7 +516,7 @@ const SearchForm = ({
 
   return (
     <section
-      className={`flex flex-col justify-center items-center search-section w-screen
+      className={`flex flex-col justify-center items-center search-section w-full
 ${className}`}
       id="overview"
     >
