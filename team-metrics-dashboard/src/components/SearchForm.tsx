@@ -318,8 +318,10 @@ function PopoverComponent({ form }) {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <div className="flex flex-col gap-4 items-center">
-              <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
+            <div className="flex flex-col p-4 gap-4 items-center">
+              <h4 className="font-medium leading-none py-2">
+                Gerrit Server(s)
+              </h4>
               <p className="text-sm text-muted-foreground">
                 Selects which Gerrit servers to look through (this doesn't
                 affect the search results)
