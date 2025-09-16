@@ -98,7 +98,6 @@ export const formSchema = z
       typeof data.owner === "string" && data.owner.trim().length > 0;
     const mustBoth = data.intersect === true;
 
-    // 1️⃣ intersect = true  → both must be present
     if (mustBoth) {
       if (!subjectFilled) {
         ctx.addIssue({
@@ -114,10 +113,9 @@ export const formSchema = z
           path: ["owner"],
         });
       }
-      return; // no need to run the “either/or” rule below
+      return;
     }
 
-    // 2️⃣ intersect ≠ true  → at least one must be present
     if (!subjectFilled && !ownerFilled) {
       const msg = "Either Subject or Owner must be provided.";
       ctx.addIssue({
@@ -171,7 +169,7 @@ function ProfileForm({ onSubmit, loading }) {
               <FormItem>
                 <FormLabel>Subject(s)</FormLabel>
 
-                <MultipleSelector /* bind it! */
+                <MultipleSelector
                   value={field.value ?? []} // RHF → component
                   onChange={field.onChange} // component → RHF
                   defaultOptions={OPTIONS}

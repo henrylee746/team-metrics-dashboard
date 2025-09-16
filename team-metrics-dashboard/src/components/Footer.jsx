@@ -12,18 +12,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 const Footer = () => (
-  <footer className="flex justify-center items-center p-4 mt-16">
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">About this tool</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Velocity Project</DialogTitle>
-          <DialogDescription>Henry Lee - Personal Project.</DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+  <footer className="p-4 mt-16">
+    <div className="flex justify-center w-full">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline">About this tool</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px] ">
+          <DialogHeader>
+            <DialogTitle>Velocity Project</DialogTitle>
+            <DialogDescription>
+              Please see "How to Use" at the Header if this is your first time.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </div>
   </footer>
 );
 

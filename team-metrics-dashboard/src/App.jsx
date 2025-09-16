@@ -69,71 +69,60 @@ function App() {
   };
 
   return (
-    <div className={`App box-border`}>
-      <Header
-        toggleTheme={toggleTheme}
-        currentTheme={theme}
-        className={`header transition-opacity duration-500 delay-100 ${
-          isRendered ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
-        }`}
-      />
-
-      <main className={`main-content`}>
-        <SearchForm
-          setResponseData={setResponseData}
-          loading={loading}
-          setLoading={setLoading}
-          setError={setError}
-          className={`transition-opacity duration-1000 delay-200 ${
+    <>
+      <div className={`App box-border`}>
+        <Header
+          toggleTheme={toggleTheme}
+          currentTheme={theme}
+          className={`header transition-opacity duration-500 delay-100 ${
             isRendered
               ? "opacity-100 translate-y-0"
               : "opacity-0 -translate-y-10"
           }`}
         />
-        {loading && (
-          <div className="flex flex-wrap gap-8 items-center justify-center ">
-            <div className="flex flex-col space-y-3">
-              <Skeleton className="h-[250px] w-full sm:w-[350px] md:w-[500px] lg:w-[450px] xl:w-[800px] rounded-xl" />
+        <main className={`main-content`}>
+          <SearchForm
+            setResponseData={setResponseData}
+            loading={loading}
+            setLoading={setLoading}
+            setError={setError}
+            className={`transition-opacity duration-1000 delay-200 ${
+              isRendered
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-10"
+            }`}
+          />
+          {loading && (
+            <div className="flex flex-wrap gap-8 items-center justify-center ">
+              <div className="flex flex-col space-y-3">
+                <Skeleton className="h-[250px] w-full sm:w-[350px] md:w-[500px] lg:w-[450px] xl:w-[800px] rounded-xl" />
 
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[350px]" />
-                <Skeleton className="h-4 w-[300px]" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[350px]" />
+                  <Skeleton className="h-4 w-[300px]" />
+                </div>
+              </div>
+              <div className="flex flex-col space-y-3">
+                <Skeleton className="h-[250px] w-full sm:w-[350px] md:w-[500px] lg:w-[450px] xl:w-[800px] rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[350px]" />
+                  <Skeleton className="h-4 w-[300px]" />
+                </div>
               </div>
             </div>
-            <div className="flex flex-col space-y-3">
-              <Skeleton className="h-[250px] w-full sm:w-[350px] md:w-[500px] lg:w-[450px] xl:w-[800px] rounded-xl" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[350px]" />
-                <Skeleton className="h-4 w-[300px]" />
-              </div>
-            </div>
-          </div>
-        )}
+          )}
 
-        {responseData && !loading && (
-          <>
-            {responseData.data.length > 0 ? (
-              <div className="w-full">
-                <Select value={value} onValueChange={handleLinkChange}>
-                  <SelectTrigger className="w-3/12 ml-4">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {responseData.intersect &&
-                      responseData.data.map((arr, index) => {
-                        return (
-                          <SelectItem key={index} value={`${index}`}>
-                            Subject:{" "}
-                            {responseData.subject[index].label.replace(
-                              /[\[\]]/g,
-                              ""
-                            )}
-                          </SelectItem>
-                        );
-                      })}
-                    {!responseData.intersect &&
-                      responseData.data.map((arr, index) => {
-                        if (index + 1 <= responseData.subjectSplit) {
+          {responseData && !loading && (
+            <>
+              {responseData.data.length > 0 ? (
+                <div className="w-full">
+                  <Select value={value} onValueChange={handleLinkChange}>
+                    <SelectTrigger className="w-3/12 ml-4">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {responseData.intersect &&
+                        responseData.data.map((arr, index) => {
                           return (
                             <SelectItem key={index} value={`${index}`}>
                               Subject:{" "}
@@ -143,33 +132,46 @@ function App() {
                               )}
                             </SelectItem>
                           );
-                        } else {
-                          return (
-                            <SelectItem key={index} value={`${index}`}>
-                              Owner: {responseData.owner.replace(/[\[\]]/g, "")}
-                            </SelectItem>
-                          );
-                        }
-                      })}
-                  </SelectContent>
-                </Select>
-                {responseData.data.length > 0 ? (
-                  <Outlet context={[responseData.data]} />
-                ) : null}
-                {/*Only renders the Outlet components (Data.jsx and descendants) if results from query were found*/}
-              </div>
-            ) : (
-              <p className="flex items-center justify-center font-medium italic">
-                No results found, please try another query.
-              </p>
-            )}
-          </>
-        )}
-        {error && <p>{error}.</p>}
-      </main>
-
-      <Footer />
-    </div>
+                        })}
+                      {!responseData.intersect &&
+                        responseData.data.map((arr, index) => {
+                          if (index + 1 <= responseData.subjectSplit) {
+                            return (
+                              <SelectItem key={index} value={`${index}`}>
+                                Subject:{" "}
+                                {responseData.subject[index].label.replace(
+                                  /[\[\]]/g,
+                                  ""
+                                )}
+                              </SelectItem>
+                            );
+                          } else {
+                            return (
+                              <SelectItem key={index} value={`${index}`}>
+                                Owner:{" "}
+                                {responseData.owner.replace(/[\[\]]/g, "")}
+                              </SelectItem>
+                            );
+                          }
+                        })}
+                    </SelectContent>
+                  </Select>
+                  {responseData.data.length > 0 ? (
+                    <Outlet context={[responseData.data]} />
+                  ) : null}
+                  {/*Only renders the Outlet components (Data.jsx and descendants) if results from query were found*/}
+                </div>
+              ) : (
+                <p className="flex items-center justify-center font-medium italic">
+                  No results found, please try another query.
+                </p>
+              )}
+            </>
+          )}
+          {error && <p>{error}.</p>}
+        </main>
+      </div>
+    </>
   );
 }
 
