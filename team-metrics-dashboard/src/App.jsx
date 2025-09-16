@@ -40,6 +40,7 @@ function App() {
   //(and disable loading animation)
   useEffect(() => {
     if (responseData) {
+      setValue("0");
       navigate("/0");
     }
   }, [responseData]);
