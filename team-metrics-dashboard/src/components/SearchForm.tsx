@@ -318,129 +318,124 @@ function PopoverComponent({ form }) {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <div className="flex flex-col items-center gap-4">
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">Gerrit Server(s)</h4>
-                <p className="text-sm text-muted-foreground">
-                  Selects which Gerrit servers to look through (this doesn't
-                  affect the search results)
-                </p>
-              </div>
-              <div className="flex flex-col gap-5">
-                <div className="flex gap-8 items-center justify-center ">
-                  <Controller
-                    control={form.control}
-                    name="gerrit"
-                    render={({ field }) => (
-                      <FormItem className="flex items-end gap-2">
-                        <Label htmlFor="gerrit">Gerrit</Label>
-                        <FormControl>
-                          <Checkbox
-                            id="gerrit"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+            <div className="flex flex-col p-4 gap-4 items-center">
+              <h4 className="font-medium leading-none py-2">
+                Gerrit Server(s)
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                Selects which Gerrit servers to look through (this doesn't
+                affect the search results)
+              </p>
+              <div className="flex gap-8">
+                <Controller
+                  control={form.control}
+                  name="gerrit"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="gerrit">Gerrit</Label>
+                      <FormControl>
+                        <Checkbox
+                          id="gerrit"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-                  <Controller
-                    control={form.control}
-                    name="gerritDelta"
-                    render={({ field }) => (
-                      <FormItem className="flex items-end gap-2">
-                        <Label htmlFor="gerritDelta">Gerrit Delta</Label>
-                        <FormControl>
-                          <Checkbox
-                            id="gerritDelta"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <Controller
-                    control={form.control}
-                    name="gerritArchive"
-                    render={({ field }) => (
-                      <FormItem className="flex items-end gap-2">
-                        <Label htmlFor="gerritArchive">Gerrit Archive</Label>
-                        <FormControl>
-                          <Checkbox
-                            id="gerritArchive"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <Controller
-                    control={form.control}
-                    name="gerritReview"
-                    render={({ field }) => (
-                      <FormItem className="flex items-end gap-2">
-                        <Label htmlFor="gerritReview">Gerrit Review</Label>
-                        <FormControl>
-                          <Checkbox
-                            id="gerritReview"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <Controller
-                    control={form.control}
-                    name="gerritSigma"
-                    render={({ field }) => (
-                      <FormItem className="flex items-end gap-2">
-                        <Label htmlFor="gerritSigma">Gerrit Sigma</Label>
-                        <FormControl>
-                          <Checkbox
-                            id="gerritSigma"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <Separator />
-                <div className="flex flex-col gap-5">
-                  <div className="space-y-3">
-                    <Controller
-                      control={form.control}
-                      name="intersect"
-                      render={({ field }) => (
-                        <FormItem className="flex items-end gap-3">
-                          <Label
-                            htmlFor="intersect"
-                            className="-translate-y-0.5"
-                          >
-                            Intersect
-                          </Label>
-                          <FormControl>
-                            <Switch
-                              id="intersect"
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <p className="text-sm text-muted-foreground">
-                      Filter results which satisfy Subject(s) and Owner(s)/
-                      simutaeneously
-                    </p>
-                  </div>
-                </div>
+                <Controller
+                  control={form.control}
+                  name="gerritDelta"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="gerritDelta">Gerrit Delta</Label>
+                      <FormControl>
+                        <Checkbox
+                          id="gerritDelta"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="gerritArchive"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="gerritArchive">Gerrit Archive</Label>
+                      <FormControl>
+                        <Checkbox
+                          id="gerritArchive"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="gerritReview"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="gerritReview">Gerrit Review</Label>
+                      <FormControl>
+                        <Checkbox
+                          id="gerritReview"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="gerritSigma"
+                  render={({ field }) => (
+                    <FormItem className="flex items-end gap-2">
+                      <Label htmlFor="gerritSigma">Gerrit Sigma</Label>
+                      <FormControl>
+                        <Checkbox
+                          id="gerritSigma"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
+
+              <Separator />
+
+              <Controller
+                control={form.control}
+                name="intersect"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="flex items-center gap-3">
+                        <Switch
+                          id="intersect"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <Label htmlFor="intersect" className="text-md">
+                          Intersects
+                        </Label>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <p className="text-sm text-muted-foreground">
+                Filter results which satisfy Subject(s) and Owner(s)/
+                simutaeneously
+              </p>
             </div>
           </DrawerHeader>
           <DrawerFooter>
