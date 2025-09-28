@@ -42,39 +42,72 @@ export default function Page() {
       <TypographyBlockquote>
         See below on a visual example of how you would query using the tool
       </TypographyBlockquote>
-      <Carousel className="max-w-[750px] max-h-[500px]">
+      <Carousel className="w-9/10">
         <CarouselContent>
-          {Array.from({ length: 2 }).map((_, index) => (
+          {Array.from({ length: 3 }).map((_, index) => (
             <CarouselItem key={index}>
               <div className="p-1">
                 <Card>
-                  <CardContent className="flex items-center justify-center p-2">
+                  <CardContent className="flex items-center justify-center p-6">
                     {index === 1 ? (
-                      <div className="flex gap-4">
+                      <>
+                        <div className="flex gap-4">
+                          <img
+                            src={image3}
+                            alt="image1"
+                            className="w-1/2 h-auto object-contain"
+                          />
+                          <img
+                            src={image2}
+                            alt="image2"
+                            className="w-1/2 h-auto object-contain"
+                          />
+                        </div>
                       </>
-                    ) : 
-                      (
-                        <></>
-                    )}
-                  </CardContent>
-                  <P className="p-6">
-                    {index === 0 ? (
-                      "Can begin your search by selecting a subject and/or an owner, and optionally filtering a date range."
                     ) : (
                       <>
-                        "Inside advanced settings: Intersect will only show
-                        results of commits on the subject made BY the owner. You
-                        can toggle this on or off of your choice.
-                        <br />
-                        <br />
-                        Note from the table above, intersecting 'Charlie Demo'
-                        and 'em8kkjsam4' will return no results.
-                        <br />
-                        <br />
-                        Then, click Submit and the results will follow.
+                        {index === 0 ? (
+                          <img src={image1} alt="image1" />
+                        ) : (
+                          <img src={image4} alt="image4" />
+                        )}
                       </>
                     )}
-                  </P>
+                  </CardContent>
+                  {index === 0 ? (
+                    <>
+                      <P className="p-6">
+                        Can begin your search by selecting a subject and/or an
+                        owner, and optionally filtering a date range.
+                      </P>
+                    </>
+                  ) : (
+                    <>
+                      {index === 1 ? (
+                        <>
+                          <P className="p-6">
+                            Inside advanced settings: Intersect will only show
+                            results of commits on the subject made BY the owner.
+                            You can toggle this on or off of your choice.
+                            <br />
+                            <br />
+                            Note from the table above, intersecting 'Charlie
+                            Demo' and 'em8kkjsam4' will return no results.
+                            <br />
+                            <br />
+                            Toggling any of the Gerrit Server options is purely
+                            for imitation and will not impact the search results
+                            in any way.
+                          </P>
+                        </>
+                      ) : (
+                        <P className="p-6">
+                          After clicking "Submit", results will return like
+                          this, unless nothing was found.
+                        </P>
+                      )}
+                    </>
+                  )}
                 </Card>
               </div>
             </CarouselItem>
