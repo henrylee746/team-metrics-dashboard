@@ -1,5 +1,5 @@
 import "dotenv/config"; // loads .env automatically
-import { createClient } from "@uspabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
 // 1. Load JSON files with import assertions
 import fs from "fs";
@@ -25,27 +25,22 @@ const supabase = createClient(
 );
 
 async function insertData() {
-  // Insert into employees
-  const { data: insertedEmployees, error: empError } = await supabase
-    .from("employees")
-    .insert(employeesData.map((row) => ({ data: row }))); // assuming 'data' is jsonb
-
-  if (empError) {
-    console.error("Employees insert error:", empError);
-  } else {
-    console.log("Inserted employees:", insertedEmployees);
-  }
-
-  // Insert into subjects
-  const { data: insertedSubjects, error: subjError } = await supabase
+  // ✅ Good: insert each commit as a separate row
+  await supabase
     .from("subjects")
-    .insert(subjectsData.map((row) => ({ data: row })));
+    .insert(messageXY789ZT2.map((commit) => ({ data: commit })));
 
-  if (subjError) {
-    console.error("Subjects insert error:", subjError);
-  } else {
-    console.log("Inserted subjects:", insertedSubjects);
-  }
+  await supabase
+    .from("subjects")
+    .insert(messageem8kkjsam4.map((commit) => ({ data: commit })));
+
+  await supabase
+    .from("employees")
+    .insert(messageBobSample.map((commit) => ({ data: commit })));
+
+  await supabase
+    .from("employees")
+    .insert(messageCharlieDemo.map((commit) => ({ data: commit })));
 }
 
 insertData();

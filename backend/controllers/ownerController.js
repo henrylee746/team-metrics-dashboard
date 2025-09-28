@@ -9,49 +9,107 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-function getCommits(req, res) {
-  finalData = [];
+async function getSupabaseData() {
+  const [bob, charlie, em8, xy] = await Promise.all([
+    supabase
+      .from("employees")
+      .select("data")
+      .contains("data", { name: "Bob Sample" }),
+    supabase
+      .from("employees")
+      .select("data")
+      .contains("data", { name: "Charlie Demo" }),
+    supabase
+      .from("subjects")
+      .select("data")
+      .contains("data", { reason: "em8kkjsam4" }),
+    supabase
+      .from("subjects")
+      .select("data")
+      .contains("data", { reason: "XY789-ZT2" }),
+  ]);
 
-  console.log(req.body);
+  // Each result is { data, error }
+  if (bob.error) throw bob.error;
+  if (charlie.error) throw charlie.error;
+  if (em8.error) throw em8.error;
+  if (xy.error) throw xy.error;
 
-  const { intersect } = req.body;
-
-  //imitating pulling data from a database
-  if (intersect) pullDataWithIntersectEnabled(req);
-  else pullDataWithIntersectDisabled(req);
-
-  //timeout to imitate script calltime
-  setTimeout(() => {
-    res.status(200).json({
-      status: "success",
-      message: "Data processed",
-      data: finalData,
-      subject: req.body.subject ? req.body.subject : 0,
-      owner: req.body.owner ? req.body.owner : 0,
-      subjectSplit: req.body.subject ? req.body.subject.length : 0,
-      ownerSplit: 1,
-      intersect: intersect,
-    });
-  }, 1000);
+  return [bob.data, charlie.data, em8.data, xy.data];
 }
 
-const pullDataWithIntersectEnabled = (req) => {
-  const [json1, json2] = [
-    require("../messageem8kkjsam4.json"),
-    require("../messageXY789-ZT2.json"),
-  ];
+async function getCommits(req, res) {
+  try {
+    const [bobSample, charlieDemo, em8kkjsam4, XY789ZT2] =
+      await getSupabaseData();
 
+    // unwrap JSONB data
+    const bobSampleData = bobSample.map((row) => row.data);
+    const charlieDemoData = charlieDemo.map((row) => row.data);
+    const em8Data = em8kkjsam4.map((row) => row.data);
+    const xyData = XY789ZT2.map((row) => row.data);
+
+    finalData = [];
+
+    console.log(req.body);
+
+    const { intersect } = req.body;
+
+    //imitating pulling data from a database
+    if (intersect)
+      pullDataWithIntersectEnabled(
+        req,
+        bobSampleData,
+        charlieDemoData,
+        em8Data,
+        xyData
+      );
+    else
+      pullDataWithIntersectDisabled(
+        req,
+        bobSampleData,
+        charlieDemoData,
+        em8Data,
+        xyData
+      );
+
+    //timeout to imitate script calltime
+    setTimeout(() => {
+      res.status(200).json({
+        status: "success",
+        message: "Data processed",
+        data: finalData,
+        subject: req.body.subject ? req.body.subject : 0,
+        owner: req.body.owner ? req.body.owner : 0,
+        subjectSplit: req.body.subject ? req.body.subject.length : 0,
+        ownerSplit: 1,
+        intersect: intersect,
+      });
+    }, 1000);
+  } catch (err) {
+    console.log("Error in getCommits:", err);
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+const pullDataWithIntersectEnabled = (
+  req,
+  bobSample,
+  charlieDemo,
+  em8kkjsam4,
+  XY789ZT2
+) => {
   const { subject, owner } = req.body;
   subject.map((subject) => {
     const jsonArr = [];
     if (subject.label === "em8kkjsam4") {
-      json1.map((commit) => {
+      em8kkjsam4.map((commit) => {
         if (commit.name === owner) {
           jsonArr.push(commit);
         }
       });
     } else {
-      json2.map((commit) => {
+      XY789ZT2.map((commit) => {
         if (commit.name === owner) {
           jsonArr.push(commit);
         }
@@ -70,17 +128,21 @@ const pullDataWithIntersectEnabled = (req) => {
   }
 };
 
-const pullDataWithIntersectDisabled = (req) => {
+const pullDataWithIntersectDisabled = (
+  req,
+  bobSample,
+  charlieDemo,
+  em8kkjsam4,
+  XY789ZT2
+) => {
   if (req.body.subject !== undefined && req.body.subject.length) {
     //empty arrays don't evaluate to falsy so must evaluate using length instead
     const { subject } = req.body;
     subject.map((subject) => {
       if (subject.label === "em8kkjsam4") {
-        const json = require("../messageem8kkjsam4.json");
-        finalData.push(json);
+        finalData.push(em8kkjsam4);
       } else if (subject.label === "XY789-ZT2") {
-        const json = require("../messageXY789-ZT2.json");
-        finalData.push(json);
+        finalData.push(XY789ZT2);
       }
     });
   }
@@ -88,11 +150,9 @@ const pullDataWithIntersectDisabled = (req) => {
     //empty strings do evaluate to falsy so can use !
     const { owner } = req.body;
     if (owner === "Bob Sample") {
-      const json = require("../messageBobSample.json");
-      finalData.push(json);
+      finalData.push(bobSample);
     } else {
-      const json = require("../messageCharlieDemo.json");
-      finalData.push(json);
+      finalData.push(charlieDemo);
     }
   }
   if (Object.keys(req.body.dateRange).length !== 0) {
