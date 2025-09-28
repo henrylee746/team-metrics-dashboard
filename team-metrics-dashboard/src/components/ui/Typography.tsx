@@ -21,3 +21,52 @@ export const P = ({ className, ...props }) => (
     {...props}
   />
 );
+
+export const Table = ({ className, ...props }) => (
+  <div className="my-6 w-full overflow-y-auto">
+    <table className="w-full">
+      <thead>
+        <tr className="even:bg-muted m-0 border-t p-0">
+          {props.headers.map((header) => {
+            return (
+              <>
+                <th className="border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right">
+                  {header}
+                </th>
+              </>
+            );
+          })}
+        </tr>
+      </thead>
+      <tbody>
+        {props.rowData.map((row) => {
+          return (
+            <>
+              <tr className="even:bg-muted m-0 border-t p-0">
+                {row.map((data) => {
+                  return (
+                    <>
+                      <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
+                        {data}
+                      </td>
+                    </>
+                  );
+                })}
+              </tr>
+            </>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+);
+
+export const TypographyBlockquote = ({ className, ...props }) => (
+  <blockquote
+    className={cn(
+      "mt-4 border-l-2 pl-4 italic text-muted-foreground",
+      className
+    )}
+    {...props}
+  ></blockquote>
+);

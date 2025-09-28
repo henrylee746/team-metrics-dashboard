@@ -1,4 +1,17 @@
-import { H1, P } from "@/components/ui/Typography";
+import { H1, P, Table, TypographyBlockquote } from "@/components/ui/Typography";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+import image1 from "../assets/image1.png";
+import image2 from "../assets/image2.png";
+import image3 from "../assets/image3.png";
+import image4 from "../assets/image4.png";
 
 export default function Page() {
   return (
@@ -6,60 +19,70 @@ export default function Page() {
       <H1>Velocity Project: How to Use</H1>
       <P>
         The objective of the tool is to query performance metrics from a mock
-        dataset of two employees and two made-up "commit subjects"
+        dataset of two employees and two made-up "commit subjects."
       </P>
       <P>
         You can query one or more employee(s)/subject(s). Below is a brief table
         of the employees/subejcts and if there are merging commits made by the
         employees in those subjects.
       </P>
-      <div className="my-6 w-full overflow-y-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="even:bg-muted m-0 border-t p-0">
-              <th className="border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right">
-                Subjects
-              </th>
-              <th className="border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right">
-                Employees
-              </th>
-              <th className="border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right">
-                Employees involved in this commit subject
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="even:bg-muted m-0 border-t p-0">
-              <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
-                Empty
-              </td>
-              <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
-                Overflowing
-              </td>
-            </tr>
-            <tr className="even:bg-muted m-0 border-t p-0">
-              <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
-                Modest
-              </td>
-              <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
-                Satisfied
-              </td>
-            </tr>
-            <tr className="even:bg-muted m-0 border-t p-0">
-              <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
-                Full
-              </td>
-              <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
-                Ecstatic
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="my-3 w-full overflow-y-auto">
+        <Table
+          headers={[
+            "Employees",
+            "Subjects",
+            "Employees involved in this commit subject",
+          ]}
+          rowData={[
+            ["Bob Sample", "XY789-ZT2", "Bob Sample, Charlie Demo"],
+            ["Charlie Demo", "em8kkjsam4", "N/A"],
+          ]}
+        ></Table>
       </div>
-      <blockquote className="mt-6 border-l-2 pl-6 italic">
-        &quot;After all,&quot; he said, &quot;everyone enjoys a good joke, so
-        it&apos;s only fair that they should pay for the privilege.&quot;
-      </blockquote>
+      <TypographyBlockquote>
+        See below on a visual example of how you would query using the tool
+      </TypographyBlockquote>
+      <Carousel className="max-w-[750px] max-h-[500px]">
+        <CarouselContent>
+          {Array.from({ length: 2 }).map((_, index) => (
+            <CarouselItem key={index}>
+              <div className="p-1">
+                <Card>
+                  <CardContent className="flex items-center justify-center p-2">
+                    {index === 1 ? (
+                      <div className="flex gap-4">
+                      </>
+                    ) : 
+                      (
+                        <></>
+                    )}
+                  </CardContent>
+                  <P className="p-6">
+                    {index === 0 ? (
+                      "Can begin your search by selecting a subject and/or an owner, and optionally filtering a date range."
+                    ) : (
+                      <>
+                        "Inside advanced settings: Intersect will only show
+                        results of commits on the subject made BY the owner. You
+                        can toggle this on or off of your choice.
+                        <br />
+                        <br />
+                        Note from the table above, intersecting 'Charlie Demo'
+                        and 'em8kkjsam4' will return no results.
+                        <br />
+                        <br />
+                        Then, click Submit and the results will follow.
+                      </>
+                    )}
+                  </P>
+                </Card>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </div>
   );
 }
