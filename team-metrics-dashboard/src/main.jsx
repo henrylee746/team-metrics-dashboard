@@ -19,14 +19,8 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/team",
+    path: "/howToUse",
     element: <App2 />,
-    children: [
-      {
-        path: ":index", // Dynamic route parameter for index
-        element: <Data />,
-      },
-    ],
   },
 ]);
 

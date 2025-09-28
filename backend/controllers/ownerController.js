@@ -1,7 +1,13 @@
 /*eslint-disable*/
-require("dotenv").config(); //load env vars
-
+require("dotenv").config();
+const supabaseModule = require("@supabase/supabase-js");
+const { createClient } = supabaseModule;
 let finalData = []; //represents final JSON arr after manipulations
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 function getCommits(req, res) {
   finalData = [];

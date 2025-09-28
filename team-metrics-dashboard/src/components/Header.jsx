@@ -52,7 +52,7 @@ const Header = ({ toggleTheme, currentTheme, className }) => {
               <UserPen />
               <div className={`hidden lg:block`}>Search</div>
             </TabsTrigger>
-            <TabsTrigger className="flex gap-2" value="/team">
+            <TabsTrigger className="flex gap-2" value="/howToUse">
               <Users />
               <div className={`hidden lg:block`}>How to Use</div>
             </TabsTrigger>
