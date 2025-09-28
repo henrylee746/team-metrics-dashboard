@@ -1,7 +1,6 @@
 import "dotenv/config"; // loads .env automatically
 import { createClient } from "@supabase/supabase-js";
 
-// 1. Load JSON files with import assertions
 import fs from "fs";
 const messageBobSample = JSON.parse(
   fs.readFileSync("./messageBobSample.json", "utf8")
@@ -16,16 +15,12 @@ const messageXY789ZT2 = JSON.parse(
   fs.readFileSync("./messageXY789-ZT2.json", "utf8")
 );
 
-const employeesData = [messageBobSample, messageCharlieDemo];
-const subjectsData = [messageem8kkjsam4, messageXY789ZT2];
-
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 async function insertData() {
-  // ✅ Good: insert each commit as a separate row
   await supabase
     .from("subjects")
     .insert(messageXY789ZT2.map((commit) => ({ data: commit })));
