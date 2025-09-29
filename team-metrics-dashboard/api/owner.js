@@ -1,5 +1,5 @@
 // /api/owner.js
-import { getCommits } from "../../controllers/ownerController.js";
+import { getCommits } from "../controllers/ownerController.js";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {

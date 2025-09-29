@@ -474,7 +474,7 @@ const SearchForm = ({
     navigate("/"); //resets URL back to homepage
 
     try {
-      const response = await fetch("http://localhost:5000/submit/owner", {
+      const response = await fetch("/api/owner", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
