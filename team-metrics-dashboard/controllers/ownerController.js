@@ -38,60 +38,49 @@ async function getSupabaseData() {
   return [bob.data, charlie.data, em8.data, xy.data];
 }
 
-async function getCommits(req, res) {
-  try {
-    const [bobSample, charlieDemo, em8kkjsam4, XY789ZT2] =
-      await getSupabaseData();
+// ownerController.js
+async function getCommits(req) {
+  const [bobSample, charlieDemo, em8kkjsam4, XY789ZT2] =
+    await getSupabaseData();
 
-    // unwrap JSONB data
-    const bobSampleData = bobSample.map((row) => row.data);
-    const charlieDemoData = charlieDemo.map((row) => row.data);
-    const em8Data = em8kkjsam4.map((row) => row.data);
-    const xyData = XY789ZT2.map((row) => row.data);
+  const bobSampleData = bobSample.map((row) => row.data);
+  const charlieDemoData = charlieDemo.map((row) => row.data);
+  const em8Data = em8kkjsam4.map((row) => row.data);
+  const xyData = XY789ZT2.map((row) => row.data);
 
-    finalData = [];
+  finalData = [];
 
-    console.log(req.body);
+  const { intersect } = req.body;
 
-    const { intersect } = req.body;
-
-    //imitating pulling data from a database
-    if (intersect)
-      pullDataWithIntersectEnabled(
-        req,
-        bobSampleData,
-        charlieDemoData,
-        em8Data,
-        xyData
-      );
-    else
-      pullDataWithIntersectDisabled(
-        req,
-        bobSampleData,
-        charlieDemoData,
-        em8Data,
-        xyData
-      );
-
-    //timeout to imitate script calltime
-    setTimeout(() => {
-      res.status(200).json({
-        status: "success",
-        message: "Data processed",
-        data: finalData,
-        subject: req.body.subject ? req.body.subject : 0,
-        owner: req.body.owner ? req.body.owner : 0,
-        subjectSplit: req.body.subject ? req.body.subject.length : 0,
-        ownerSplit: 1,
-        intersect: intersect,
-      });
-    }, 1000);
-  } catch (err) {
-    console.log("Error in getCommits:", err);
-    return res.status(500).json({ error: err.message });
+  if (intersect) {
+    pullDataWithIntersectEnabled(
+      req,
+      bobSampleData,
+      charlieDemoData,
+      em8Data,
+      xyData
+    );
+  } else {
+    pullDataWithIntersectDisabled(
+      req,
+      bobSampleData,
+      charlieDemoData,
+      em8Data,
+      xyData
+    );
   }
-}
 
+  return {
+    status: "success",
+    message: "Data processed",
+    data: finalData,
+    subject: req.body.subject ?? 0,
+    owner: req.body.owner ?? 0,
+    subjectSplit: req.body.subject ? req.body.subject.length : 0,
+    ownerSplit: 1,
+    intersect,
+  };
+}
 const pullDataWithIntersectEnabled = (
   req,
   bobSample,
