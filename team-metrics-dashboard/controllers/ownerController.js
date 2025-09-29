@@ -1,7 +1,6 @@
 /*eslint-disable*/
-require("dotenv").config();
-const supabaseModule = require("@supabase/supabase-js");
-const { createClient } = supabaseModule;
+import "dotenv/config";
+import { createClient } from "@supabase/supabase-js";
 let finalData = []; //represents final JSON arr after manipulations
 
 const supabase = createClient(
@@ -39,7 +38,7 @@ async function getSupabaseData() {
 }
 
 // ownerController.js
-async function getCommits(req) {
+export async function getCommits(req) {
   const [bobSample, charlieDemo, em8kkjsam4, XY789ZT2] =
     await getSupabaseData();
 
@@ -218,5 +217,3 @@ const getSummativeNumbers = (finalDataAfterDateFilter) => {
   return finalDataAfterDateFilter;
 };
 /** */
-
-module.exports = { getCommits };

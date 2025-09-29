@@ -4,6 +4,7 @@ import { getCommits } from "../controllers/ownerController.js";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
+      console.log("Endpoint hit");
       await getCommits(req, res); // reuse existing controller
     } catch (err) {
       console.error("Error in /api/owner:", err);
