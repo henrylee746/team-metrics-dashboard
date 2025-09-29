@@ -42,7 +42,7 @@ export default function Page() {
       <TypographyBlockquote>
         See below on a visual example of how you would query using the tool
       </TypographyBlockquote>
-      <Carousel className="w-9/10 my-4">
+      <Carousel className="w-11/12 m-4">
         <CarouselContent>
           {Array.from({ length: 3 }).map((_, index) => (
             <CarouselItem key={index}>
@@ -51,16 +51,16 @@ export default function Page() {
                   <CardContent className="flex items-center justify-center p-6">
                     {index === 1 ? (
                       <>
-                        <div className="flex gap-4">
+                        <div className="flex flex-col justify-center items-center gap-4">
                           <img
                             src={image3}
                             alt="image3"
-                            className="rounded-xl w-1/2 h-auto"
+                            className="rounded-xl h-auto"
                           />
                           <img
                             src={image2}
                             alt="image2"
-                            className="w-1/2 h-auto object-contain rounded-xl"
+                            className="h-auto object-contain rounded-xl"
                           />
                         </div>
                       </>

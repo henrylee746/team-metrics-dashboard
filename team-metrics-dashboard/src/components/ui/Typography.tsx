@@ -26,7 +26,7 @@ export const Table = ({ className, ...props }) => (
   <div className="my-6 w-full overflow-y-auto">
     <table className="w-full">
       <thead>
-        <tr className="even:bg-muted m-0 border-t p-0">
+        <tr className="m-0 border-t p-0">
           {props.headers.map((header) => {
             return (
               <>
@@ -42,7 +42,7 @@ export const Table = ({ className, ...props }) => (
         {props.rowData.map((row) => {
           return (
             <>
-              <tr className="even:bg-muted m-0 border-t p-0">
+              <tr className="m-0 border-t p-0">
                 {row.map((data) => {
                   return (
                     <>

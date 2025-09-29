@@ -4,7 +4,14 @@ import { FaSun, FaMoon, FaBars } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ChevronsUp, UserPen, Calculator, Users } from "lucide-react";
+import {
+  ChevronsUp,
+  UserPen,
+  Calculator,
+  Users,
+  Search,
+  LucideMessageCircleQuestion,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 const Header = ({ toggleTheme, currentTheme, className }) => {
@@ -49,11 +56,11 @@ const Header = ({ toggleTheme, currentTheme, className }) => {
         <Tabs value={tab} onValueChange={handleChange}>
           <TabsList>
             <TabsTrigger className="flex gap-2" value="/">
-              <UserPen />
+              <Search />
               <div className={`hidden lg:block`}>Search</div>
             </TabsTrigger>
             <TabsTrigger className="flex gap-2" value="/howToUse">
-              <Users />
+              <LucideMessageCircleQuestion />
               <div className={`hidden lg:block`}>How to Use</div>
             </TabsTrigger>
           </TabsList>
