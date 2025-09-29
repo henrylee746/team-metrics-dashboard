@@ -43,6 +43,7 @@ export async function getCommits(req) {
   const [bobSample, charlieDemo, em8kkjsam4, XY789ZT2] =
     await getSupabaseData();
 
+  console.log("Done retrieving supabase data");
   const bobSampleData = bobSample.map((row) => row.data);
   const charlieDemoData = charlieDemo.map((row) => row.data);
   const em8Data = em8kkjsam4.map((row) => row.data);
