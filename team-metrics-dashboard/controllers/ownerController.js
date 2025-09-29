@@ -39,6 +39,7 @@ async function getSupabaseData() {
 
 // ownerController.js
 export async function getCommits(req) {
+  console.log("Reached getCommits");
   const [bobSample, charlieDemo, em8kkjsam4, XY789ZT2] =
     await getSupabaseData();
 

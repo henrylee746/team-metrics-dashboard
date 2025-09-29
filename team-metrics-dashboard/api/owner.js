@@ -6,6 +6,7 @@ export default async function handler(req, res) {
     try {
       console.log("Endpoint hit");
       await getCommits(req, res); // reuse existing controller
+      console.log("Done");
     } catch (err) {
       console.error("Error in /api/owner:", err);
       res.status(500).json({ error: err.message });
