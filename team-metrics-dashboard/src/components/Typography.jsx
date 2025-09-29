@@ -1,4 +1,11 @@
-import { H1, P, Table, TypographyBlockquote } from "@/components/ui/Typography";
+import {
+  H1,
+  H2,
+  P,
+  List,
+  Table,
+  TypographyBlockquote,
+} from "@/components/ui/Typography";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -7,6 +14,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
@@ -17,10 +31,10 @@ export default function Page() {
   return (
     <div className="flex flex-col justify-center items-center p-4 gap-4">
       <H1>Velocity Project: How to Use</H1>
-      <P>
+      <H2 className="my-4">
         The objective of the tool is to query performance metrics from a mock
         dataset of two employees and two made-up "commit subjects."
-      </P>
+      </H2>
       <P>
         You can query one or more employee(s)/subject(s). Below is a brief table
         of the employees/subejcts and if there are merging commits made by the
@@ -39,10 +53,22 @@ export default function Page() {
           ]}
         ></Table>
       </div>
+      <P>
+        For example, here are some queries you could try, and expected returns:
+      </P>
+      <List
+        lists={[
+          "No Subject, Bob Sample: Returns Bob Sample's commits",
+          "Subject em8kkjsam4, No Employee: Returns commits for Subject/Branch em8kkjsam",
+          "Subject XY789-ZT2, Charlie Demo: Returns commits from the subject and the owner",
+          "Subject XY789-ZT2, Charlie Demo, Intersect Enabled: Returns commits for the Subject only from the queried owner",
+        ]}
+      ></List>
       <TypographyBlockquote>
-        See below on a visual example of how you would query using the tool
+        See below on a visual example of how you would query using the tool,
+        including the "intersect function"
       </TypographyBlockquote>
-      <Carousel className="w-11/12 m-4">
+      <Carousel className="w-11/12">
         <CarouselContent>
           {Array.from({ length: 3 }).map((_, index) => (
             <CarouselItem key={index}>
@@ -124,6 +150,29 @@ export default function Page() {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <Button variant="link">Special Thanks</Button>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-80">
+          <div className="flex justify-between gap-4">
+            <Avatar>
+              <AvatarImage src="../assets/Ericsson-logo.png" />
+              <AvatarFallback>ER-C</AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h4 className="text-sm font-semibold">Ericsson Canada</h4>
+              <p className="text-sm">
+                For providing the project idea and making this possible during
+                my internship there.
+              </p>
+              <div className="text-muted-foreground text-xs">
+                Sep 2024 - 2025
+              </div>
+            </div>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
     </div>
   );
 }

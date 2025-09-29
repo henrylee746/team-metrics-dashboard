@@ -5,7 +5,17 @@ import { cn } from "@/lib/utils";
 export const H1 = ({ className, ...props }) => (
   <h1
     className={cn(
-      "scroll-m-20 text-xl font-extrabold tracking-tight text-balance",
+      "scroll-m-20 text-3xl font-extrabold tracking-tight text-balance",
+      className
+    )}
+    {...props}
+  />
+);
+
+export const H2 = ({ className, ...props }) => (
+  <h2
+    className={cn(
+      "scroll-m-20 border-b pb-2 text-xl font-semibold tracking-tight first:mt-0",
       className
     )}
     {...props}
@@ -15,15 +25,27 @@ export const H1 = ({ className, ...props }) => (
 export const P = ({ className, ...props }) => (
   <p
     className={cn(
-      "text-muted-foreground text-md leading-7 [&:not(:first-child)]:mt-6",
+      "text-muted-foreground text-md leading-7 [&:not(:first-child)]:mt-2",
       className
     )}
     {...props}
   />
 );
 
+export const List = ({ className, ...props }) => (
+  <ul className={cn("my-4 ml-6 list-disc [&>li]:mt-2", className)}>
+    {props.lists.map((li) => {
+      return (
+        <>
+          <li>{li}</li>
+        </>
+      );
+    })}
+  </ul>
+);
+
 export const Table = ({ className, ...props }) => (
-  <div className="my-6 w-full overflow-y-auto">
+  <div className="my-4 w-full overflow-y-auto">
     <table className="w-full">
       <thead>
         <tr className="m-0 border-t p-0">
