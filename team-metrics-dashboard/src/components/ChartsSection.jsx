@@ -68,7 +68,8 @@ const ChartsSection = ({ responseData }) => {
             1/x <Clock height={20} />
           </CardTitle>
           <CardDescription>
-            Displays amount of days in between each respective commit done
+            The higher the value, the more efficient (100 indicates two commits
+            were done on back to back days)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -80,6 +81,7 @@ const ChartsSection = ({ responseData }) => {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
+                tickFormatter={(value) => `${value} days`}
               />
               <YAxis
                 tickLine={false}

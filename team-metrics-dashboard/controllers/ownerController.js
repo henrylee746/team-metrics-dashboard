@@ -13,19 +13,26 @@ async function getSupabaseData() {
     supabase
       .from("employees")
       .select("data")
-      .contains("data", { name: "Bob Sample" }),
+      .contains("data", { name: "Bob Sample" })
+      .order("data->>updated", { ascending: true }),
+
     supabase
       .from("employees")
       .select("data")
-      .contains("data", { name: "Charlie Demo" }),
+      .contains("data", { name: "Charlie Demo" })
+      .order("data->>updated", { ascending: true }),
+
     supabase
       .from("subjects")
       .select("data")
-      .contains("data", { reason: "em8kkjsam4" }),
+      .contains("data", { reason: "em8kkjsam4" })
+      .order("data->>updated", { ascending: true }),
+
     supabase
       .from("subjects")
       .select("data")
-      .contains("data", { reason: "XY789-ZT2" }),
+      .contains("data", { reason: "XY789-ZT2" })
+      .order("data->>updated", { ascending: true }),
   ]);
 
   // Each result is { data, error }

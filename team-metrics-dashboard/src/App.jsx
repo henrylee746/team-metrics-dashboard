@@ -6,6 +6,7 @@ import SearchForm from "./components/SearchForm.tsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Component, Component2 } from "./components/PlaceholderCharts.tsx";
 
 /*UI components*/
 import {
@@ -92,6 +93,12 @@ function App() {
                 : "opacity-0 -translate-y-10"
             }`}
           />
+          {!responseData && !loading && (
+            <div className="flex gap-4 m-4">
+              <Component />
+              <Component2 />
+            </div>
+          )}
           {loading && (
             <div className="flex flex-wrap gap-8 items-center justify-center ">
               <div className="flex flex-col space-y-3">
