@@ -68,20 +68,23 @@ const ChartsSection = ({ responseData }) => {
             1/x <Clock height={20} />
           </CardTitle>
           <CardDescription>
-            The higher the value, the more efficient (100 indicates two commits
-            were done on back to back days)
+            1 divided by x (days since last commit)
           </CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-            <BarChart accessibilityLayer data={responseData}>
+            <BarChart
+              accessibilityLayer
+              data={responseData.slice(0, responseData.length - 1)}
+              margin={{ top: 30 }}
+            >
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="days from 1st commit"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) => `${value} days`}
+                tickFormatter={(value) => `Day ${value}`}
               />
               <YAxis
                 tickLine={false}
@@ -123,10 +126,25 @@ const ChartsSection = ({ responseData }) => {
                   </div>
                 )}
               />
-              <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4} />
+              <Bar dataKey="1/x" fill="var(--color-oneOverX)" radius={4}>
+                <LabelList
+                  position="top"
+                  offset={12}
+                  className="fill-foreground"
+                  fontSize={12}
+                />
+              </Bar>
             </BarChart>
           </ChartContainer>
         </CardContent>
+        <CardFooter className="flex-col items-start gap-2 text-sm">
+          <div className="flex gap-2 leading-none font-medium">
+            The higher the bars, the better
+          </div>
+          <div className="text-muted-foreground leading-none">
+            Means commits were updated/pushed more often in between days
+          </div>
+        </CardFooter>
       </Card>
       <Card>
         <CardHeader>
@@ -139,10 +157,11 @@ const ChartsSection = ({ responseData }) => {
           <ChartContainer config={chartConfig}>
             <AreaChart
               accessibilityLayer
-              data={responseData}
+              data={responseData.slice(0, responseData.length - 1)}
               margin={{
                 left: 12,
                 right: 12,
+                top: 30,
               }}
             >
               <CartesianGrid vertical={false} />
@@ -205,6 +224,14 @@ const ChartsSection = ({ responseData }) => {
             </AreaChart>
           </ChartContainer>
         </CardContent>
+        <CardFooter className="flex-col items-start gap-2 text-sm">
+          <div className="flex gap-2 leading-none font-medium">
+            The more area covered, the better
+          </div>
+          <div className="text-muted-foreground leading-none">
+            Means commits were updated/pushed more often in between days
+          </div>
+        </CardFooter>
       </Card>
       <Card>
         <CardHeader>
@@ -212,7 +239,9 @@ const ChartsSection = ({ responseData }) => {
             Total Test and Design code <TestTube height={20} />
           </CardTitle>{" "}
           <CardDescription>
-            Displays percentage of total test and design code over time
+            Displays percentage of total test and design code over time. 200%
+            means completion (100% of the design and 100% of the test code
+            done.)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -220,7 +249,11 @@ const ChartsSection = ({ responseData }) => {
             config={chartConfig}
             className="min-h-[200px]  w-full"
           >
-            <BarChart accessibilityLayer data={responseData}>
+            <BarChart
+              accessibilityLayer
+              data={responseData.slice(0, responseData.length - 1)}
+              margin={{ top: 30 }}
+            >
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="days from 1st commit"
@@ -280,10 +313,26 @@ const ChartsSection = ({ responseData }) => {
                 stackId={"a"}
                 fill="var(--color-totalDesign)"
                 radius={[0, 0, 4, 4]}
-              />
+              >
+                <LabelList
+                  position="top"
+                  offset={12}
+                  className="fill-foreground"
+                  fontSize={12}
+                  formatter={(value) => `${value.toFixed(2)}%`}
+                />
+              </Bar>
             </BarChart>
           </ChartContainer>
         </CardContent>
+        <CardFooter className="flex-col items-start gap-2 text-sm">
+          <div className="flex gap-2 leading-none font-medium">
+            The closer the bars are to a 1:1 ratio, the better
+          </div>
+          <div className="text-muted-foreground leading-none">
+            Means design code was being tested often with test code
+          </div>
+        </CardFooter>
       </Card>
       <Card>
         <CardHeader>
@@ -298,7 +347,7 @@ const ChartsSection = ({ responseData }) => {
           <ChartContainer config={chartConfig}>
             <LineChart
               accessibilityLayer
-              data={responseData}
+              data={responseData.slice(0, responseData.length - 1)}
               margin={{
                 left: 12,
                 right: 12,
@@ -371,6 +420,14 @@ const ChartsSection = ({ responseData }) => {
             </LineChart>
           </ChartContainer>
         </CardContent>
+        <CardFooter className="flex-col items-start gap-2 text-sm">
+          <div className="flex gap-2 leading-none font-medium">
+            The more closely correlated the lines are, the better
+          </div>
+          <div className="text-muted-foreground leading-none">
+            Means design code was being tested often with test code
+          </div>
+        </CardFooter>
       </Card>
     </section>
   ) : (

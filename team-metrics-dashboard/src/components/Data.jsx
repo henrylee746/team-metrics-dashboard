@@ -1,5 +1,5 @@
 import "../output.css"; // Import global styles
-import KPISection from "../components/KPISection.jsx";
+import KPISection from "../components/KPISection.tsx";
 import ChartsSection from "../components/ChartsSection.jsx";
 import { useOutletContext } from "react-router-dom";
 import { useParams } from "react-router-dom";
