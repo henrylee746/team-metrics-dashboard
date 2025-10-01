@@ -36,7 +36,7 @@ const chartData = [
     desktop: 186,
     mobile: 80,
     visitors: 266,
-    fill: "#fecaca",
+    fill: "#fecaca", //need to specify fill for pie charts in shad-cn
   },
   {
     month: "February",
@@ -60,7 +60,7 @@ const chartData = [
     fill: "#b91c1c",
   },
   { month: "May", desktop: 209, mobile: 130, visitors: 339, fill: "#450a0a" },
-  { month: "June", desktop: 214, mobile: 140, visitors: 354 },
+  { month: "June", desktop: 214, mobile: 140, visitors: 354, fill: "#2563eb" },
 ];
 
 const chartConfig = {
@@ -129,7 +129,7 @@ export function Component() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="month"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
