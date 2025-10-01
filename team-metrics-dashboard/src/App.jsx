@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { Component, Component2 } from "./components/PlaceholderCharts.tsx";
 
 /*UI components*/
+import { TypographyMuted } from "./components/ui/Typography.tsx";
+
 import {
   Select,
   SelectContent,
@@ -94,10 +96,16 @@ function App() {
             }`}
           />
           {!responseData && !loading && (
-            <div className="flex gap-4 m-4">
-              <Component />
-              <Component2 />
-            </div>
+            <>
+              <TypographyMuted className="p-4 flex justify-center">
+                Start a search with either a subject and/or owner to get
+                customized results like these charts below.
+              </TypographyMuted>
+              <div className="flex gap-4 m-8">
+                <Component />
+                <Component2 />
+              </div>
+            </>
           )}
           {loading && (
             <div className="flex flex-wrap gap-8 items-center justify-center ">

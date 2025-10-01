@@ -44,6 +44,10 @@ export const List = ({ className, ...props }) => (
   </ul>
 );
 
+export const TypographyMuted = ({ className, ...props }) => (
+  <p className={cn("text-muted-foreground text-sm", className)} {...props} />
+);
+
 export const Table = ({ className, ...props }) => (
   <div className="my-4 w-full overflow-y-auto">
     <table className="w-full">

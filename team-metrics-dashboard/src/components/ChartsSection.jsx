@@ -75,19 +75,19 @@ const ChartsSection = ({ responseData }) => {
           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
             <BarChart
               accessibilityLayer
-              data={responseData.slice(0, responseData.length - 1)}
+              data={responseData.slice(1, responseData.length - 1)}
               margin={{ top: 30 }}
             >
-              <CartesianGrid vertical={false} />
+              <CartesianGrid vertical={true} />
               <XAxis
                 dataKey="days from 1st commit"
-                tickLine={false}
+                tickLine={true}
                 tickMargin={10}
-                axisLine={false}
+                axisLine={true}
                 tickFormatter={(value) => `Day ${value}`}
               />
               <YAxis
-                tickLine={false}
+                tickLine={true}
                 axisLine={false}
                 tickMargin={8}
                 tickCount={3}
@@ -157,22 +157,21 @@ const ChartsSection = ({ responseData }) => {
           <ChartContainer config={chartConfig}>
             <AreaChart
               accessibilityLayer
-              data={responseData.slice(0, responseData.length - 1)}
+              data={responseData.slice(1, responseData.length - 1)}
               margin={{
-                left: 12,
-                right: 12,
                 top: 30,
               }}
             >
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="days from 1st commit"
-                tickLine={false}
-                axisLine={false}
+                tickLine={true}
+                axisLine={true}
                 tickMargin={8}
+                tickFormatter={(value) => `Day ${value}`}
               />
               <YAxis
-                tickLine={false}
+                tickLine={true}
                 axisLine={false}
                 tickMargin={8}
                 tickCount={3}
@@ -245,10 +244,7 @@ const ChartsSection = ({ responseData }) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer
-            config={chartConfig}
-            className="min-h-[200px]  w-full"
-          >
+          <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
             <BarChart
               accessibilityLayer
               data={responseData.slice(0, responseData.length - 1)}
@@ -257,12 +253,13 @@ const ChartsSection = ({ responseData }) => {
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="days from 1st commit"
-                tickLine={false}
+                tickLine={true}
                 tickMargin={20}
-                axisLine={false}
+                axisLine={true}
+                tickFormatter={(value) => `Day ${value}`}
               />
               <YAxis
-                tickLine={false}
+                tickLine={true}
                 axisLine={false}
                 tickMargin={15}
                 tickCount={3}
@@ -349,19 +346,20 @@ const ChartsSection = ({ responseData }) => {
               accessibilityLayer
               data={responseData.slice(0, responseData.length - 1)}
               margin={{
-                left: 12,
-                right: 12,
+                top: 30,
+                right: 10,
               }}
             >
-              <CartesianGrid vertical={false} />
+              <CartesianGrid vertical={true} />
               <XAxis
                 dataKey="days from 1st commit"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
+                tickLine={true}
+                axisLine={true}
+                tickMargin={20}
+                tickFormatter={(value) => `Day ${value}`}
               />
               <YAxis
-                tickLine={false}
+                tickLine={true}
                 axisLine={false}
                 tickMargin={8}
                 tickCount={3}

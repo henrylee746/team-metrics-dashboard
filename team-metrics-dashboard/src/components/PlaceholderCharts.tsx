@@ -10,7 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Bar, BarChart, CartesianGrid, XAxis, Pie, PieChart } from "recharts";
+import {
+  BarChart,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+} from "recharts";
 import {
   ChartTooltip,
   ChartTooltipContent,
@@ -27,18 +36,37 @@ const chartData = [
     desktop: 186,
     mobile: 80,
     visitors: 266,
+    fill: "#fecaca",
   },
-  { month: "February", desktop: 305, mobile: 200, visitors: 505 },
-  { month: "March", desktop: 237, mobile: 120, visitors: 357 },
-  { month: "April", desktop: 73, mobile: 190, visitors: 263 },
-  { month: "May", desktop: 209, mobile: 130, visitors: 339 },
+  {
+    month: "February",
+    desktop: 305,
+    mobile: 200,
+    visitors: 505,
+    fill: "#fca5a5",
+  },
+  {
+    month: "March",
+    desktop: 237,
+    mobile: 120,
+    visitors: 357,
+    fill: "#ef4444",
+  },
+  {
+    month: "April",
+    desktop: 73,
+    mobile: 190,
+    visitors: 263,
+    fill: "#b91c1c",
+  },
+  { month: "May", desktop: 209, mobile: 130, visitors: 339, fill: "#450a0a" },
   { month: "June", desktop: 214, mobile: 140, visitors: 354 },
 ];
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "#2563eb",
+    color: "#2563eb", //colour painted if fill not specified in chartData
   },
   mobile: {
     label: "Mobile",

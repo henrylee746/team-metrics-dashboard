@@ -40,7 +40,7 @@ export default function Page() {
         of the employees/subejcts and if there are merging commits made by the
         employees in those subjects.
       </P>
-      <div className="my-3 w-full overflow-y-auto">
+      <div className="my-3 w-[80%] overflow-y-auto">
         <Table
           headers={[
             "Employees",
@@ -61,7 +61,7 @@ export default function Page() {
           "No Subject, Bob Sample: Returns Bob Sample's commits",
           "Subject em8kkjsam4, No Employee: Returns commits for Subject/Branch em8kkjsam",
           "Subject XY789-ZT2, Charlie Demo: Returns commits from the subject and the owner",
-          "Subject XY789-ZT2, Charlie Demo, Intersect Enabled: Returns commits for the Subject only from the queried owner",
+          "Subject XY789-ZT2, Charlie Demo, Intersect Enabled: Returns commits for the Subject only from the queried owner  ",
         ]}
       ></List>
       <TypographyBlockquote>

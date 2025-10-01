@@ -10,13 +10,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label, Pie, PieChart, Sector } from "recharts";
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
+import { Calendar } from "lucide-react";
 import {
   ChartConfig,
   ChartContainer,
   ChartStyle,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 import {
   Select,
@@ -46,12 +48,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
 const KPISection = ({ responseData }) => {
+  if (!Array.isArray(responseData) || responseData.length === 0) {
+    return null;
+  }
+
   console.log("KPI Section Response:", responseData);
 
   //Grab all dates for the subject/employee selected
   const dates =
     responseData && responseData.length > 0
-      ? responseData.map((commit: any) => commit.updated)
+      ? responseData.map((commit: any, index: number) => {
+          return commit.updated;
+        })
       : [];
 
   // Track which date is currently selected
@@ -67,17 +75,27 @@ const KPISection = ({ responseData }) => {
   // Transform into pie-friendly data
   const pieData = selectedCommit
     ? [
-        { name: "Test Code Churn", value: selectedCommit.testCodeChurn || 0 },
+        {
+          name: "Test Code Churn",
+          value: selectedCommit.testCodeChurn || 0,
+          fill: "hsl(200, 70%, 50%)",
+        },
         {
           name: "Design Code Churn",
           value: selectedCommit.sourceCodeChurn || 0,
+          fill: "hsl(40, 70%, 50%)",
         },
       ]
     : [];
 
+  const totalCodeChurn = selectedCommit
+    ? (selectedCommit.testCodeChurn || 0) +
+      (selectedCommit.sourceCodeChurn || 0)
+    : 0;
+
   // Chart config: static since we always use 2 fields
   const chartConfig: ChartConfig = {
-    testCodeChurn: { label: "Test Code Churn", color: "hsl(200, 70%, 50%)" },
+    testCodeChurn: { label: "Test Code Churn", color: "hsl(200, 30%, 50%)" },
     designCodeChurn: { label: "Design Code Churn", color: "hsl(40, 70%, 50%)" },
   };
 
@@ -86,7 +104,7 @@ const KPISection = ({ responseData }) => {
       <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-4">
         <div className="flex gap-4">
           <Card className="flex flex-col items-center justify-center p-4">
-            <CardHeader>
+            <CardHeader className="flex flex-col items-center">
               <CardTitle>Commits Pie Chart</CardTitle>
               <CardDescription>
                 Breakdown of churn on {selectedDate}
@@ -94,12 +112,13 @@ const KPISection = ({ responseData }) => {
             </CardHeader>
             <CardContent>
               {/* Date selector */}
-              <div className="mb-4 w-48">
+              <div className="mb-4 w-48 mx-auto">
                 <Select
                   value={selectedDate || ""}
                   onValueChange={(val) => setselectedDate(val)}
                 >
                   <SelectTrigger>
+                    <Calendar />
                     <SelectValue placeholder="Select date" />
                   </SelectTrigger>
                   <SelectContent>
@@ -119,16 +138,45 @@ const KPISection = ({ responseData }) => {
                   className="h-[300px] w-[300px]"
                 >
                   <PieChart>
-                    <ChartStyle />
+                    <ChartStyle id={"pie chart"} config={chartConfig} />{" "}
                     <Pie
                       data={pieData}
                       dataKey="value"
-                      nameKey="name"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={2}
                       label
-                    />
+                      nameKey="name"
+                      innerRadius={70}
+                      outerRadius={100}
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <text
+                                x={viewBox.cx}
+                                y={viewBox.cy}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                              >
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={viewBox.cy}
+                                  className="fill-foreground text-3xl font-bold"
+                                >
+                                  {totalCodeChurn}
+                                </tspan>
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={(viewBox.cy || 0) + 24}
+                                  className="fill-muted-foreground"
+                                >
+                                  Lines of Code Churn
+                                </tspan>
+                              </text>
+                            );
+                          }
+                        }}
+                      />
+                    </Pie>
                     <ChartTooltip content={<ChartTooltipContent />} />
                   </PieChart>
                 </ChartContainer>
