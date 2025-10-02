@@ -6,7 +6,8 @@ import SearchForm from "./components/SearchForm.tsx";
 import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Component, Component2 } from "./components/PlaceholderCharts.tsx";
+import { Component } from "./components/PlaceholderCharts.tsx";
+import { ProgressDemo } from "./components/Progress.tsx";
 
 /*UI components*/
 import { TypographyMuted } from "./components/ui/Typography.tsx";
@@ -23,11 +24,26 @@ import { Skeleton } from "@/components/ui/skeleton";
 function App() {
   const navigate = useNavigate();
   const [responseData, setResponseData] = useState(null);
+  const [preliminaryData, setPreliminaryData] = useState(null);
   const [isRendered, setIsRendered] = useState(false);
   const [theme, setTheme] = useState("dark"); // Default to dark mode
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [value, setValue] = useState("0");
+
+  async function fetchPreliminaryData() {
+    try {
+      const response = await fetch("/api/preliminary");
+      if (!response.ok)
+        throw new Error(`HTTP Error: ${response.status} - ${response.error}`);
+      const result = await response.json();
+      console.log(result);
+      return result.data;
+    } catch (e) {
+      console.log(e.message);
+      return null;
+    }
+  }
 
   useEffect(() => {
     // Check for saved theme in localStorage
@@ -37,6 +53,12 @@ function App() {
       setTheme(savedTheme);
     }
     setIsRendered(true);
+    /*Run Preliminary Data Fetch*/
+    async function loadData() {
+      const data = await fetchPreliminaryData();
+      setPreliminaryData(data);
+    }
+    loadData();
   }, []);
 
   //Once data is fetched, redirect to first array of data
@@ -95,17 +117,29 @@ function App() {
                 : "opacity-0 -translate-y-10"
             }`}
           />
-          {!responseData && !loading && (
-            <>
+          {!responseData && !loading && !preliminaryData && (
+            <div className="flex justify-center">
+              <ProgressDemo
+                className={`header transition-opacity duration-1500 delay-100`}
+              />
+            </div>
+          )}
+          {!responseData && !loading && preliminaryData && (
+            <div
+              className={`header transition-opacity duration-3000 delay-100 ${
+                preliminaryData
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 -translate-y-10"
+              }`}
+            >
               <TypographyMuted className="p-4 flex justify-center">
                 Start a search with either a subject and/or owner to get
-                customized results like these charts below.
+                customized responses like these charts below.
               </TypographyMuted>
-              <div className="flex gap-4 m-8">
-                <Component />
-                <Component2 />
+              <div className="flex justify-center my-8">
+                <Component preliminaryData={preliminaryData} />
               </div>
-            </>
+            </div>
           )}
           {loading && (
             <div className="flex flex-wrap gap-8 items-center justify-center ">
@@ -174,11 +208,11 @@ function App() {
                   {responseData.data.length > 0 ? (
                     <Outlet context={[responseData.data]} />
                   ) : null}
-                  {/*Only renders the Outlet components (Data.jsx and descendants) if results from query were found*/}
+                  {/*Only renders the Outlet components (Data.jsx and descendants) if responses from query were found*/}
                 </div>
               ) : (
                 <p className="flex items-center justify-center font-medium italic">
-                  No results found, please try another query.
+                  No responses found, please try another query.
                 </p>
               )}
             </>

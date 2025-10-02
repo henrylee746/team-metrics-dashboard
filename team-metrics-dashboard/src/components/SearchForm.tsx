@@ -493,9 +493,7 @@ const SearchForm = ({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          `HTTP Error: ${response.status} - ${errorData.message}`
-        );
+        throw new Error(`HTTP Error: ${response.status} - ${errorData.error}`);
       }
 
       const promise = await response.json();
