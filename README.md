@@ -4,10 +4,8 @@ This tool's goal is to return performance metrics of any employee/contractor at 
 
 ## Getting Started
 
-Coming soon!
+Access the tool here: https://team-metrics-dashboard.vercel.app/
+There are two pages at the header: *"Search"* (the main page) for queries and chart displays, but for first-time users, a *"How to Use"* page was also implemented.
 
-<!---A separate Google Doc on how to use the tool will come soon, although there will also be a "How to Use" page on the application.
-
-(DEPLOYMENT IN PROGRESS) In the event you cannot access the URL/the tool is down, here are the steps to access it on your local machine: https://docs.google.com/document/d/103Rhp6hH6jeWM8GF_jjNoVcaItMSqcDdxiWl8IRkMTo/edit?tab=t.0-->
-
+<img width="1719" height="548" alt="chartImage1" src="https://github.com/user-attachments/assets/63823c0b-96f7-439d-a4aa-2eeecd613f87" />
 
