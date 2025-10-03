@@ -2,7 +2,11 @@
 
 # :bar_chart: Team Metrics Dashboard
 
-This tool's goal is to return performance metrics of any employee/contractor at X company who has made at least 1 commit to any repo in X company's said codebase repositories. 
+Welcome to the Team Metrics Dashboard project. This was a personal project originated from my internship at Ericsson Canada, tasked with designing a web application to scrape performance metrics of employees off of pushed code commits using the Gerrit REST API.
+
+## :arrow_right: Extension of the project
+
+Currently, this project does not contain any real information anymore, and everything is scraped off a Supabase PostgreSQL mock dataset. 
 
 ## Getting Started
 
