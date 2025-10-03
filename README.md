@@ -6,6 +6,8 @@ Welcome to the Team Metrics Dashboard project. This was a personal project origi
 
 ## Getting Started
 
+<img width="1888" height="494" alt="image" src="https://github.com/user-attachments/assets/e545bc0f-dd24-43a5-bb52-d4072d16c3e9" />
+
 Access the tool here: https://team-metrics-dashboard.vercel.app/
 There are two pages at the header: *"Search"* (the main page) for queries and chart displays, but for first-time users, a *"How to Use"* page was also implemented.
 
@@ -18,9 +20,4 @@ The dataset is relatively small, containing only two mock "employees" and two "c
 ### :question: What is Code Churn?
 
 Code Churn (a.k.a. Code Rework) is the phenomenon where someone rewrites/deletes lines of code shortly after it was wrote. This is common
-
-## Getting Started
-
-Access the tool here: https://team-metrics-dashboard.vercel.app/
-There are two pages at the header: *"Search"* (the main page) for queries and chart displays, but for first-time users, a *"How to Use"* page was also implemented.
 
