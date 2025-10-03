@@ -313,10 +313,11 @@ const KPISection = ({ responseData }) => {
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
               <div className="flex items-center gap-2 leading-none font-medium">
-                Trending up by 5.2% this month{" "}
+                25% of annual goal achieved
               </div>
               <div className="text-muted-foreground leading-none">
-                Showing total visitors for the last 6 months
+                Showing total code churn from entire subject/employee's commit
+                history
               </div>
             </CardFooter>
           </Card>
