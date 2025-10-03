@@ -315,7 +315,7 @@ const KPISection = ({ responseData }) => {
               <div className="flex items-center gap-2 leading-none font-medium">
                 25% of annual goal achieved
               </div>
-              <div className="text-muted-foreground leading-none">
+              <div className="text-muted-foreground leading-none text-center">
                 Showing total code churn from entire subject/employee's commit
                 history
               </div>
