@@ -132,17 +132,18 @@ function App() {
                   : "opacity-0 -translate-y-10"
               }`}
             >
-              <TypographyMuted className="p-2 flex justify-center">
+              <TypographyMuted className="p-2 m-2 text-center">
                 <span>
                   Start a search with either a subject and/or owner to get
-                  customized responses like these charts below.
+                  customized responses like these charts below. Most charts are
+                  responsive, so hover over them to see specific details.
                 </span>
               </TypographyMuted>
-              <TypographyMuted className="p-2 flex justify-center text-center">
+              <TypographyMuted className="p-2 m-2 text-center">
                 <span>
-                  Disclaimer: Results are scraped using a dataset of mock data
+                  Disclaimer: Results are scraped from a dataset of mock data
                   and is not meant to be 100% realistic nor accurate of the
-                  performance metrics of an actual software developer.
+                  average performance metrics of an actual software developer.
                 </span>
               </TypographyMuted>
               <div className="flex justify-center my-8">

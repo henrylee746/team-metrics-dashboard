@@ -31,11 +31,11 @@ export default function Page() {
   return (
     <div className="flex flex-col justify-center items-center p-4 gap-4">
       <H1>Velocity Project: How to Use</H1>
-      <H2 className="my-4">
+      <H2 className="my-4 text-center">
         The objective of the tool is to query performance metrics from a mock
         dataset of two employees and two made-up "commit subjects."
       </H2>
-      <P>
+      <P className="text-center">
         You can query one or more employee(s)/subject(s). Below is a brief table
         of the employees/subejcts and if there are merging commits made by the
         employees in those subjects.
@@ -68,7 +68,7 @@ export default function Page() {
         See below on a visual example of how you would query using the tool,
         including the "intersect function"
       </TypographyBlockquote>
-      <Carousel className="w-11/12">
+      <Carousel className="w-10/12">
         <CarouselContent>
           {Array.from({ length: 3 }).map((_, index) => (
             <CarouselItem key={index}>

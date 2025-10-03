@@ -1,4 +1,6 @@
 /* eslint-disable*/
+"use client";
+
 import * as React from "react";
 import "../output.css";
 import {
@@ -9,7 +11,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label, Pie, PieChart, Sector } from "recharts";
+import {
+  LabelList,
+  RadialBar,
+  RadialBarChart,
+  Label,
+  Pie,
+  PieChart,
+  Sector,
+  PolarAngleAxis,
+  PolarGrid,
+  Radar,
+  RadarChart,
+  PolarRadiusAxis,
+} from "recharts";
 import { Calendar } from "lucide-react";
 import {
   ChartConfig,
@@ -62,58 +77,94 @@ const KPISection = ({ responseData }) => {
         })
       : [];
 
+  const uniqueDates = Array.from(new Set(dates.map((d) => d.updated)));
+  //prevents duplicate dates (e.g. two commits on same day)
+  //used when displaying select options
+
   // Track which date is currently selected
   const [selectedDate, setselectedDate] = React.useState(
     dates.length > 0 ? dates[0]["updated"] : null
   );
 
-  console.log(selectedDate);
-
-  // Find commit for selected date
-  const selectedCommit = responseData.find(
+  // Instead of find, aggregate all commits with the same date
+  const commitsForDate = responseData.filter(
     (commit) => commit.updated === selectedDate
   );
 
-  // Transform into pie-friendly data
-  const pieData = selectedCommit
-    ? [
-        {
-          name: "Test Code Churn",
-          value: selectedCommit.testCodeChurn || 0,
-          fill: "hsl(200, 70%, 50%)",
-        },
-        {
-          name: "Design Code Churn",
-          value: selectedCommit.sourceCodeChurn || 0,
-          fill: "hsl(40, 70%, 50%)",
-        },
-      ]
-    : [];
+  const aggregatedCommit = commitsForDate.reduce(
+    (acc, commit) => {
+      acc.testCodeChurn += commit.testCodeChurn || 0;
+      acc.sourceCodeChurn += commit.sourceCodeChurn || 0;
+      return acc;
+    },
+    { testCodeChurn: 0, sourceCodeChurn: 0 }
+  );
 
-  const totalCodeChurn = selectedCommit
-    ? (selectedCommit.testCodeChurn || 0) +
-      (selectedCommit.sourceCodeChurn || 0)
+  // Use aggregatedCommit for chart
+  const pieData = [
+    {
+      name: "Test Code Churn",
+      date: aggregatedCommit.updated,
+      value: aggregatedCommit.testCodeChurn,
+      fill: "hsl(200, 70%, 50%)",
+    },
+    {
+      name: "Design Code Churn",
+      date: aggregatedCommit.updated,
+      value: aggregatedCommit.sourceCodeChurn,
+      fill: "hsl(40, 70%, 50%)",
+    },
+  ];
+
+  const totalCodeChurn = aggregatedCommit
+    ? (aggregatedCommit.testCodeChurn || 0) +
+      (aggregatedCommit.sourceCodeChurn || 0)
     : 0;
 
-  // Chart config: static since we always use 2 fields
-  const chartConfig: ChartConfig = {
+  // Pie Chart config: static since we always use 2 fields
+  const pieChartConfig: ChartConfig = {
     testCodeChurn: { label: "Test Code Churn", color: "hsl(200, 30%, 50%)" },
     designCodeChurn: { label: "Design Code Churn", color: "hsl(40, 70%, 50%)" },
-  };
+  } satisfies ChartConfig;
 
   //Reset date selection back to first one if subject/employee selection switched
   React.useEffect(() => {
     setselectedDate(dates[0]["updated"]);
   }, [responseData]);
 
+  /*Radial Chart Functions/Vars*/
+  const totalCodeChurned = responseData.reduce(
+    (acc, commit) =>
+      acc + (commit.sourceCodeChurn || 0) + (commit.testCodeChurn || 0),
+    0
+  );
+
+  const radialData = [
+    {
+      label: "Total Code Churn",
+      totalCodeChurn: totalCodeChurned,
+      fill: "hsl(var(--chart-1))",
+    },
+  ];
+  //Radial Chart Config
+  const radialChartConfig: ChartConfig = {
+    totalCodeChurn: {
+      label: "Total Code Churn",
+    },
+    label: {
+      label: "Subject/Employee",
+      color: "hsl(var(--chart-2))",
+    },
+  } satisfies ChartConfig;
+
   return responseData && responseData.length > 0 ? (
     <>
-      <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-4">
-        <div className="flex gap-4 justify-center items-center gap-8">
-          <Card className="flex flex-col items-center justify-center p-4">
+      <section className="kpi-section grid grid-cols-1 xl:grid-cols-2 items-center justify-center gap-12 p-8 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center justify-center">
+          <Card className="flex flex-col items-center justify-center">
             <CardHeader className="flex flex-col items-center">
               <CardTitle>Commits Pie Chart</CardTitle>
-              <CardDescription>
+              <CardDescription className="text-center">
                 Breakdown of churn on {selectedDate}
               </CardDescription>
             </CardHeader>
@@ -131,9 +182,9 @@ const KPISection = ({ responseData }) => {
                     <SelectValue placeholder="Select date" />
                   </SelectTrigger>
                   <SelectContent>
-                    {dates.map((d, index) => (
-                      <SelectItem key={index} value={d.updated}>
-                        {d.updated}
+                    {uniqueDates.map((d, index) => (
+                      <SelectItem key={index} value={d}>
+                        {d}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -143,11 +194,11 @@ const KPISection = ({ responseData }) => {
               {/* Pie Chart */}
               {pieData.length > 0 && (
                 <ChartContainer
-                  config={chartConfig}
-                  className="h-[300px] w-[300px]"
+                  config={pieChartConfig}
+                  className="h-[220px] w-[300px]"
                 >
                   <PieChart>
-                    <ChartStyle id={"pie chart"} config={chartConfig} />{" "}
+                    <ChartStyle id={"pie chart"} config={pieChartConfig} />{" "}
                     <Pie
                       data={pieData}
                       dataKey="value"
@@ -191,88 +242,86 @@ const KPISection = ({ responseData }) => {
                 </ChartContainer>
               )}
             </CardContent>
+            <CardFooter className="flex-col gap-2 text-sm">
+              <div className="text-center text-muted-foreground leading-none">
+                Hover over Chart to see specific amount of design/test code
+              </div>
+            </CardFooter>
           </Card>
-          <Card className="flex flex-col items-center justify-center p-4">
-            <CardHeader className="flex flex-col items-center">
-              <CardTitle>Commits Pie Chart</CardTitle>
-              <CardDescription>
-                Breakdown of churn on {selectedDate}
-              </CardDescription>
+          {/*Radial Chart*/}
+          <Card className="flex flex-col">
+            <CardHeader className="items-center pb-0">
+              <CardTitle>Radial Chart - Shape</CardTitle>
+              <CardDescription>January - June 2024</CardDescription>
             </CardHeader>
-            <CardContent>
-              {/* Date selector */}
-              <div className="mb-4 w-48 mx-auto">
-                <Select
-                  value={selectedDate || ""}
-                  onValueChange={(val) => setselectedDate(val)}
+            <CardContent className="flex-1 pb-0">
+              <ChartContainer
+                config={radialChartConfig}
+                className="mx-auto aspect-square max-h-[250px]"
+              >
+                <RadialBarChart
+                  data={radialData}
+                  endAngle={100}
+                  innerRadius={80}
+                  outerRadius={140}
                 >
-                  <SelectTrigger>
-                    <Calendar />
-                    <SelectValue placeholder="Select date" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {dates.map((d, index) => (
-                      <SelectItem key={index} value={d.updated}>
-                        {d.updated}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Pie Chart */}
-              {pieData.length > 0 && (
-                <ChartContainer
-                  config={chartConfig}
-                  className="h-[300px] w-[300px]"
-                >
-                  <PieChart>
-                    <ChartStyle id={"pie chart"} config={chartConfig} />{" "}
-                    <Pie
-                      data={pieData}
-                      dataKey="value"
-                      label
-                      nameKey="name"
-                      innerRadius={70}
-                      outerRadius={100}
-                    >
-                      <Label
-                        content={({ viewBox }) => {
-                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                            return (
-                              <text
+                  <PolarGrid
+                    gridType="circle"
+                    radialLines={false}
+                    stroke="hsl(-var(--chart-1))"
+                    className="first:fill-muted last:fill-background"
+                    polarRadius={[86, 74]}
+                  />
+                  <RadialBar dataKey="totalCodeChurned" background />
+                  <PolarRadiusAxis
+                    tick={false}
+                    tickLine={false}
+                    axisLine={false}
+                  >
+                    <Label
+                      content={({ viewBox }) => {
+                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                          return (
+                            <text
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                            >
+                              <tspan
                                 x={viewBox.cx}
                                 y={viewBox.cy}
-                                textAnchor="middle"
-                                dominantBaseline="middle"
+                                className="fill-foreground text-4xl font-bold"
                               >
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={viewBox.cy}
-                                  className="fill-foreground text-3xl font-bold"
-                                >
-                                  {totalCodeChurn}
-                                </tspan>
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={(viewBox.cy || 0) + 24}
-                                  className="fill-muted-foreground"
-                                >
-                                  Lines of Code Churn
-                                </tspan>
-                              </text>
-                            );
-                          }
-                        }}
-                      />
-                    </Pie>
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                  </PieChart>
-                </ChartContainer>
-              )}
+                                {radialData[0].totalCodeChurn.toLocaleString()}
+                              </tspan>
+                              <tspan
+                                x={viewBox.cx}
+                                y={(viewBox.cy || 0) + 24}
+                                className="fill-muted-foreground"
+                              >
+                                Lines of Code Churned
+                              </tspan>
+                            </text>
+                          );
+                        }
+                      }}
+                    />
+                  </PolarRadiusAxis>
+                </RadialBarChart>
+              </ChartContainer>
             </CardContent>
+            <CardFooter className="flex-col gap-2 text-sm">
+              <div className="flex items-center gap-2 leading-none font-medium">
+                Trending up by 5.2% this month{" "}
+              </div>
+              <div className="text-muted-foreground leading-none">
+                Showing total visitors for the last 6 months
+              </div>
+            </CardFooter>
           </Card>
         </div>
+        {/*Commits Table*/}
         <ScrollArea className="h-96 rounded-md border">
           <div className="p-4">
             <h4 className="flex gap-2 mb-4 text-md font-medium leading-none items-center">

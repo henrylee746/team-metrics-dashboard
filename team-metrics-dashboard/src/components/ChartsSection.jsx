@@ -301,7 +301,7 @@ const ChartsSection = ({ responseData }) => {
                   offset={12}
                   className="fill-foreground"
                   fontSize={12}
-                  formatter={(value) => `${value.toFixed(2)}%`}
+                  formatter={(value) => `${value.toFixed(0)}%`}
                 />
               </Bar>
             </BarChart>
