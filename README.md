@@ -22,5 +22,6 @@ The dataset is relatively small, containing only two mock "employees" and two "c
 Code Churn (a.k.a. Code Rework) is the phenomenon where someone rewrites/deletes lines of code shortly after it was wrote. This is common in the SDLC (Software Development Life Cycle) and is a good metric to measure a developer's productivity/blockers, depending on the context.
 
 > Low churn could mean slow productivity but also a lack of needing to refactor due to clear requirements, high-quality code, and passing of unit tests on the first trial.
+> 
 > High code churn could mean high productivity if there is a large feature being worked on/function(s) constantly being optimized, but also an issue with testing/unclear user requirements if the same blocks of code are consistently being changed
 
