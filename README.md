@@ -1,7 +1,5 @@
 <img width="1719" height="548" alt="chartImage1" src="https://github.com/user-attachments/assets/63823c0b-96f7-439d-a4aa-2eeecd613f87" />
 
-<img width="1258" height="923" alt="image" src="https://github.com/user-attachments/assets/8f3cce8c-a5bd-43d3-877c-a82a044d2b66" />
-
 # :bar_chart: Team Metrics Dashboard
 
 Welcome to the Team Metrics Dashboard project. This was a personal project originated from my internship at Ericsson Canada, tasked with designing a web application to scrape performance metrics of employees off of pushed code commits using the Gerrit REST API.
