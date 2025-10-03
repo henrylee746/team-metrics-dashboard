@@ -30,7 +30,7 @@ import image4 from "../assets/image4.png";
 export default function Page() {
   return (
     <div className="flex flex-col justify-center items-center p-4 gap-4">
-      <H1>Velocity Project: How to Use</H1>
+      <H1 className="text-center">Velocity Project: How to Use</H1>
       <H2 className="my-4 text-center">
         The objective of the tool is to query performance metrics from a mock
         dataset of two employees and two made-up "commit subjects."
