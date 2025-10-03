@@ -1,3 +1,5 @@
+/*Script for inserting in all Subject/Employee Data*/
+
 import "dotenv/config"; // loads .env automatically
 import { createClient } from "@supabase/supabase-js";
 

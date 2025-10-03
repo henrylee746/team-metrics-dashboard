@@ -58,14 +58,16 @@ const KPISection = ({ responseData }) => {
   const dates =
     responseData && responseData.length > 0
       ? responseData.map((commit: any, index: number) => {
-          return commit.updated;
+          return { id: index, updated: commit.updated };
         })
       : [];
 
   // Track which date is currently selected
   const [selectedDate, setselectedDate] = React.useState(
-    dates.length > 0 ? dates[0] : null
+    dates.length > 0 ? dates[0]["updated"] : null
   );
+
+  console.log(selectedDate);
 
   // Find commit for selected date
   const selectedCommit = responseData.find(
@@ -99,10 +101,97 @@ const KPISection = ({ responseData }) => {
     designCodeChurn: { label: "Design Code Churn", color: "hsl(40, 70%, 50%)" },
   };
 
+  //Reset date selection back to first one if subject/employee selection switched
+  React.useEffect(() => {
+    setselectedDate(dates[0]["updated"]);
+  }, [responseData]);
+
   return responseData && responseData.length > 0 ? (
     <>
       <section className="kpi-section grid sm:grid-cols-1 lg:grid-cols-2 items-center justify-center gap-12 p-8 mt-4">
-        <div className="flex gap-4">
+        <div className="flex gap-4 justify-center items-center gap-8">
+          <Card className="flex flex-col items-center justify-center p-4">
+            <CardHeader className="flex flex-col items-center">
+              <CardTitle>Commits Pie Chart</CardTitle>
+              <CardDescription>
+                Breakdown of churn on {selectedDate}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* Date selector */}
+              <div className="mb-4 w-48 mx-auto">
+                <Select
+                  value={selectedDate || ""}
+                  onValueChange={(val) => {
+                    setselectedDate(val);
+                  }}
+                >
+                  <SelectTrigger>
+                    <Calendar />
+                    <SelectValue placeholder="Select date" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dates.map((d, index) => (
+                      <SelectItem key={index} value={d.updated}>
+                        {d.updated}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Pie Chart */}
+              {pieData.length > 0 && (
+                <ChartContainer
+                  config={chartConfig}
+                  className="h-[300px] w-[300px]"
+                >
+                  <PieChart>
+                    <ChartStyle id={"pie chart"} config={chartConfig} />{" "}
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      label
+                      nameKey="name"
+                      innerRadius={70}
+                      outerRadius={100}
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <text
+                                x={viewBox.cx}
+                                y={viewBox.cy}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                              >
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={viewBox.cy}
+                                  className="fill-foreground text-3xl font-bold"
+                                >
+                                  {totalCodeChurn}
+                                </tspan>
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={(viewBox.cy || 0) + 24}
+                                  className="fill-muted-foreground"
+                                >
+                                  Lines of Code Churn
+                                </tspan>
+                              </text>
+                            );
+                          }
+                        }}
+                      />
+                    </Pie>
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                  </PieChart>
+                </ChartContainer>
+              )}
+            </CardContent>
+          </Card>
           <Card className="flex flex-col items-center justify-center p-4">
             <CardHeader className="flex flex-col items-center">
               <CardTitle>Commits Pie Chart</CardTitle>
@@ -122,9 +211,9 @@ const KPISection = ({ responseData }) => {
                     <SelectValue placeholder="Select date" />
                   </SelectTrigger>
                   <SelectContent>
-                    {dates.map((d) => (
-                      <SelectItem key={d} value={d}>
-                        {d}
+                    {dates.map((d, index) => (
+                      <SelectItem key={index} value={d.updated}>
+                        {d.updated}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -4,6 +4,12 @@ import "../output.css";
 import * as React from "react";
 ("use client");
 import {
+  TrendingDown,
+  ChartColumnDecreasing,
+  ChartArea,
+  ChartPie,
+} from "lucide-react";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -40,6 +46,14 @@ import {
 export function Component(preliminaryData) {
   const chartData = preliminaryData; //originally the "data" object from the response obj
   const chartDataDestructured = chartData.preliminaryData; //destructure the object to only have the array of supabase entries
+  const chartDataForRadialChart = [
+    {
+      month: chartDataDestructured[0]["month"],
+      total_code_churn: chartDataDestructured[0]["total_code_churn"],
+    },
+  ];
+
+  console.log(chartDataForRadialChart);
 
   const chartConfig = {
     design_code_churn: {
@@ -48,7 +62,7 @@ export function Component(preliminaryData) {
     },
     test_code_churn: {
       label: "Test Code Churn",
-      color: "hsl(var(--chart-3))",
+      color: "hsl(var(--chart-2))",
     },
   } satisfies ChartConfig;
   const [activeChart, setActiveChart] =
@@ -67,16 +81,18 @@ export function Component(preliminaryData) {
     []
   );
   return (
-    <div className="flex flex-wrap gap-4 m-4 justify-center items-center w-full">
+    <div className="flex flex-wrap gap-8 m-4 justify-center items-center w-full">
       <Card className="py-0">
         <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
-            <CardTitle>Code Churn - Bar Chart</CardTitle>
+            <CardTitle className="flex gap-2 items-center">
+              Code Churn - Bar Chart <ChartColumnDecreasing />{" "}
+            </CardTitle>
             <CardDescription>
               Showing code churn from the last 5 months
             </CardDescription>
           </div>
-          <div className="flex">
+          <div className="flex mt-0">
             {["design_code_churn", "test_code_churn"].map((key) => {
               const chart = key as keyof typeof chartConfig;
               return (
@@ -120,7 +136,10 @@ export function Component(preliminaryData) {
               />
               <ChartTooltip
                 content={
-                  <ChartTooltipContent className="w-[185px]" nameKey="views" />
+                  <ChartTooltipContent
+                    className="w-[185px]"
+                    nameKey="design_code_churn"
+                  />
                 }
               />
               <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
@@ -131,7 +150,7 @@ export function Component(preliminaryData) {
           <div className="flex w-full items-start gap-2 text-sm">
             <div className="grid gap-2">
               <div className="flex items-center gap-2 leading-none font-medium">
-                Approx. 89% drop from January to February
+                Approx. 89% drop from January to February <TrendingDown />
               </div>
               <div className="text-muted-foreground flex items-center gap-2 leading-none">
                 January - May 2025 (Toggle between Design and Test Code Churn)
@@ -143,7 +162,9 @@ export function Component(preliminaryData) {
       {/*Area Chart - Gradient*/}
       <Card>
         <CardHeader>
-          <CardTitle>Code Churn - Gradient Area Chart</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            Code Churn - Gradient Area Chart <ChartArea />{" "}
+          </CardTitle>
           <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
@@ -164,29 +185,29 @@ export function Component(preliminaryData) {
                 tickMargin={8}
                 tickFormatter={(value) => value.slice(0, 3)}
               />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
               <defs>
-                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="fillDesign" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="var(--color-desktop)"
+                    stopColor="hsl(var(--chart-3))"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="var(--color-desktop)"
+                    stopColor="hsl(var(--chart-3))"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
-                <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="fillTest" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="var(--color-mobile)"
+                    stopColor="hsl(var(--chart-4))"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="var(--color-mobile)"
+                    stopColor="hsl(var(--chart-4))"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
@@ -194,16 +215,16 @@ export function Component(preliminaryData) {
               <Area
                 dataKey="design_code_churn"
                 type="natural"
-                fill="url(#fillMobile)"
+                fill="url(#fillDesign)"
                 fillOpacity={0.4}
-                stroke="var(--color-mobile)"
+                stroke="hsl(var(--chart-3))"
               />
               <Area
                 dataKey="test_code_churn"
                 type="natural"
-                fill="url(#fillDesktop)"
+                fill="url(#fillTest)"
                 fillOpacity={0.4}
-                stroke="var(--color-desktop)"
+                stroke="hsl(var(--chart-4))"
               />
             </AreaChart>
           </ChartContainer>
@@ -212,7 +233,7 @@ export function Component(preliminaryData) {
           <div className="flex w-full items-start gap-2 text-sm">
             <div className="grid gap-2">
               <div className="flex items-center gap-2 leading-none font-medium">
-                What happened to the productivity?
+                3385 less lines of code written, Janurary vs. February
               </div>
               <div className="text-muted-foreground flex items-center gap-2 leading-none">
                 January - May 2025 (Hover over the graph to see specific month
@@ -225,7 +246,9 @@ export function Component(preliminaryData) {
       {/*Radial Chart*/}
       <Card className="flex flex-col">
         <CardHeader className="items-center pb-0">
-          <CardTitle>Radial Chart - Total Code Churn</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            Radial Chart - Total Code Churn <ChartPie />{" "}
+          </CardTitle>
           <CardDescription>Across 5 months</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 pb-0">
@@ -234,9 +257,9 @@ export function Component(preliminaryData) {
             className="mx-auto aspect-square max-h-[250px]"
           >
             <RadialBarChart
-              data={chartDataDestructured}
+              data={chartDataForRadialChart}
               startAngle={0}
-              endAngle={250}
+              endAngle={150}
               innerRadius={80}
               outerRadius={110}
             >
@@ -245,12 +268,13 @@ export function Component(preliminaryData) {
                 radialLines={false}
                 stroke="none"
                 className="first:fill-muted last:fill-background"
-                polarRadius={[86, 74]}
+                polarRadius={[85, 74]}
               />
               <RadialBar
                 dataKey="total_code_churn"
                 background
                 cornerRadius={10}
+                fill="hsl(var(--chart-5))"
               />
               <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                 <Label
@@ -288,7 +312,7 @@ export function Component(preliminaryData) {
         </CardContent>
         <CardFooter className="flex-col gap-2 text-sm">
           <div className="flex items-center gap-2 leading-none font-medium">
-            4031 lines across 5 months - how's that?
+            4031 lines across 5 months - 42% of goal done
           </div>
         </CardFooter>
       </Card>

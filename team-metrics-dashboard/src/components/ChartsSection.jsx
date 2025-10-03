@@ -65,10 +65,10 @@ const ChartsSection = ({ responseData }) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex gap-2 items-center">
-            1/x <Clock height={20} />
+            1/x * 100 <Clock height={20} />
           </CardTitle>
           <CardDescription>
-            1 divided by x (days since last commit)
+            (1 divided by x (days since last commit) * 100)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -146,12 +146,15 @@ const ChartsSection = ({ responseData }) => {
           </div>
         </CardFooter>
       </Card>
+      {/*Area Chart*/}
       <Card>
         <CardHeader>
           <CardTitle className="flex gap-2 items-center">
-            1/x Area Chart <ChartArea height={20} />
+            1/x * 100 Area Chart <ChartArea height={20} />
           </CardTitle>{" "}
-          <CardDescription>Showing 1/x in continuous format</CardDescription>
+          <CardDescription>
+            Showing 1/x * 100 in continuous format
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
@@ -180,45 +183,27 @@ const ChartsSection = ({ responseData }) => {
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
               />
-              <ChartLegend
-                content={(props) => (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {props.payload.map((entry, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          fontSize: "14px",
-                          margin: "16px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "10px",
-                            height: "10px",
-                            backgroundColor: entry.color,
-                          }}
-                        />
-                        <span>{entry.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              />
+              <defs>
+                <linearGradient id="1/x" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="hsl(var(--chart-2)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="hsl(var(--chart-2)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
               <Area
                 dataKey="1/x"
                 type="natural"
-                fill="var(--color-oneOverXArea)"
-                fillOpacity={0.4}
-                stroke="var(--color-oneOverXArea)"
+                fill="url(#1/x)"
+                fillOpacity={0.3}
+                stroke="hsl(var(--chart-2))"
+                stackId="a"
               />
             </AreaChart>
           </ChartContainer>
