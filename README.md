@@ -8,6 +8,12 @@ Welcome to the Team Metrics Dashboard project. This was a personal project origi
 
 Currently, this project does not contain any real information anymore, and everything is scraped off a Supabase PostgreSQL mock dataset. 
 
+The dataset is relatively small, containing only two mock "employees" and two "commit subjects" - each employee/subject containing a set of commits worked on with code churn numbers.
+
+### :question: What is Code Churn?
+
+Code Churn (a.k.a. Code Rework) is the phenomenon where someone rewrites/deletes lines of code shortly after it was wrote. This is common
+
 ## Getting Started
 
 Access the tool here: https://team-metrics-dashboard.vercel.app/
