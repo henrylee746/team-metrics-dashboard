@@ -143,7 +143,7 @@ const KPISection = ({ responseData }) => {
     {
       label: "Total Code Churn",
       totalCodeChurn: totalCodeChurned,
-      fill: "hsl(var(--chart-1))",
+      fill: "hsl(200, 70%, 50%)",
     },
   ];
   //Radial Chart Config
@@ -153,7 +153,7 @@ const KPISection = ({ responseData }) => {
     },
     label: {
       label: "Subject/Employee",
-      color: "hsl(var(--chart-2))",
+      color: "hsl(200, 70%, 50%)",
     },
   } satisfies ChartConfig;
 
@@ -268,11 +268,11 @@ const KPISection = ({ responseData }) => {
                   <PolarGrid
                     gridType="circle"
                     radialLines={false}
-                    stroke="hsl(-var(--chart-1))"
+                    stroke="none"
                     className="first:fill-muted last:fill-background"
                     polarRadius={[86, 74]}
                   />
-                  <RadialBar dataKey="totalCodeChurned" background />
+                  <RadialBar dataKey="totalCodeChurn" background />
                   <PolarRadiusAxis
                     tick={false}
                     tickLine={false}
