@@ -25,3 +25,9 @@ Code Churn (a.k.a. Code Rework) is the phenomenon where someone rewrites/deletes
 > 
 > High code churn could mean high productivity if there is a large feature being worked on/function(s) constantly being optimized, but also an issue with testing/unclear user requirements if the same blocks of code are consistently being changed
 
+### :yellow_square: Next Steps
+<ul>
+  <li>State is persistent even when switching betwen pages (global state/redux/zustand)</li>
+  <li>Implementing React.useEffect cleanup functions</li>
+</ul>
+
