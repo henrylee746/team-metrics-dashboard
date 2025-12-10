@@ -327,7 +327,7 @@ function PopoverComponent({ form }) {
                   control={form.control}
                   name="gerrit"
                   render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
+                    <FormItem className="flex items-start gap-2">
                       <Label htmlFor="gerrit">Gerrit</Label>
                       <FormControl>
                         <Checkbox
@@ -344,7 +344,7 @@ function PopoverComponent({ form }) {
                   control={form.control}
                   name="gerritDelta"
                   render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
+                    <FormItem className="flex items-start gap-2">
                       <Label htmlFor="gerritDelta">Gerrit Delta</Label>
                       <FormControl>
                         <Checkbox
@@ -360,7 +360,7 @@ function PopoverComponent({ form }) {
                   control={form.control}
                   name="gerritArchive"
                   render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
+                    <FormItem className="flex items-start gap-2">
                       <Label htmlFor="gerritArchive">Gerrit Archive</Label>
                       <FormControl>
                         <Checkbox
@@ -376,7 +376,7 @@ function PopoverComponent({ form }) {
                   control={form.control}
                   name="gerritReview"
                   render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
+                    <FormItem className="flex items-start gap-2">
                       <Label htmlFor="gerritReview">Gerrit Review</Label>
                       <FormControl>
                         <Checkbox
@@ -392,7 +392,7 @@ function PopoverComponent({ form }) {
                   control={form.control}
                   name="gerritSigma"
                   render={({ field }) => (
-                    <FormItem className="flex items-end gap-2">
+                    <FormItem className="flex items-start gap-2">
                       <Label htmlFor="gerritSigma">Gerrit Sigma</Label>
                       <FormControl>
                         <Checkbox

@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import App2 from "./App2.jsx";
-import "./output.css";
+import "./index.css";
 import Data from "./components/Data.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 

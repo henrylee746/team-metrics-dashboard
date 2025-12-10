@@ -26,6 +26,8 @@
   --radius-sm: calc(var(--radius) - 4px);
 }
 
+@plugin "tailwindcss-animate";
+
 @layer base {
   :root {
     --background: 0 0% 100%;
