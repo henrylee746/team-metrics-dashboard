@@ -25,7 +25,7 @@ export const H2 = ({ className, ...props }) => (
 export const P = ({ className, ...props }) => (
   <p
     className={cn(
-      "text-muted-foreground text-md leading-7 [&:not(:first-child)]:mt-2",
+      "text-muted-foreground text-md leading-7 not-first:mt-2",
       className
     )}
     {...props}
@@ -56,7 +56,7 @@ export const Table = ({ className, ...props }) => (
           {props.headers.map((header) => {
             return (
               <>
-                <th className="border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right">
+                <th className="border px-4 py-2 text-left font-bold [[align=center]]:text-center [[align=right]]:text-right">
                   {header}
                 </th>
               </>
@@ -72,7 +72,7 @@ export const Table = ({ className, ...props }) => (
                 {row.map((data) => {
                   return (
                     <>
-                      <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
+                      <td className="border px-4 py-2 text-left [[align=center]]:text-center [[align=right]]:text-right">
                         {data}
                       </td>
                     </>

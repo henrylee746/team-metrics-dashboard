@@ -83,8 +83,8 @@ export function Component(preliminaryData) {
   return (
     <div className="flex flex-wrap gap-8 m-4 justify-center items-center w-full">
       <Card className="py-0">
-        <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
-          <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+        <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:py-0!">
             <CardTitle className="flex gap-2 items-center">
               Code Churn - Bar Chart <ChartColumnDecreasing />{" "}
             </CardTitle>
