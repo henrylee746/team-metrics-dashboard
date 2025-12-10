@@ -261,6 +261,12 @@ function DatePickerWithRange({ value, onChange }) {
   }, []);
 
   const handleDateChange = (newDate) => {
+    if (newDate === undefined) {
+      setDate({ from: null, to: null });
+      onChange({ from: null, to: null });
+      return;
+    }
+    console.log(newDate);
     setDate(newDate);
     onChange(newDate); // Passes the new date range back to the form
   };
