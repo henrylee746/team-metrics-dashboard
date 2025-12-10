@@ -3,7 +3,6 @@ import "./output.css"; // Import global styles
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
 import SearchForm from "./components/SearchForm.tsx";
-import Footer from "./components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Component } from "./components/PlaceholderCharts.tsx";

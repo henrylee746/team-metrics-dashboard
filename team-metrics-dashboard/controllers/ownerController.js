@@ -1,12 +1,7 @@
 /*eslint-disable*/
 import "dotenv/config";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../utils/supabase.js";
 let finalData = []; //represents final JSON arr after manipulations
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
 
 async function getSupabaseData() {
   const [bob, charlie, em8, xy] = await Promise.all([

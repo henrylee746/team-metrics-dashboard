@@ -2,13 +2,7 @@
 (This data gets displayed on the preview charts 
 when user first loads up webpage)*/
 
-import "dotenv/config"; // loads .env automatically
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+import supabase from "../utils/supabase";
 
 async function insertData() {
   await supabase.from("preliminary").insert([
