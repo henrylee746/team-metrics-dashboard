@@ -174,6 +174,7 @@ function ProfileForm({ onSubmit, loading }) {
                   onChange={field.onChange} // component → RHF
                   defaultOptions={OPTIONS}
                   hideClearAllButton
+                  className="mt-2"
                   placeholder="Select subject(s)..."
                 />
 
@@ -195,7 +196,7 @@ function ProfileForm({ onSubmit, loading }) {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl>
+                  <FormControl className="mt-2">
                     <SelectTrigger>
                       <SelectValue placeholder="Select an Owner..." />
                     </SelectTrigger>

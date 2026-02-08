@@ -161,7 +161,7 @@ export default function Page() {
               <AvatarFallback>ER-C</AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <h4 className="text-sm font-semibold">Ericsson Canada</h4>
+              <h4 className="text-sm font-semibold">Ericsson</h4>
               <p className="text-sm">
                 For providing the project idea and making this possible during
                 my internship there.
