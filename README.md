@@ -2,7 +2,7 @@
 
 # :bar_chart: Team Metrics Dashboard
 
-Welcome to the Team Metrics Dashboard project. This was a personal project originated from my internship at Ericsson Canada, tasked with designing a web application to scrape performance metrics of employees off of pushed code commits using the Gerrit REST API.
+Welcome to the Team Metrics Dashboard project. This was a personal project originated from my internship at Ericsson, tasked with designing a web application to scrape performance metrics of employees off of pushed code commits using the Gerrit REST API.
 
 ## Getting Started
 
