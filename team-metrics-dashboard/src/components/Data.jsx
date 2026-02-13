@@ -15,7 +15,6 @@ function Data() {
   }, [responseData]);
 
   const currentData = responseData[index]; //sets data according to option chosen
-  console.log(currentData);
   return (
     <div
       className={`transition-opacity duration-500 delay-100 ${

@@ -51,8 +51,6 @@ async function getCommits(req, res) {
 
     finalData = [];
 
-    console.log(req.body);
-
     const { intersect } = req.body;
 
     //imitating pulling data from a database
@@ -87,7 +85,6 @@ async function getCommits(req, res) {
       });
     }, 1000);
   } catch (err) {
-    console.log("Error in getCommits:", err);
     return res.status(500).json({ error: err.message });
   }
 }
@@ -117,7 +114,6 @@ const pullDataWithIntersectEnabled = (
     }
     finalData.push(jsonArr);
   });
-  console.log(finalData);
   if (finalData.length == 0) {
     return;
   }

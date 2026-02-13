@@ -13,7 +13,6 @@ function App() {
   useEffect(() => {
     // Check for saved theme in localStorage
     const savedTheme = localStorage.getItem("theme");
-    console.log(`${savedTheme} mode is currently on`);
     if (savedTheme) {
       setTheme(savedTheme);
     }

@@ -67,8 +67,6 @@ const KPISection = ({ responseData }) => {
     return null;
   }
 
-  console.log("KPI Section Response:", responseData);
-
   //Grab all dates for the subject/employee selected
   const dates =
     responseData && responseData.length > 0

@@ -267,7 +267,6 @@ function DatePickerWithRange({ value, onChange }) {
       onChange({ from: null, to: null });
       return;
     }
-    console.log(newDate);
     setDate(newDate);
     onChange(newDate); // Passes the new date range back to the form
   };
@@ -462,7 +461,6 @@ const SearchForm = ({
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
-    console.log("Form values:", values); // Logs the submitted values
     const {
       subject,
       owner,
@@ -504,10 +502,8 @@ const SearchForm = ({
       }
 
       const promise = await response.json();
-      console.log(promise);
       setResponseData(promise); // Set all response data together if needed
     } catch (error) {
-      console.error("Form submission failed:", error);
       setResponseData(null);
       setLoading(false);
       setError(error.message);

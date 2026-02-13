@@ -53,8 +53,6 @@ export function Component(preliminaryData) {
     },
   ];
 
-  console.log(chartDataForRadialChart);
-
   const chartConfig = {
     design_code_churn: {
       label: "Design Code Churn",

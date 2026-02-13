@@ -36,10 +36,8 @@ function App() {
       if (!response.ok)
         throw new Error(`HTTP Error: ${response.status} - ${response.error}`);
       const result = await response.json();
-      console.log(result);
       return result.data;
     } catch (e) {
-      console.log(e.message);
       return null;
     }
   }
@@ -47,7 +45,6 @@ function App() {
   useEffect(() => {
     // Check for saved theme in localStorage
     const savedTheme = localStorage.getItem("theme");
-    console.log(`${savedTheme} mode is currently on`);
     if (savedTheme) {
       setTheme(savedTheme);
     }
